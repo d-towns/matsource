@@ -6,12 +6,11 @@ import { tool } from "@langchain/core/tools";
 import { z } from "zod";
 import { ToolNode } from "@langchain/langgraph/prebuilt";
 import { ChatGroq } from "@langchain/groq";
-import { HumanMessage, AIMessage, BaseMessage, SystemMessage, ToolMessage } from "@langchain/core/messages";
-import { StateGraph, MessagesAnnotation, Annotation, messagesStateReducer, START, END } from "@langchain/langgraph";
+import { HumanMessage, AIMessage, BaseMessage, ToolMessage } from "@langchain/core/messages";
+import { StateGraph, Annotation, messagesStateReducer, START, END } from "@langchain/langgraph";
 import { TavilySearchResults } from "@langchain/community/tools/tavily_search";
-import { StagehandExtractTool, StagehandActTool, StagehandNavigateTool, StagehandObserveTool } from "@langchain/community/agents/toolkits/stagehand";
+import { StagehandToolkit, StagehandExtractTool } from "@langchain/community/agents/toolkits/stagehand";
 import { Stagehand } from "@browserbasehq/stagehand"
-import * as tslab from "tslab";
 
 // Define types for inputs and results.
 export interface SearchParams {
@@ -23,28 +22,6 @@ export interface SearchParams {
   preferredBrands?: string[];
   recycledParts?: boolean;
   retailParts?: boolean;
-}
-
-export interface PartIdentificationResult {
-  parts: string[];
-}
-
-export interface StoreInfo {
-  id: string;
-  name: string;
-  phone?: string;
-  location: string;
-  url?: string; // Added url to StoreInfo
-}
-
-export interface AvailabilityResult {
-  store: StoreInfo;
-  availableParts: { part: string; year: string; model: string; grade: string; stockNumber: string; price: string; distance: string; deliveryTime: string; inStock: boolean; url: string }[];
-}
-
-export interface SearchAgentResult {
-  identifiedParts: string[];
-  storeResults: AvailabilityResult[];
 }
 
 //###################################################################################################
@@ -185,13 +162,36 @@ const stagehand = new Stagehand({
 
 
 
-const navigateTool = new StagehandNavigateTool(stagehand);
-const observeTool = new StagehandObserveTool(stagehand);
-const extractTool = new StagehandExtractTool(stagehand);
-console.log("extractTOol", extractTool);
-const actTool = new StagehandActTool(stagehand);
+const stagehandToolkit = new StagehandToolkit(stagehand);
 
-const recycledTools = [navigateTool, observeTool, actTool, extractTool, recycledFinalResponseTool];
+const navigateTool = stagehandToolkit.tools.find(tool => tool.name === "stagehand_navigate");
+const observeTool = stagehandToolkit.tools.find(tool => tool.name === "stagehand_observe");
+const extractTool = new StagehandExtractTool(stagehand)
+
+
+const extractRecycledPartsTool = tool(
+  async (input: { instruction: string }) => {
+    const result = await extractTool.invoke({
+      instruction: "Extract the part data from the first 3 rows of the table on the page.",
+      schema: RecycledResponseSchema
+    })
+    return result;
+  },
+  {
+    name: "extract_recycled_parts",
+    description: "Extract the part data from the first 3 rows of the table on the page.",
+    schema: z.object({
+      instruction: z.string().describe("The instruction to pass to the extract tool."),
+    })
+  }
+);
+const actTool = stagehandToolkit.tools.find(tool => tool.name === "stagehand_act");
+
+if (!navigateTool || !observeTool || !extractTool || !actTool) {
+  throw new Error("Tools could not be found in the stagehand toolkit");
+}
+
+const recycledTools = [navigateTool, observeTool, extractRecycledPartsTool, actTool, recycledFinalResponseTool];
 const recycledToolNode = new ToolNode<typeof GraphState.State>(recycledTools);
 
 const recycledPartsModel = new ChatGroq({
@@ -247,7 +247,7 @@ async function callOrchestrator(state: typeof GraphState.State,) {
 
     const response = await orchestratorModel.invoke(state.messages);
 
-    return { messages: [response], next: "route" };
+    return { messages: [response] };
   } catch (error: any) {
     console.error("Error invoking orchestrator model:", error);
     throw error;
@@ -260,7 +260,7 @@ async function callRetailPartsAgent(state: typeof GraphState.State,) {
 
   try {
     const response = await retailPartsModel.invoke(state.messages);
-    return { messages: [response], next: "route" };
+    return { messages: [response]};
   } catch (error: any) {
     console.error("Error invoking retail parts agent model:", error);
     throw error;
@@ -268,42 +268,46 @@ async function callRetailPartsAgent(state: typeof GraphState.State,) {
 }
 
 // 3. Recycled Parts Agent Node
+
 async function callRecycledPartsAgent(state: typeof GraphState.State,) {
-
-  
   // Define the tools for the recycled parts agent
-
 
   try {
 
     console.log("calling recycled parts agent");
     console.log(state.messages[state.messages.length - 1]);
-    console.log(state.searchStep); 
+    console.log(state.searchStep);
 
     const lastMessage = state.messages[state.messages.length - 1]
-    if(lastMessage instanceof ToolMessage) {
-      const toolMessage = lastMessage as ToolMessage;
-      if(state.searchStep === "initialFormSubmitted") {
+
+    if (lastMessage instanceof ToolMessage) {
+
+      if (state.searchStep === "initialFormSubmitted") {
         const recycledPartsPrompt = `If there is a form on the page, submit it.`;
         const response = await recycledPartsModel.invoke(recycledPartsPrompt);
-        return { messages: [response], next: "route", searchStep: "extraFormSubmitted" };
+        return { messages: [response],  searchStep: "extraFormSubmitted" };
       }
+
+      if (state.searchStep === "extraFormSubmitted") {
+        const recycledPartsPrompt = `Extract the part data from the first 3 rows of the table on the page.`;
+        const response = await recycledPartsModel.invoke(recycledPartsPrompt);
+        return { messages: [response], searchStep: "dataExtracted" };
+      }
+
+      if (state.searchStep === "dataExtracted") {
+        return { messages: [new AIMessage("dataExtracted")], searchStep: "dataExtracted" };
+      }
+
     }
 
-    if(state.searchStep === "extraFormSubmitted") {
-      const recycledPartsPrompt = `extract the data from the page and return the results in a structured JSON format.`;
+    if (state.searchStep === "setup") {
+      await stagehand.init();
+      const { carName, year, issues, location, budget, preferredBrands, recycledParts, retailParts } = state.searchParams;
+      const recycledPartsPrompt = `navigate to car-part.com and act on the form to search for ${carName} ${year} ${issues} ${location}. `
       const response = await recycledPartsModel.invoke(recycledPartsPrompt);
-      return { messages: [response], next: "route", searchStep: "dataExtracted" };
+      return { messages: [response],  searchStep: "initialFormSubmitted" };
     }
 
-    // right now, this model is being called with the entire message history.
-    // it doesnt know that it should only go to car-parts.com to search for parts.
-    // it should be able to navigate to the page, fill out the form based on the first prompt in the message history, and extract the data.
-    await stagehand.init();
-    const { carName, year, issues, location, budget, preferredBrands, recycledParts, retailParts } = state.searchParams;
-    const recycledPartsPrompt = `navigate to car-part.com and act on the form to search for ${carName} ${year} ${issues} ${location}. `
-    const response = await recycledPartsModel.invoke(recycledPartsPrompt);
-    return { messages: [response], next: "route", searchStep: "initialFormSubmitted" };
   } catch (error: any) {
     console.error("Error invoking recycled parts agent model:", error);
     throw error;
@@ -316,7 +320,7 @@ async function callRecycledPartsAgent(state: typeof GraphState.State,) {
 
 // 1. Define the function that routes to the next agent
 function route({ messages, searchParams }: typeof GraphState.State) {
-  if(searchParams.recycledParts) {
+  if (searchParams.recycledParts) {
     return "recycled_parts_agent";
   } else {
     return "retail_parts_agent";
@@ -326,7 +330,7 @@ function route({ messages, searchParams }: typeof GraphState.State) {
 function recycledPartsAgentRoute({ messages, searchParams }: typeof GraphState.State) {
   // if there are tools calls, then route to the tools node
   const lastMessage = messages[messages.length - 1] as AIMessage;
-  if(lastMessage.tool_calls && lastMessage.tool_calls[lastMessage.tool_calls?.length -1].name === "recycled_final_response") {
+  if (lastMessage.tool_calls && lastMessage.tool_calls[lastMessage.tool_calls?.length - 1].name === "recycled_final_response") {
     return "__end__";
   } else {
     return "recycled_parts_agent_tools";
@@ -336,16 +340,12 @@ function recycledPartsAgentRoute({ messages, searchParams }: typeof GraphState.S
 function retailPartsAgentRoute({ messages, searchParams }: typeof GraphState.State) {
   // if there are tools calls, then route to the tools node
   const lastMessage = messages[messages.length - 1] as AIMessage;
-  if(lastMessage.tool_calls && lastMessage.tool_calls[lastMessage.tool_calls?.length -1].name === "retail_final_response") {
+  if (lastMessage.tool_calls && lastMessage.tool_calls[lastMessage.tool_calls?.length - 1].name === "retail_final_response") {
     return "__end__";
   } else {
     return "retail_parts_agent_tools";
   }
 }
-
-
-
-
 
 //###################################################################################################
 //#  CREATE LANGGRAPH WORKFLOW                                                                     #
@@ -373,7 +373,7 @@ const workflow = new StateGraph(GraphState)
   })
   .addEdge(START, "orchestrator")
 
-  const PartSearchAgent = workflow.compile();
+const PartSearchAgent = workflow.compile();
 
 
 //###################################################################################################
@@ -402,30 +402,20 @@ export async function runSearchWorkflow(params: SearchParams): Promise<any> {
     }
     const state = await PartSearchAgent.invoke({
       messages: [new HumanMessage(searchPrompt)],
-      searchParams: params
+      searchParams: params,
+      searchStep: "setup"
     },
       config
     );
 
-    console.log(state);
+
     // Extract the final response from the agent's messages
     const finalMessage = state.messages[state.messages.length - 1] as AIMessage;
 
-    console.log(finalMessage);
-
-    console.log("raw content", finalMessage.content);
-
     const contentJSON = finalMessage.content.toString().replace(/<function=(retail_final_response|recycled_final_response),/g, "").replace("</function>", "").trim();
-    console.log("split content", contentJSON);
 
-    return new Promise((resolve, reject) => resolve(contentJSON));
+    return JSON.parse(contentJSON);
 
-    // if (finalMessage.tool_calls && finalMessage.tool_calls.length > 0 && finalMessage.tool_calls[0].name === "final_response") {
-    //   const finalResponseArgs = finalMessage.tool_calls[0].args;
-    //   return new Promise((resolve, reject) => resolve(finalResponseArgs)); // Return the structured arguments
-    // } else {
-    //   return new Promise((resolve, reject) => reject("No final_response tool call found."));
-    // }
   } catch (error: any) {
     console.error("Error in runSearchWorkflow:", error);
     throw error;
