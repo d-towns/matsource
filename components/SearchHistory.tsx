@@ -3,29 +3,56 @@
 import { useSearch } from '@/contexts/search-context'
 import { Card } from '@/components/ui/card'
 import { useEffect } from 'react'
+import { Button } from "@/components/ui/button"
+import { useRouter } from "next/navigation"
 
 export function SearchHistory() {
   const { searchHistory, updateSearchHistory, isLoading  } = useSearch();
+  const router = useRouter();
+
   useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch('/api/search/events');
+      const reader = response.body
+        .pipeThrough(new TextDecoderStream())
+      .getReader();
 
-    const eventSource = new EventSource('/api/search/events');
-
-    eventSource.onmessage = (event) => {
+    const processStream = async () => {
       try {
-        const update = JSON.parse(event.data);
-        console.log("SSE Update received:", update);
-        // Only update search step and status.
-        if (update.searchId && update.status && update.step) {
-          updateSearchHistory(update.searchId, { status: update.status, step: update.step });
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          // SSE format is "event: type\ndata: payload\n\n"
+          const messages = value.split('\n\n').filter(Boolean);
+          
+          for (const message of messages) {
+            const [eventLine, dataLine] = message.split('\n');
+            if (!eventLine || !dataLine) continue;
+
+            const eventType = eventLine.replace('event: ', '');
+            const data = JSON.parse(dataLine.replace('data: ', ''));
+
+            if (eventType === 'search-status-update' && data.id) {
+              updateSearchHistory(data.id, {
+                status: data.status,
+                step: data.step
+              });
+            }
+          }
         }
-      } catch (err) {
-        console.error("Error parsing SSE event data:", err);
+      } catch (error) {
+        console.error('Error reading stream:', error);
       }
     };
 
+    fetchData();
+    processStream();
+
     return () => {
-      eventSource.close();
+      reader.cancel();
     };
+  }
   }, [updateSearchHistory]);
 
   return (
@@ -73,6 +100,17 @@ export function SearchHistory() {
                   )}
                   {search.step && (
                     <p className="text-xs text-gray-400">Step: {search.step}</p>
+                  )}
+                  {search.status === 'completed' && (
+                    <div className="mt-4">
+                      <Button 
+                        variant="outline"
+                        size="sm"
+                        onClick={() => router.push(`/search/${search.id}`)}
+                      >
+                        View Results
+                      </Button>
+                    </div>
                   )}
                 </div>
               </Card>
