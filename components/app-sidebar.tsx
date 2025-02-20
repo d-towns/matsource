@@ -12,6 +12,9 @@ import {
   PieChart,
   Settings2,
   SquareTerminal,
+  CarIcon,
+  PackageSearchIcon,
+  HomeIcon
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -27,7 +30,7 @@ import {
 } from "@/components/ui/sidebar"
 
 // This is sample data.
-const data = {
+const navMenuItems = {
   user: {
     name: "shadcn",
     email: "m@example.com",
@@ -52,46 +55,33 @@ const data = {
   ],
   navMain: [
     {
-      title: "Playground",
+      title: "Dashboard",
+      url: "dashboard",
+      icon: HomeIcon,
+    },
+    {
+      title: "Search",
       url: "#",
-      icon: SquareTerminal,
+      icon: PackageSearchIcon,
       isActive: true,
       items: [
         {
-          title: "History",
-          url: "#",
+          title: "Parts",
+          url: "search/parts",
         },
         {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
-          url: "#",
+          title: "Vehicles",
+          url: "search/vehicles",
         },
       ],
     },
     {
-      title: "Models",
+      title: "Vehicles",
       url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
+      icon: CarIcon,
     },
     {
-      title: "Documentation",
+      title: "Reports",
       url: "#",
       icon: BookOpen,
       items: [
@@ -160,14 +150,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <TeamSwitcher teams={navMenuItems.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+        <NavMain items={navMenuItems.navMain} />
+        {/* <NavProjects projects={navMenuItems.projects} /> */}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

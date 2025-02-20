@@ -6,11 +6,12 @@ import { tool } from "@langchain/core/tools";
 import { z } from "zod";
 import { ToolNode } from "@langchain/langgraph/prebuilt";
 import { ChatGroq } from "@langchain/groq";
-import { HumanMessage, AIMessage, BaseMessage, ToolMessage } from "@langchain/core/messages";
-import { StateGraph, Annotation, messagesStateReducer, START, END } from "@langchain/langgraph";
+import { HumanMessage, AIMessage, BaseMessage, ToolMessage, MessageContent } from "@langchain/core/messages";
+import { StateGraph, Annotation, messagesStateReducer, START, END, Command } from "@langchain/langgraph";
 import { TavilySearchResults } from "@langchain/community/tools/tavily_search";
 import { StagehandToolkit, StagehandExtractTool } from "@langchain/community/agents/toolkits/stagehand";
 import { Stagehand } from "@browserbasehq/stagehand"
+import { redis } from '@/utils/redis/client';
 
 // Define types for inputs and results.
 export interface SearchParams {
@@ -142,8 +143,28 @@ const RecycledResponseSchema = z.object({
 
 const recycledFinalResponseTool = tool(
   async (input: z.infer<typeof RecycledResponseSchema>) => {
-    // This tool's purpose is to enforce the schema.  The agent should call this to return the final result.
-    return JSON.stringify(input);
+    // Consolidate parts from stores with the same name
+    const consolidatedResults = input.storeResults.reduce((acc, current) => {
+      const existingStoreIndex = acc.findIndex(item => item.store.name === current.store.name);
+      
+      if (existingStoreIndex >= 0) {
+        // Merge availableParts arrays if store already exists
+        acc[existingStoreIndex].availableParts = [
+          ...acc[existingStoreIndex].availableParts,
+          ...current.availableParts
+        ];
+      } else {
+        // Add new store entry if it doesn't exist
+        acc.push(current);
+      }
+      
+      return acc;
+    }, [] as typeof input.storeResults);
+
+    return {
+      identifiedParts: input.identifiedParts,
+      storeResults: consolidatedResults
+    };
   },
   {
     name: "recycled_final_response",
@@ -155,9 +176,9 @@ const recycledFinalResponseTool = tool(
 const stagehand = new Stagehand({
   env: "LOCAL",
   headless: false,
-  verbose: 2,
   debugDom: true,
   enableCaching: false,
+  
 })
 
 
@@ -170,12 +191,49 @@ const extractTool = new StagehandExtractTool(stagehand)
 
 
 const extractRecycledPartsTool = tool(
-  async (input: { instruction: string }) => {
+  async (input: { instruction: string }, config ) => {
     const result = await extractTool.invoke({
       instruction: "Extract the part data from the first 3 rows of the table on the page.",
       schema: RecycledResponseSchema
     })
-    return result;
+    console.log('extractRecycledPartsTool result', result.content);
+
+    const response = JSON.parse(result.content.toString());
+
+    const consolidatedResults = response.storeResults.reduce((acc: any, current: any) => {
+      const existingStoreIndex = acc.findIndex((item: any) => item.store.name === current.store.name);
+      
+      if (existingStoreIndex >= 0) {
+        // Merge availableParts arrays if store already exists
+        acc[existingStoreIndex].availableParts = [
+          ...acc[existingStoreIndex].availableParts,
+          ...current.availableParts
+        ];
+      } else {
+        // Add new store entry if it doesn't exist
+        acc.push(current);
+      }
+      
+      return acc;
+    }, [] as typeof response.storeResults);
+
+    const results =  {
+      identifiedParts: response.identifiedParts,
+      storeResults: consolidatedResults
+    };
+
+    return new Command({
+      // update state keys
+      update: {
+        searchResults: results,
+        messages: [
+          new ToolMessage({
+            content: "Successfully extracted part data from the table on the page.",
+            tool_call_id: config.toolCall.id,
+          }),
+        ],
+      },
+    });
   },
   {
     name: "extract_recycled_parts",
@@ -233,7 +291,8 @@ const GraphState = Annotation.Root({
     reducer: messagesStateReducer,
   }),
   searchParams: Annotation<SearchParams>,
-  searchStep: Annotation<string>
+  searchStep: Annotation<string>,
+  searchResults: Annotation<any>
 });
 
 
@@ -275,27 +334,49 @@ async function callRecycledPartsAgent(state: typeof GraphState.State,) {
   try {
 
     console.log("calling recycled parts agent");
-    console.log(state.messages[state.messages.length - 1]);
-    console.log(state.searchStep);
 
+    console.log('last message', state.messages[state.messages.length - 1]);
+    console.log('search step', state.searchStep);
+    console.log('search results', state.searchResults);
     const lastMessage = state.messages[state.messages.length - 1]
+    const searchParams = state.searchParams; // Get search params to access search ID if you have it
 
     if (lastMessage instanceof ToolMessage) {
 
       if (state.searchStep === "initialFormSubmitted") {
-        const recycledPartsPrompt = `If there is a form on the page, submit it.`;
+        // Publish status update - Initial form submitted
+        redis.publish('search_status_updates', JSON.stringify({
+          searchId: searchParams.carName + "-" + searchParams.year + "-" + new Date().getTime(), // Replace with actual search ID if available
+          status: 'Submitting extra form',
+          step: 'extraFormSubmitted'
+        }));
+        const recycledPartsPrompt = `If there is a form on the page, use the act tool to submit it by clicking the search button.`;
         const response = await recycledPartsModel.invoke(recycledPartsPrompt);
         return { messages: [response],  searchStep: "extraFormSubmitted" };
       }
 
       if (state.searchStep === "extraFormSubmitted") {
-        const recycledPartsPrompt = `Extract the part data from the first 3 rows of the table on the page.`;
+        // Publish status update - Extra form submitted, extracting data
+        redis.publish('search_status_updates', JSON.stringify({
+          searchId: searchParams.carName + "-" + searchParams.year + "-" + new Date().getTime(), // Replace with actual search ID if available
+          status: 'Extracting data from page',
+          step: 'dataExtracted'
+        }));
+        const recycledPartsPrompt = `if there is a form on the page, submit it. if there is not, then do not submit the form. then, Extract the part data from the first 3 rows of the table on the page.`;
         const response = await recycledPartsModel.invoke(recycledPartsPrompt);
+        console.log('extracted Data invoke response ', response);
         return { messages: [response], searchStep: "dataExtracted" };
       }
 
       if (state.searchStep === "dataExtracted") {
-        return { messages: [new AIMessage("dataExtracted")], searchStep: "dataExtracted" };
+        stagehand.close();
+        // Publish status update - Data extracted, search complete
+        redis.publish('search_status_updates', JSON.stringify({
+          searchId: searchParams.carName + "-" + searchParams.year + "-" + new Date().getTime(), // Replace with actual search ID if available
+          status: 'Data extracted',
+          step: 'completed'
+        }));
+        return { messages: [new AIMessage("dataExtracted")], searchStep: "dataExtracted"};
       }
 
     }
@@ -303,13 +384,26 @@ async function callRecycledPartsAgent(state: typeof GraphState.State,) {
     if (state.searchStep === "setup") {
       await stagehand.init();
       const { carName, year, issues, location, budget, preferredBrands, recycledParts, retailParts } = state.searchParams;
-      const recycledPartsPrompt = `navigate to car-part.com and act on the form to search for ${carName} ${year} ${issues} ${location}. `
+      // Publish status update - Initial setup and navigation
+      redis.publish('search_status_updates', JSON.stringify({
+        searchId: carName + "-" + year + "-" + new Date().getTime(), // You might want to generate and store a unique search ID earlier
+        status: 'Navigating to car-part.com and submitting initial form',
+        step: 'initialFormSubmitted'
+      }));
+      const recycledPartsPrompt = `Navigate to car-part.com and act on the form. Enter ${year} in the year select, ${carName} in the make select, in the parts select, enter the parts that are needed to fix these issues: ${issues},  and use the zip code in the location: ${location} to enter in zip code. And submit the form by clicking the search button.`;
       const response = await recycledPartsModel.invoke(recycledPartsPrompt);
       return { messages: [response],  searchStep: "initialFormSubmitted" };
     }
 
   } catch (error: any) {
     console.error("Error invoking recycled parts agent model:", error);
+    // Publish error status update
+    redis.publish('search_status_updates', JSON.stringify({
+      searchId: searchParams.carName + "-" + searchParams.year + "-" + new Date().getTime(), // Replace with actual search ID if available
+      status: 'Error during search',
+      step: 'error',
+      error: error.message || 'Unknown error'
+    }));
     throw error;
   }
 }
@@ -330,10 +424,12 @@ function route({ messages, searchParams }: typeof GraphState.State) {
 function recycledPartsAgentRoute({ messages, searchParams }: typeof GraphState.State) {
   // if there are tools calls, then route to the tools node
   const lastMessage = messages[messages.length - 1] as AIMessage;
-  if (lastMessage.tool_calls && lastMessage.tool_calls[lastMessage.tool_calls?.length - 1].name === "recycled_final_response") {
-    return "__end__";
-  } else {
+  console.log('conditional tool route for recycled parts agent called, last message was', lastMessage);
+  if ("tool_calls" in lastMessage && Array.isArray(lastMessage.tool_calls) && lastMessage.tool_calls?.length) {
     return "recycled_parts_agent_tools";
+  } else {
+    console.log('Ending Tool calls in recycled parts agent route');
+    return "__end__";
   }
 }
 
@@ -403,7 +499,8 @@ export async function runSearchWorkflow(params: SearchParams): Promise<any> {
     const state = await PartSearchAgent.invoke({
       messages: [new HumanMessage(searchPrompt)],
       searchParams: params,
-      searchStep: "setup"
+      searchStep: "setup",
+      searchResults: ""
     },
       config
     );
@@ -411,10 +508,22 @@ export async function runSearchWorkflow(params: SearchParams): Promise<any> {
 
     // Extract the final response from the agent's messages
     const finalMessage = state.messages[state.messages.length - 1] as AIMessage;
+    const formattedSearchResults = state.searchResults as MessageContent
 
-    const contentJSON = finalMessage.content.toString().replace(/<function=(retail_final_response|recycled_final_response),/g, "").replace("</function>", "").trim();
+    console.log(finalMessage);
+    console.log('formattedSearchResults', formattedSearchResults);
 
-    return JSON.parse(contentJSON);
+    return formattedSearchResults;
+
+    // const searchResults = JSON.parse(formattedSearchResults.toString());
+
+    // console.log('searchResults', searchResults);
+
+    // return searchResults;
+
+    // const contentJSON = finalMessage.content.toString().replace(/<function=(retail_final_response|recycled_final_response),/g, "").replace("</function>", "").trim();
+
+    // return JSON.parse(contentJSON);
 
   } catch (error: any) {
     console.error("Error in runSearchWorkflow:", error);
