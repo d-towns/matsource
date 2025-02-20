@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import redis from "@/utils/redis/client"; // Assuming you have your Redis client setup here
 
-export const runtime = 'nodejs';
+export const runtime = 'force-dynamic';
 
 async function* eventGenerator() {
   const pubsub = redis.duplicate(); // Duplicate client for pub/sub
@@ -9,9 +9,15 @@ async function* eventGenerator() {
 
   console.log("Connected to Redis");  
 
-  // Subscribe and push messages into the queue.
-  await pubsub.subscribe('search_status_updates', (message: any) => {
-    console.log("Received message:", message);
+
+  // use a generator function to yield messages
+  const channel = await pubsub.subscribe('search_status_updates');
+  console.log(`Subscribed to 'search_status_updates'' channel. Current subscription: ${channel}`);
+
+  //use a queue and a while loop to yield messages
+
+  pubsub.on('message', (channel : string, message: string) => {
+    console.log(`Received message from channel: ${channel}`, message);
     queue.push(message);
   });
 
@@ -46,10 +52,7 @@ export async function GET() {
         controller.enqueue(encoder.encode(message));
       }
       controller.close();
-    },
-    cancel() {
-      console.log('SSE stream cancelled by client');
-    },
+    }
   });
 
   return new NextResponse(stream, {
@@ -57,6 +60,7 @@ export async function GET() {
       'Content-Type': 'text/event-stream',
       'Cache-Control': 'no-cache, no-transform',
       'Connection': 'keep-alive',
+      'Content-Encoding': 'none',
     },
   });
 } 

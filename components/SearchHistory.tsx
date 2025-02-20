@@ -6,8 +6,8 @@ import { useEffect } from 'react'
 
 export function SearchHistory() {
   const { searchHistory, updateSearchHistory, isLoading  } = useSearch();
-
   useEffect(() => {
+
     const eventSource = new EventSource('/api/search/events');
 
     eventSource.onmessage = (event) => {

@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react'
 
-export interface SearchHistoryItem {
+export interface SearchItem {
   id: string;
   car_name: string;
   year: number;
@@ -13,29 +13,29 @@ export interface SearchHistoryItem {
   retail_parts: boolean;
   created_at: string;
   user_id: string;
-  status?: string;
+  status?: 'active' | 'setup' | 'completed' | 'failed';
   step?: string;
 }
 
 interface SearchContextType {
-  searchHistory: SearchHistoryItem[];
+  searchHistory: SearchItem[];
   isLoading: boolean;
-  setSearchHistory: (history: SearchHistoryItem[]) => void;
-  addSearchHistory: (item: SearchHistoryItem) => void;
-  updateSearchHistory: (id: string, updates: Partial<SearchHistoryItem>) => void;
+  setSearchHistory: (history: SearchItem[]) => void;
+  addSearchHistory: (item: SearchItem) => void;
+  updateSearchHistory: (id: string, updates: Partial<SearchItem>) => void;
 }
 
 const SearchContext = createContext<SearchContextType | undefined>(undefined)
 
 export const SearchProvider = ({ children }: { children: ReactNode }) => {
-  const [searchHistory, setSearchHistory] = useState<SearchHistoryItem[]>([])
+  const [searchHistory, setSearchHistory] = useState<SearchItem[]>([])
   const [isLoading, setIsLoading] = useState(true);
 
-  const addSearchHistory = (item: SearchHistoryItem) => {
+  const addSearchHistory = (item: SearchItem) => {
     setSearchHistory(prev => [item, ...prev])
   }
 
-  const updateSearchHistory = (id: string, updates: Partial<SearchHistoryItem>) => {
+  const updateSearchHistory = (id: string, updates: Partial<SearchItem>) => {
     setSearchHistory(prev =>
       prev.map(item => (item.id === id ? { ...item, ...updates } : item))
     )

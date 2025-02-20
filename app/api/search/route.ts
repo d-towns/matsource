@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { runSearchWorkflow } from '@/agents/searchAgent';
 import { createClient } from '@/utils/supabase/server';
 import redis from '@/utils/redis/client';
 
@@ -28,7 +27,6 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    console.log("Request received")
     const body = await request.json();
     // Expected parameters: carName, year, issues, location, (optionally budget and preferredBrands)
     const { carName, year, issues, location, budget, preferredBrands, recycledParts, retailParts} = body;
@@ -54,6 +52,8 @@ export async function POST(request: Request) {
       recycled_parts: recycledParts,
       retail_parts: retailParts,
       user_id: user.id,
+      status: 'setup',
+      step: 'Pending',
     }).select().single();
 
     if (error) {
@@ -61,10 +61,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Error inserting search' }, { status: 500 });
     }
 
-    const pubsub = redis.duplicate(); // Du
-
-    // console.log("Pubsub client created", pubsub);
-
+    const pubsub = redis.duplicate(); 
 
     // Publish the search event to Redis
     await pubsub.publish('search_events', JSON.stringify({
