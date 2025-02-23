@@ -67,6 +67,42 @@ export const SearchProvider = ({ children }: { children: ReactNode }) => {
     fetchSearchHistory();
   }, [setSearchHistory]);
 
+
+  useEffect(() => {
+    const eventSource = new EventSource('/api/search/events');
+
+    eventSource.onopen = () => {
+      console.log('SSE connection opened');
+    };
+
+    // Add handler for the custom event type
+    eventSource.addEventListener('search-status-update', (event: MessageEvent) => {
+      console.log("Received custom event:", event.data);
+      try {
+        const data = JSON.parse(event.data);
+        console.log("Parsed data:", data);
+        // Process the data accordingly here
+        if(data.searchId) {
+          updateSearchHistory(data.searchId, { step: data.step, status: data.status });
+        }
+      } catch (error) {
+        console.error("Error parsing event data:", error);
+      }
+    });
+
+    eventSource.onerror = (error) => {
+      console.error('SSE error:', error);
+      eventSource.close();
+    };
+
+    // Clean up on unmount if needed:
+    return () => {
+      eventSource.close();
+      console.log('SSE connection closed');
+    };
+
+  }, []);
+
   const value: SearchContextType = {
     searchHistory,
     isLoading,

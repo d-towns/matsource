@@ -10,50 +10,12 @@ export function SearchHistory() {
   const { searchHistory, updateSearchHistory, isLoading  } = useSearch();
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch('/api/search/events');
-      const reader = response.body
-        .pipeThrough(new TextDecoderStream())
-      .getReader();
-
-    const processStream = async () => {
-      try {
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-
-          // SSE format is "event: type\ndata: payload\n\n"
-          const messages = value.split('\n\n').filter(Boolean);
-          
-          for (const message of messages) {
-            const [eventLine, dataLine] = message.split('\n');
-            if (!eventLine || !dataLine) continue;
-
-            const eventType = eventLine.replace('event: ', '');
-            const data = JSON.parse(dataLine.replace('data: ', ''));
-
-            if (eventType === 'search-status-update' && data.id) {
-              updateSearchHistory(data.id, {
-                status: data.status,
-                step: data.step
-              });
-            }
-          }
-        }
-      } catch (error) {
-        console.error('Error reading stream:', error);
-      }
-    };
-
-    fetchData();
-    processStream();
-
-    return () => {
-      reader.cancel();
-    };
-  }
-  }, [updateSearchHistory]);
+  // useEffect(() => {
+  //   const response = await fetch('/api/search/events');
+  //   const reader = response.body
+  //     .pipeThrough(new TextDecoderStream())
+  //   .getReader();
+  // }, [updateSearchHistory]);
 
   return (
     <div className="h-full w-full sm:w-[600px] md:w-[700px] lg:w-[800px] xl:w-full mx-auto">
