@@ -18,9 +18,6 @@ export function Hero() {
       {/* Content */}
       <div className="relative pt-12 pb-20">
         <div className="container mx-auto px-4 text-center">
-          <div className="inline-block bg-gray-800/30 rounded-lg px-3 py-1 text-sm font-mono mb-6">
-            $ npm i @matsource/search
-          </div>
           <h1 className="text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
             Seamless Voice Communication<br /> & Intelligent Semantic Search
           </h1>
