@@ -25,12 +25,6 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 ENV NEXT_TELEMETRY_DISABLED 1
 
-# Copy environment variables for build time
-COPY .env .env.local* .env.production* ./
-
-# Set NODE_ENV for build
-ENV NODE_ENV=production
-
 RUN npm run build --legacy-peer-deps
 
 # Production image, copy all the files and run next
@@ -42,9 +36,6 @@ ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
-
-# Copy environment files for runtime
-COPY --from=builder /app/.env /app/.env.local* /app/.env.production* ./
 
 COPY --from=builder /app/public ./public
 
