@@ -20,6 +20,8 @@ export function SignInForm() {
   //   }
   // }
 
+  setIsLoading(false);
+
   return (
     <div className="grid gap-6">
       <form action={signIn}>
