@@ -55,8 +55,6 @@ export function SignInForm() {
             />
           </div>
           <button
-            disabled={isLoading}
-            onClick={() => setIsLoading(true)}
             className={`inline-flex items-center justify-center rounded-full bg-matsource-500 px-8 py-3 text-base font-medium text-white transition-colors hover:bg-matsource-400 focus:outline-none focus:ring-2 focus:ring-matsource-500 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none`}
           >
             {isLoading ? "Signing in..." : "Sign in"}

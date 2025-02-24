@@ -31,7 +31,7 @@ export function AuthStatusClient({ user }: AuthStatusClientProps) {
   return (
     <div className="flex items-center gap-4">
       <Link
-        href="/workspaces"
+        href="/workspaces/dashboard"
         className="bg-matsource-500 hover:bg-matsource-400 px-6 py-2 rounded-full text-white transition-colors"
       >
         Dashboard

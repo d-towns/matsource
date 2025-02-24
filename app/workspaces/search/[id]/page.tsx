@@ -66,12 +66,9 @@ async function getSearchResults(searchId: string) {
   }
 }
 
-export default async function SearchResultPage({
-  params
-}: {
-  params: { id: string }
-}) {
-  const results = await getSearchResults(params.id);
+export default async function SearchResultPage({params}: {params: Promise<{ id: string }>}) {
+  const { id } = await params;
+  const results = await getSearchResults(id);
 
   if (!results) {
     notFound();
