@@ -17,44 +17,7 @@ import { ModelsCombobox } from './modelsCombobox';
 import { Label } from "./ui/label";
 import { Textarea } from './ui/textarea';
 
-interface SearchResult {
-  identifiedParts: string[];
-  storeResults: {
-    store: {
-      id: string;
-      name: string;
-      phone?: string;
-      location: string;
-      url?: string;
-    };
-    availableParts: {
-      part: string;
-      year: string;
-      model: string;
-      grade: string;
-      stockNumber: string;
-      price: string;
-      distance: string;
-      deliveryTime: string;
-      inStock: boolean;
-      url: string;
-    }[];
-  }[];
-}
 
-interface SearchItem {
-  id?: string
-  make: string
-  model: string
-  year: number
-  issues: string
-  location: string
-  distance: string
-  preferred_brands: string[]
-  part_type: string
-  created_at: string
-  user_id: string
-}
 
 export default function SearchForm() {
   const { register, handleSubmit, setValue, watch } = useForm({
@@ -75,7 +38,7 @@ export default function SearchForm() {
 
   const selectedMake = watch("make");
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data) => {
     setLoading(true);
     setError("");
     try {
@@ -98,7 +61,7 @@ export default function SearchForm() {
         localStorage.setItem('searchResults', JSON.stringify(responseData));
         addSearchHistory(responseData);
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error("Error:", err);
       setError("Error occurred while performing search.");
     } finally {
@@ -113,7 +76,7 @@ export default function SearchForm() {
           <div className="grid grid-cols-3 gap-4">
             <div className="space-y-2">
               <Label htmlFor="partType">Part Type</Label>
-              <Select onValueChange={(value) => setValue("partType", value)}>
+              <Select onValueChange={(value: string) => setValue("partType", value)}>
                 <SelectTrigger id="partType">
                   <SelectValue placeholder="Recycled/Retail" />
                 </SelectTrigger>
@@ -125,13 +88,13 @@ export default function SearchForm() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="make">Make</Label>
-              <MakesCombobox onSelect={(value) => setValue("make", value)} />
+              <MakesCombobox onSelect={(value: string) => setValue("make", value)} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="model">Model</Label>
               <ModelsCombobox 
                 make={selectedMake} 
-                onSelect={(value) => setValue("model", value)} 
+                onSelect={(value : string) => setValue("model", value)} 
               />
             </div>
           </div>
@@ -158,7 +121,7 @@ export default function SearchForm() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="distance">Distance</Label>
-              <Select onValueChange={(value) => setValue("distance", value)}>
+              <Select onValueChange={(value: string) => setValue("distance", value)}>
                 <SelectTrigger id="distance">
                   <SelectValue placeholder="Select distance" />
                 </SelectTrigger>

@@ -34,7 +34,6 @@ const RecycledResponseSchema = z.object({
   ),
 });
 
-type SearchResults = z.infer<typeof RecycledResponseSchema>;
 
 async function getSearchResults(searchId: string) {
   const supabase = await createClient();

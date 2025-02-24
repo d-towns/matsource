@@ -18,7 +18,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { carMakes } from "@/utils/carData"
 import { carModels } from "@/utils/carData"
 
 interface ModelsComboboxProps {
