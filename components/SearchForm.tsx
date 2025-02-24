@@ -1,10 +1,24 @@
 "use client";
 
 // import { SearchAgentResult } from '@/agents/searchAgent';
-import React, { useState } from 'react';
+import React from 'react';
+import { useForm } from 'react-hook-form';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useSearch } from '@/contexts/search-context'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { PartyPopper } from 'lucide-react';
+import { Input } from './ui/input';
+import { MakesCombobox } from './makesCombobox';
+import { ModelsCombobox } from './modelsCombobox';
+import { Label } from "./ui/label";
+import { Textarea } from './ui/textarea';
 
 interface SearchResult {
   identifiedParts: string[];
@@ -31,44 +45,51 @@ interface SearchResult {
   }[];
 }
 
-interface SearchHistory {
-  id: string
-  car_name: string
+interface SearchItem {
+  id?: string
+  make: string
+  model: string
   year: number
   issues: string
   location: string
+  distance: string
   preferred_brands: string[]
-  recycled_parts: boolean
-  retail_parts: boolean
+  part_type: string
   created_at: string
   user_id: string
 }
 
 export default function SearchForm() {
-  const [carName, setCarName] = useState("");
-  const [year, setYear] = useState<number | "">("");
-  const [issues, setIssues] = useState("");
-  const [location, setLocation] = useState("");
-  const [preferredBrands, setPreferredBrands] = useState("");
-  const [retailParts, setRetailParts] = useState<boolean>(false);
-  const [recycledParts, setRecycledParts] = useState<boolean>(false);
-  const [results, setResults] = useState<SearchResult | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const { addSearchHistory } = useSearch()
+  const { register, handleSubmit, setValue, watch } = useForm({
+    defaultValues: {
+      make: "",
+      model: "",
+      year: "",
+      issues: "",
+      location: "",
+      distance: "",
+      preferredBrands: "",
+      partType: "",
+    }
+  });
+  const [results, setResults] = React.useState<SearchResult | null>(null);
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState("");
+  const { addSearchHistory } = useSearch();
+
+  const selectedMake = watch("make");
 
   const loadTestDataForm = () => {
-    setCarName("Jeep Patriot");
-    setYear(2008);
-    setIssues("needs new alternator");
-    setLocation("48505");
-    setPreferredBrands("");
-    setRetailParts(false);
-    setRecycledParts(true);
-  }
+    setValue("make", "Jeep");
+    setValue("model", "Patriot");
+    setValue("year", "2008");
+    setValue("issues", "needs new alternator");
+    setValue("location", "48505");
+    setValue("preferredBrands", "");
+    setValue("partType", "recycled");
+  };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: any) => {
     setLoading(true);
     setError("");
     setResults(null);
@@ -79,23 +100,19 @@ export default function SearchForm() {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          carName,
-          year: Number(year),
-          issues,
-          location,
-          preferredBrands: preferredBrands.split(',').map(brand => brand.trim()),
-          retailParts,
-          recycledParts
+          ...data,
+          year: Number(data.year),
+          preferredBrands: data.preferredBrands.split(',').map((brand: string) => brand.trim()),
         })
       });
       if (!res.ok) {
         const err = await res.json();
         setError(err.error || "An error occurred");
       } else {
-        const data = await res.json();
-        localStorage.setItem('searchResults', JSON.stringify(data));
-        setResults(data);
-        addSearchHistory(data);
+        const responseData = await res.json();
+        localStorage.setItem('searchResults', JSON.stringify(responseData));
+        setResults(responseData);
+        addSearchHistory(responseData);
       }
     } catch (err: any) {
       console.error("Error:", err);
@@ -106,71 +123,95 @@ export default function SearchForm() {
   };
 
   return (
-    <div className="h-full w-full sm:w-[600px] md:w-[700px] lg:w-[800px] xl:w-full mx-auto">
-      <div className="p-4 border rounded bg-background lg:sticky lg:top-4">
-        <Button onClick={loadTestDataForm}>Load Test Data</Button>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-          <input
-            type="text"
-            placeholder="Car Name"
-            value={carName}
-            onChange={(e) => setCarName(e.target.value)}
-            className="p-2 border rounded"
-            required
-          />
-          <input
-            type="number"
-            placeholder="Year"
-            value={year}
-            onChange={(e) => setYear(parseInt(e.target.value))}
-            className="p-2 border rounded"
-            required
-          />
-          <textarea
-            placeholder="Describe the issues with your car"
-            value={issues}
-            onChange={(e) => setIssues(e.target.value)}
-            className="p-2 border rounded"
-            required
-          />
-          <input
-            type="text"
-            placeholder="Location"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            className="p-2 border rounded"
-            required
-          />
-          <input
-            type="text"
-            placeholder="Preferred Brands (comma-separated)"
-            value={preferredBrands}
-            onChange={(e) => setPreferredBrands(e.target.value)}
-            className="p-2 border rounded"
-          />
-          <div>
-            <input
-              type="checkbox"
-              id="retailParts"
-              name="retailParts"
-              checked={retailParts}
-              onChange={(e) => setRetailParts(e.target.checked)}
-            />
-            <label htmlFor="retailParts">Search for retail parts</label>
+    <div className="w-full max-w-4xl mx-auto">
+      <div className="p-4 bg-background">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div className="grid grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="partType">Part Type</Label>
+              <Select onValueChange={(value) => setValue("partType", value)}>
+                <SelectTrigger id="partType">
+                  <SelectValue placeholder="Recycled/Retail" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="recycled">Recycled</SelectItem>
+                  <SelectItem value="retail">Retail</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="make">Make</Label>
+              <MakesCombobox onSelect={(value) => setValue("make", value)} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="model">Model</Label>
+              <ModelsCombobox 
+                make={selectedMake} 
+                onSelect={(value) => setValue("model", value)} 
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="year">Year</Label>
+              <Input
+                id="year"
+                type="number"
+                placeholder="Enter year"
+                className="w-full"
+                {...register("year", {
+                  min: {
+                    value: 1900,
+                    message: "Year must be after 1900"
+                  },
+                  max: {
+                    value: new Date().getFullYear() + 1,
+                    message: "Year cannot be in the future"
+                  }
+                })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="distance">Distance</Label>
+              <Select onValueChange={(value) => setValue("distance", value)}>
+                <SelectTrigger id="distance">
+                  <SelectValue placeholder="Select distance" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="30">30 miles</SelectItem>
+                  <SelectItem value="50">50 miles</SelectItem>
+                  <SelectItem value="100">100 miles</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="location">ZIP Code</Label>
+              <Input
+                id="location"
+                type="text"
+                placeholder="Enter ZIP"
+                className="w-full"
+                {...register("location")}
+              />
+            </div>
           </div>
           <div>
-            <input
-              type="checkbox"
-              id="recycledParts"
-              name="recycledParts"
-              checked={recycledParts}
-              onChange={(e) => setRecycledParts(e.target.checked)}
+            <Label htmlFor="issues">Issues</Label>
+            <Textarea
+              id="issues"
+              placeholder="Enter issues"
+              className="w-full"
+              {...register("issues")}
             />
-            <label htmlFor="recycledParts">Search for recycled parts</label>
           </div>
-          <button type="submit" className="bg-primary text-white p-2 rounded">
-            {loading ? "Searching..." : "Search"}
-          </button>
+
+          <Button 
+            type="submit" 
+            className="w-full bg-purple-600 hover:bg-purple-700"
+          >
+            {loading ? "Searching..." : "Show matches"}
+          </Button>
         </form>
       </div>
 

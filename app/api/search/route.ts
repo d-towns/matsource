@@ -3,8 +3,15 @@ import { createClient } from '@/utils/supabase/server';
 import redis from '@/utils/redis/client';
 
 
-export async function GET() {
+export async function GET(request: Request) {
   const supabase = await createClient();
+  const { searchParams } = new URL(request.url);
+  
+  // Get pagination parameters from query string
+  const page = parseInt(searchParams.get('page') || '1');
+  const pageSize = parseInt(searchParams.get('pageSize') || '4');
+  const start = (page - 1) * pageSize;
+  const end = start + pageSize - 1;
 
   const { data: { user } } = await supabase.auth.getUser();
   
@@ -12,26 +19,38 @@ export async function GET() {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  // Get total count for pagination
+  const { count } = await supabase
+    .from('searches')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', user.id);
+
+  // Get paginated results
   const { data: searches, error } = await supabase
     .from('searches')
     .select('*')
     .eq('user_id', user.id)
-    .order('created_at', { ascending: false });
+    .order('created_at', { ascending: false })
+    .range(start, end);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  return NextResponse.json(searches);
+  return NextResponse.json({
+    searches,
+    totalPages: Math.ceil((count || 0) / pageSize),
+    currentPage: page
+  });
 }
 
 export async function POST(request: Request) {
   try {
     const body = await request.json();
     // Expected parameters: carName, year, issues, location, (optionally budget and preferredBrands)
-    const { carName, year, issues, location, budget, preferredBrands, recycledParts, retailParts} = body;
+    const { make, model, year, issues, location, distance, preferredBrands, partType} = body;
     
-    if (!carName || !year || !issues || !location) {
+    if (!make || !model || !year || !issues || !location) {
       return NextResponse.json({ error: 'Missing required parameters' }, { status: 400 });
     }
 
@@ -43,14 +62,14 @@ export async function POST(request: Request) {
     }
     // insert a new row into the search table
     const { data, error } = await supabase.from('searches').insert({
-      car_name: carName,
+      make: make,
+      model: model,
       year: year,
       issues: issues,
       location: location,
-      budget: budget,
+      distance: distance,
       preferred_brands: preferredBrands,
-      recycled_parts: recycledParts,
-      retail_parts: retailParts,
+      part_search_type: partType,
       user_id: user.id,
       status: 'setup',
       step: 'Pending',
@@ -66,14 +85,14 @@ export async function POST(request: Request) {
     // Publish the search event to Redis
     await pubsub.publish('search_events', JSON.stringify({
       id: data.id,
-      carName: data.car_name,
+      make: data.make,
+      model: data.model,
       year: data.year,
       issues: data.issues,
       location: data.location,
-      budget: data.budget,
+      distance: data.distance,
       preferredBrands: data.preferred_brands,
-      recycledParts: data.recycled_parts,
-      retailParts: data.retail_parts,
+      partSearchType: data.part_search_type,
       userId: data.user_id,
       createdAt: data.created_at
     }));

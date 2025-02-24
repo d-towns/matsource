@@ -4,13 +4,14 @@ import { createContext, useContext, useState, ReactNode, useEffect } from 'react
 
 export interface SearchItem {
   id: string;
-  car_name: string;
+  make: string;
+  model: string;  
   year: number;
   issues: string;
   location: string;
   preferred_brands: string[];
-  recycled_parts: boolean;
-  retail_parts: boolean;
+  part_search_type: string;
+  distance: string;
   created_at: string;
   user_id: string;
   status?: 'active' | 'setup' | 'completed' | 'failed';
@@ -20,6 +21,9 @@ export interface SearchItem {
 interface SearchContextType {
   searchHistory: SearchItem[];
   isLoading: boolean;
+  currentPage: number;
+  totalPages: number;
+  setCurrentPage: (page: number) => void;
   setSearchHistory: (history: SearchItem[]) => void;
   addSearchHistory: (item: SearchItem) => void;
   updateSearchHistory: (id: string, updates: Partial<SearchItem>) => void;
@@ -30,6 +34,9 @@ const SearchContext = createContext<SearchContextType | undefined>(undefined)
 export const SearchProvider = ({ children }: { children: ReactNode }) => {
   const [searchHistory, setSearchHistory] = useState<SearchItem[]>([])
   const [isLoading, setIsLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const pageSize = 4;
 
   const addSearchHistory = (item: SearchItem) => {
     setSearchHistory(prev => [item, ...prev])
@@ -45,28 +52,28 @@ export const SearchProvider = ({ children }: { children: ReactNode }) => {
     const fetchSearchHistory = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch('/api/search');
+        const response = await fetch(`/api/search?page=${currentPage}&pageSize=${pageSize}`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        // if there is no step or status, set it to "pending"
-        const updatedData = data.map(item => ({
+        // Update search history and pagination info
+        const updatedData = data.searches.map(item => ({
           ...item,
           step: item.step || "pending",
           status: item.status || "pending"
         }));
         setSearchHistory(updatedData);
+        setTotalPages(data.totalPages);
         setIsLoading(false);
       } catch (error) {
         console.error("Could not fetch search history:", error);
-        // Handle error appropriately, maybe set an error state
+        setIsLoading(false);
       }
     };
 
     fetchSearchHistory();
-  }, [setSearchHistory]);
-
+  }, [currentPage]); // Add currentPage as dependency
 
   useEffect(() => {
     const eventSource = new EventSource('/api/search/events');
@@ -106,6 +113,9 @@ export const SearchProvider = ({ children }: { children: ReactNode }) => {
   const value: SearchContextType = {
     searchHistory,
     isLoading,
+    currentPage,
+    totalPages,
+    setCurrentPage,
     setSearchHistory,
     addSearchHistory,
     updateSearchHistory,

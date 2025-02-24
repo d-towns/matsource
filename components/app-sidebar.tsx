@@ -56,7 +56,7 @@ const navMenuItems = {
   navMain: [
     {
       title: "Dashboard",
-      url: "dashboard",
+      url: "/workspaces/dashboard",
       icon: HomeIcon,
     },
     {
@@ -67,11 +67,11 @@ const navMenuItems = {
       items: [
         {
           title: "Parts",
-          url: "search/parts",
+          url: "/workspaces/search/parts",
         },
         {
           title: "Vehicles",
-          url: "search/vehicles",
+          url: "/workspaces/search/vehicles",
         },
       ],
     },
