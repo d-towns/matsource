@@ -2,67 +2,73 @@
 
 import { useState } from "react";
 import { signIn } from "@/app/(home)/signin/actions";
+import { useForm } from "react-hook-form";
+
+interface SignInFormData {
+  email: string;
+  password: string;
+}
+
+function SubmitButton({ isLoading }: { isLoading: boolean }) {
+  return (
+    <button
+      type="submit"
+      disabled={isLoading}
+      className="inline-flex items-center justify-center rounded-full bg-matsource-500 px-8 py-3 text-base font-medium text-white transition-colors hover:bg-matsource-400 focus:outline-none focus:ring-2 focus:ring-matsource-500 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none"
+    >
+      {isLoading ? "Signing in..." : "Sign in"}
+    </button>
+  );
+}
 
 export function SignInForm() {
+  const { register, handleSubmit, formState: { errors } } = useForm<SignInFormData>();
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  // const router = useRouter();
-  // const supabase = createClient();
 
-  // async function handleSubmit(formData: FormData) {
-  //   setIsLoading(true);
-  //   setError(null);
-
-  //   const result = await signIn(formData);
-    
-  //   if (result?.error) {
-  //     setError(result.error);
-  //     setIsLoading(false);
-  //   }
-  // }
-
-  setIsLoading(false);
+  async function onSubmit(data: SignInFormData) {
+    setIsLoading(true);
+    const formData = new FormData();
+    formData.append('email', data.email);
+    formData.append('password', data.password);
+    await signIn(formData);
+    setIsLoading(false);
+  }
 
   return (
     <div className="grid gap-6">
-      <form action={signIn}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid gap-4">
           <div className="grid gap-2">
             <label className="text-base text-gray-300" htmlFor="email">
               Email
             </label>
             <input
-              name="email"
-              id="email"
+              {...register("email", { required: true })}
               type="email"
               autoCapitalize="none"
               autoComplete="email"
               autoCorrect="off"
-              disabled={isLoading}
               className="rounded-md border border-gray-800 bg-black px-4 py-3 text-base text-gray-300 focus:border-matsource-500 focus:outline-none focus:ring-2 focus:ring-matsource-500"
-              required
             />
+            {errors.email && <span className="text-red-500">Email is required</span>}
           </div>
           <div className="grid gap-2">
             <label className="text-base text-gray-300" htmlFor="password">
               Password
             </label>
             <input
-              name="password"
-              id="password"
+              {...register("password", { required: true })}
               type="password"
               autoComplete="current-password"
-              disabled={isLoading}
               className="rounded-md border border-gray-800 bg-black px-4 py-3 text-base text-gray-300 focus:border-matsource-500 focus:outline-none focus:ring-2 focus:ring-matsource-500"
-              required
             />
+            {errors.password && <span className="text-red-500">Password is required</span>}
           </div>
-          <button
-            className={`inline-flex items-center justify-center rounded-full bg-matsource-500 px-8 py-3 text-base font-medium text-white transition-colors hover:bg-matsource-400 focus:outline-none focus:ring-2 focus:ring-matsource-500 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none`}
-          >
-            {isLoading ? "Signing in..." : "Sign in"}
-          </button>
+          <SubmitButton isLoading={isLoading} />
         </div>
       </form>
+
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t border-gray-800" />
@@ -71,9 +77,11 @@ export function SignInForm() {
           <span className="w-fit bg-black px-2 text-gray-500">Or continue with</span>
         </div>
       </div>
+
       <button
         type="button"
-        disabled={isLoading}
+        disabled={isGoogleLoading}
+        onClick={() => setIsGoogleLoading(true)}
         className="inline-flex items-center justify-center rounded-full border border-gray-800 bg-black px-8 py-2 text-sm font-medium text-gray-300 transition-colors hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-matsource-500 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none"
       >
         <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
