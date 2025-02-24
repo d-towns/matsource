@@ -1,10 +1,8 @@
 "use client";
 
-// import { SearchAgentResult } from '@/agents/searchAgent';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { Button } from './ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useSearch } from '@/contexts/search-context'
 import {
   Select,
@@ -13,7 +11,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { PartyPopper } from 'lucide-react';
 import { Input } from './ui/input';
 import { MakesCombobox } from './makesCombobox';
 import { ModelsCombobox } from './modelsCombobox';
@@ -72,27 +69,15 @@ export default function SearchForm() {
       partType: "",
     }
   });
-  const [results, setResults] = React.useState<SearchResult | null>(null);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState("");
   const { addSearchHistory } = useSearch();
 
   const selectedMake = watch("make");
 
-  const loadTestDataForm = () => {
-    setValue("make", "Jeep");
-    setValue("model", "Patriot");
-    setValue("year", "2008");
-    setValue("issues", "needs new alternator");
-    setValue("location", "48505");
-    setValue("preferredBrands", "");
-    setValue("partType", "recycled");
-  };
-
   const onSubmit = async (data: any) => {
     setLoading(true);
     setError("");
-    setResults(null);
     try {
       const res = await fetch("/api/search", {
         method: "POST",
@@ -111,7 +96,6 @@ export default function SearchForm() {
       } else {
         const responseData = await res.json();
         localStorage.setItem('searchResults', JSON.stringify(responseData));
-        setResults(responseData);
         addSearchHistory(responseData);
       }
     } catch (err: any) {

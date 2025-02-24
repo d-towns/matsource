@@ -40,7 +40,7 @@ export function Features() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-          {features.map((feature, index) => (
+          {features.map((feature) => (
             <div
               key={feature.title}
               className="relative rounded-2xl backdrop-blur-sm border border-gray-800 bg-gray-900/40 p-8 hover:bg-gray-900/60 transition-colors group"

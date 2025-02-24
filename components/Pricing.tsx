@@ -66,7 +66,7 @@ export function Pricing() {
             Simple, transparent pricing
           </h2>
           <p className="text-lg text-gray-300">
-            Choose the plan that's right for your business
+            Choose the right plan for your business
           </p>
         </div>
 

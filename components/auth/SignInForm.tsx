@@ -1,17 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { createClient } from "@/utils/supabase/client";
-import { useRouter } from "next/navigation";
 import { signIn } from "@/app/(home)/signin/actions";
 
 export function SignInForm() {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
-  const supabase = createClient();
+  // const router = useRouter();
+  // const supabase = createClient();
 
   // async function handleSubmit(formData: FormData) {
   //   setIsLoading(true);
@@ -28,11 +23,6 @@ export function SignInForm() {
   return (
     <div className="grid gap-6">
       <form action={signIn}>
-        {error && (
-          <div className="text-red-500 text-sm mb-4">
-            {error}
-          </div>
-        )}
         <div className="grid gap-4">
           <div className="grid gap-2">
             <label className="text-base text-gray-300" htmlFor="email">
@@ -66,6 +56,7 @@ export function SignInForm() {
           </div>
           <button
             disabled={isLoading}
+            onClick={() => setIsLoading(true)}
             className={`inline-flex items-center justify-center rounded-full bg-matsource-500 px-8 py-3 text-base font-medium text-white transition-colors hover:bg-matsource-400 focus:outline-none focus:ring-2 focus:ring-matsource-500 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none`}
           >
             {isLoading ? "Signing in..." : "Sign in"}

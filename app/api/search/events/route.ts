@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   const encoder = new TextEncoder();
-  let controller: ReadableStreamController<any>;
+  let controller: ReadableStreamController<Uint8Array>;
   let intervalId: NodeJS.Timeout; // Store the interval ID
 
   const pubsub = redis.duplicate();

@@ -1,8 +1,5 @@
 import { createClient } from '@/utils/supabase/server'
 import { notFound } from 'next/navigation'
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
 import { DataTable } from "@/components/ui/data-table"
 import { columns } from "@/components/parts-columns"
 import { z } from 'zod'

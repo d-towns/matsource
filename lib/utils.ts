@@ -39,7 +39,7 @@ function describeZodSchema(schema: z.ZodTypeAny): SchemaDescription {
     if (def.minLength !== null) desc.minLength = def.minLength;
     if (def.maxLength !== null) desc.maxLength = def.maxLength;
     if (def.checks) {
-      def.checks.forEach((check: any) => {
+      def.checks.forEach((check) => {
         if (check.kind === 'regex') desc.pattern = check.regex.source;
       });
     }
@@ -49,7 +49,7 @@ function describeZodSchema(schema: z.ZodTypeAny): SchemaDescription {
   if (schema instanceof z.ZodNumber) {
     const desc: SchemaDescription = { type: 'number' };
     if (def.checks) {
-      def.checks.forEach((check: any) => {
+      def.checks.forEach((check) => {
         if (check.kind === 'min') desc.minimum = check.value;
         if (check.kind === 'max') desc.maximum = check.value;
       });

@@ -100,7 +100,7 @@ export async function POST(request: Request) {
     console.log('Search inserted and event published successfully');
     
     return NextResponse.json(data, { status: 200 });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error in search workflow:', error);
     return NextResponse.json({ error: `Error in search workflow: ${error}` }, { status: 500 });
   }
