@@ -22,14 +22,11 @@ head.appendChild(link);
 
 export function Hero() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isTyping, setIsTyping] = useState(true);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIsTyping(false);
       setTimeout(() => {
         setCurrentIndex((prev) => (prev + 1) % industries.length);
-        setIsTyping(true);
       }, 500); // Wait for exit animation
     }, 3000); // Change every 3 seconds
 
