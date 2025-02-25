@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Helmet } from "react-helmet";
-import Head from 'next/head';
 import Script from 'next/script';
 
 const industries = [
@@ -84,9 +82,9 @@ export function Hero() {
           </p>
           <div>
           <>
-<Script type="" dangerouslySetInnerHTML={{__html: cssLoader}}></Script>
+<Script id="css-loader" type="" dangerouslySetInnerHTML={{__html: cssLoader}}></Script>
 
-<Script src="https://prod-waitlist-widget.s3.us-east-2.amazonaws.com/getwaitlist.min.js"></Script>
+<Script id="js-loader" src="https://prod-waitlist-widget.s3.us-east-2.amazonaws.com/getwaitlist.min.js"></Script>
 <h3>We are currently in beta. Sign up for the waitlist to get early access.</h3>
 <div id="getWaitlistContainer" className="w-full justify-center"  data-waitlist_id="25576" data-widget_type="WIDGET_2"></div>
 </>
