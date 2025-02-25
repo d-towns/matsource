@@ -1,9 +1,10 @@
 'use client'
 
+import { User } from '@supabase/supabase-js'
 import Link from 'next/link'
 
 interface AuthStatusClientProps {
-  user: any | null
+  user: User | null
 }
 
 export function AuthStatusClient({ user }: AuthStatusClientProps) {
