@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { NavMenu } from "@/components/ui/nav-menu";
 import { AuthStatus } from "@/components/auth/auth-status";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export function Navbar() {
   return (
-    <header className="relative z-50 bg-black text-white">
+    <header className="relative z-50">
       {/* Content */}
       <div className="container mx-auto px-4 py-6">
         <div className="flex items-center justify-between">
@@ -21,8 +22,11 @@ export function Navbar() {
             <NavMenu />
           </div>
 
-          {/* Right Side - Auth Status */}
-          <AuthStatus />
+          {/* Right Side - Auth Status and Theme Toggle */}
+          <div className="flex items-center gap-4">
+            <AuthStatus />
+            <ThemeToggle />
+          </div>
         </div>
       </div>
     </header>

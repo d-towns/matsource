@@ -1,33 +1,95 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Helmet } from "react-helmet";
+import Head from 'next/head';
+import Script from 'next/script';
+
+const industries = [
+  "Home Services",
+  "Auto Service",
+  "Contractors",
+  "Electrical"
+];
+
+const cssLoader = `
+let head = document.getElementsByTagName('HEAD')[0];
+let link = document.createElement('link');
+link.rel = 'stylesheet';
+link.type = 'text/css';
+link.href = 'https://prod-waitlist-widget.s3.us-east-2.amazonaws.com/getwaitlist.min.css';
+head.appendChild(link);
+`
+
 export function Hero() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isTyping, setIsTyping] = useState(true);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsTyping(false);
+      setTimeout(() => {
+        setCurrentIndex((prev) => (prev + 1) % industries.length);
+        setIsTyping(true);
+      }, 500); // Wait for exit animation
+    }, 3000); // Change every 3 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section className="relative">
       {/* Gradient background with fade to black */}
       <div className="absolute inset-0 
-        bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))]
+       
         from-purple-900/90 via-blue-900/50 to-transparent"
       />
       
       {/* Add a subtle fade at the top */}
-      <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black to-transparent" />
+      <div className="absolute inset-x-0 top-0 h-32 " />
       
       {/* Add a stronger fade at the bottom */}
-      <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-black via-black/90 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-64  to-transparent" />
       
       {/* Content */}
       <div className="relative pt-12 pb-20">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
-            Seamless Voice Communication<br /> & Intelligent Semantic Search
+          <h1 className="text-6xl font-bold mb-6">
+            <span
+              className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary"
+            >
+              AI Automation Tools for{'  '} <br />
+            </span>
+            <AnimatePresence mode="wait">
+              <motion.span
+                key={currentIndex}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ 
+                  opacity: 1, 
+                  y: 0, 
+                  transition: { 
+                    type: "spring", stiffness: 200, damping: 20 
+                  }
+                }}
+                exit={{ opacity: 0, y: -20 }}
+                className="inline-block bg-clip-text"
+              >
+                {industries[currentIndex]}
+              </motion.span>
+            </AnimatePresence>
           </h1>
-          <p className="text-xl text-gray-300 mb-12 max-w-2xl mx-auto">
-            Automate inbound and outbound voice calls paired with cutting-edge semantic search designed for home and auto service companies.
+          <p className="text-xl mb-12 max-w-2xl mx-auto">
+            Boost revenue and save countless hours with AI-powered call automation and automated parts sourcing.
           </p>
           <div>
-            <button className="inline-flex items-center justify-center font-medium focus:outline-none focus:ring-2 focus:ring-matsource-500 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none h-12 px-8 bg-matsource-500 hover:bg-matsource-400 transition-colors rounded-full">
-              Try it out
-            </button>
+          <>
+<Script type="" dangerouslySetInnerHTML={{__html: cssLoader}}></Script>
+
+<Script src="https://prod-waitlist-widget.s3.us-east-2.amazonaws.com/getwaitlist.min.js"></Script>
+<h3>We are currently in beta. Sign up for the waitlist to get early access.</h3>
+<div id="getWaitlistContainer" className="w-full justify-center"  data-waitlist_id="25576" data-widget_type="WIDGET_2"></div>
+</>
           </div>
         </div>
       </div>

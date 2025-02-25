@@ -7,6 +7,8 @@ import {
   CreditCard,
   LogOut,
   Sparkles,
+  Moon,
+  Sun,
 } from "lucide-react"
 
 import {
@@ -30,10 +32,14 @@ import {
 } from "@/components/ui/sidebar"
 import { useUser } from "@/hooks/use-user"
 import { signOut } from "@/app/(home)/signin/actions"
+import { useTheme } from "next-themes"
+import { usePathname } from "next/navigation"
 
 export function NavUser() {
   const { isMobile } = useSidebar()
   const { user } = useUser()
+  const { resolvedTheme, setTheme } = useTheme()
+  const pathname = usePathname()
 
   if (!user) return null
 
@@ -103,6 +109,27 @@ export function NavUser() {
                 Notifications
               </DropdownMenuItem>
             </DropdownMenuGroup>
+            {
+              pathname?.startsWith("/workspaces") && (
+                <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem
+                      onClick={() =>
+                        setTheme(resolvedTheme === "dark" ? "light" : "dark")
+                      }
+                    >
+                      {resolvedTheme === "dark" ? (
+                        <Sun className="mr-2 h-4 w-4" />
+                      ) : (
+                        <Moon className="mr-2 h-4 w-4" />
+                      )}
+                      Switch to {resolvedTheme === "dark" ? "Light" : "Dark"} Mode
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </>
+              )
+            }
             <DropdownMenuSeparator />
             <form action={signOut}>
               <DropdownMenuItem asChild>
