@@ -2,30 +2,35 @@ import Link from "next/link";
 import { NavMenu } from "@/components/ui/nav-menu";
 import { AuthStatus } from "@/components/auth/auth-status";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { MobileNav } from "@/components/MobileNav";
 
 export function Navbar() {
   return (
-    <header className="relative z-50">
-      {/* Content */}
-      <div className="container mx-auto px-4 py-6">
-        <div className="flex items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center">
-            <span className="text-3xl mr-2" role="img" aria-label="Construction Worker">
-              👷‍♂️
-            </span>
-            <span className="text-xl font-bold">Matsource</span>
-          </Link>
-
-          {/* Center Navigation */}
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container h-14 max-w-screen-2xl">
+        <div className="relative flex h-14 items-center justify-between">
+          {/* Left - Logo */}
+          <div className="flex items-center">
+            <Link href="/" className="flex items-center">
+              <span className="text-3xl mr-2" role="img" aria-label="Construction Worker">
+                👷‍♂️
+              </span>
+              <span className="text-xl font-bold">Matsource</span>
+            </Link>
+          </div>
+          
+          {/* Center - Navigation Menu */}
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:block">
             <NavMenu />
           </div>
-
-          {/* Right Side - Auth Status and Theme Toggle */}
+          
+          {/* Right - Auth & Theme */}
           <div className="flex items-center gap-4">
-            <AuthStatus />
-            <ThemeToggle />
+            <div className="hidden md:flex items-center gap-4">
+              <AuthStatus />
+              <ThemeToggle />
+            </div>
+            <MobileNav />
           </div>
         </div>
       </div>

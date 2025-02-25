@@ -62,10 +62,10 @@ export function Pricing() {
     <section className="py-20">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
+          <h2 className="text-4xl font-bold mb-4 bg-clip-text  bg-gradient-to-r from-white to-gray-400">
             Simple, transparent pricing
           </h2>
-          <p className="text-lg text-gray-300">
+          <p className="text-lg">
             Choose the right plan for your business
           </p>
         </div>
