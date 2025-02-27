@@ -39,6 +39,7 @@ export function FeatureTicker({ features, speed = 70 }: FeatureTickerProps) {
   return (
     <div className="relative overflow-hidden" ref={containerRef}>
       <motion.div
+        key={`ticker-${features.length}`}
         ref={contentRef}
         className="flex whitespace-nowrap py-3"
         animate={{
@@ -54,15 +55,15 @@ export function FeatureTicker({ features, speed = 70 }: FeatureTickerProps) {
         }}
       >
         {duplicatedFeatures.map((feature, index) => (
-          <>
+          <div key={`${feature}-${index}`} className="flex items-center">
           <div
             key={`${feature}-${index}`}
             className="inline-flex items-center mx-6 text-xs md:text-base text-gray-400"
           >
             {feature}
           </div>
-          <Separator orientation="vertical" className="h-8 hidden md:block" />
-          </>
+          <Separator key={`${feature}-${index}-separator`} orientation="vertical" className="h-4 hidden md:block" />
+          </div>
         ))}
       </motion.div>
     </div>

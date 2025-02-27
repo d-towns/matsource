@@ -192,19 +192,7 @@ export function Features() {
     
     return () => unsubscribe();
   }, [scrollYProgress]);
-  
-  // Calculate how much of the current step is complete
-  const getCurrentStepProgress = () => {
-    const stepsCount = journeySteps.length;
-    const stepSize = 1 / stepsCount;
-    const currentStepStart = activeStep * stepSize;
-    
-    // How far through the current step (0-1)
-    return Math.min(
-      Math.max((scrollProgress - currentStepStart) / stepSize, 0),
-      1
-    );
-  };
+
   
   return (
     <section className="py-20 bg-background relative overflow-hidden">
