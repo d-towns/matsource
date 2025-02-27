@@ -23,7 +23,7 @@ export function FeatureHero({ title, subtitle, description }: FeatureHeroProps) 
             </span>
           </h1>
           
-          <h2 className="text-xl md:text-2xl font-medium mb-6 bg-clip-text text-transparent bg-gradient-to-r from-matsource-500 to-purple-400">
+          <h2 className="text-xl md:text-2xl font-medium mb-6 bg-clip-text text-secondary-foreground">
             {subtitle}
           </h2>
           

@@ -32,11 +32,7 @@ const solutions = [
 ];
 
 const resources = [
-  {
-    title: "Documentation",
-    href: "/docs",
-    description: "Technical guides and API documentation for developers."
-  },
+
   {
     title: "Case Studies",
     href: "/case-studies",
@@ -46,6 +42,11 @@ const resources = [
     title: "Blog",
     href: "/blog",
     description: "Latest updates, best practices, and industry insights."
+  },,
+  {
+    title: "About",
+    href: "/about",
+    description: "Learn more about Matsource and our mission.",
   }
 ];
 

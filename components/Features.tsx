@@ -93,7 +93,7 @@ const JourneyStep = ({ step, index, isActive }: JourneyStepProps) => {
     <div 
       ref={stepRef}
       className={cn(
-        "relative grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-16 py-24 transition-opacity",
+        "relative grid grid-cols-1 lg:grid-cols-5 gap-8 md:gap-16 py-24 transition-opacity",
         isInView ? "opacity-100" : "opacity-50"
       )}
       data-index={index}
@@ -207,7 +207,7 @@ export function Features() {
         {/* Journey Container */}
         <div ref={containerRef} className="relative">
           {/* The vertical timeline line */}
-          <div className="absolute left-6 md:left-1/2 top-12 bottom-12 w-0.5 bg-gray-800/50">
+          <div className="absolute left-6 lg:left-1/2 top-12 bottom-12 w-0.5 bg-gray-800/50">
             {/* The filled line that grows with scroll - now using smoothProgress */}
             <motion.div
               className="absolute top-0 left-0 w-full bg-gradient-to-b from-blue-500 via-purple-500 to-amber-500"

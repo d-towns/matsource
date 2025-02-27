@@ -32,16 +32,16 @@ const solutions = [
 
 const resources = [
   {
-    title: "Documentation",
-    href: "/docs",
-  },
-  {
     title: "Case Studies",
     href: "/case-studies",
   },
   {
     title: "Blog",
     href: "/blog",
+  },
+  {
+    title: "About",
+    href: "/about",
   }
 ];
 
