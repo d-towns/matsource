@@ -14,60 +14,61 @@ import {
   CheckCircle2, 
   Sparkles
 } from "lucide-react";
+import { WaitlistWidget } from "@/components/WaitlistWidget";
 
 const journeySteps = [
   {
     id: "incoming-call",
-    title: "Incoming Call Automation",
-    description: "Customer calls are automatically answered by AI which understands the issue, categorizes it, and creates a service ticket without human intervention.",
+    title: "Never Miss a Revenue Opportunity",
+    description: "Turn every incoming call into revenue. Our AI answers 100% of calls instantly, understands customer needs with 95% accuracy, and creates perfect service tickets while your competitors let calls go to voicemail.",
     icon: PhoneCall,
     color: "bg-blue-500",
     image: "/images/features/call-automation.webp"
   },
   {
     id: "estimate",
-    title: "Smart Work Estimation",
-    description: "AI analyzes the problem and instantly generates accurate work estimates and pricing based on historical data and industry standards.",
+    title: "Perfect Quotes in Seconds, Not Hours",
+    description: "Generate accurate, profitable work estimates in seconds. Eliminate pricing errors that cost the average service business $30K+ annually while maximizing job profitability.",
     icon: Calculator,
     color: "bg-indigo-500",
     image: "/images/features/work-estimation.webp"
   },
   {
     id: "parts-search",
-    title: "Intelligent Parts Search",
-    description: "Our semantic search engine instantly locates needed parts from suppliers, comparing prices and availability to find the best options.",
+    title: "Cut Parts Sourcing Time by 90%",
+    description: "Our semantic search slashes parts sourcing time from hours to minutes. Find the exact right parts at the best prices across all your suppliers with a single search.",
     icon: Search,
     color: "bg-purple-500",
     image: "/images/features/parts-search.webp"
   },
   {
     id: "procurement",
-    title: "Automated Procurement",
-    description: "Parts are automatically ordered from the best suppliers, with delivery scheduled to align perfectly with your service timeline.",
+    title: "Eliminate Parts Procurement Headaches",
+    description: "Say goodbye to endless supplier calls and delivery coordination. Our system automatically orders from optimal suppliers, saving 5+ hours weekly while ensuring parts arrive exactly when your technicians need them.",
     icon: ShoppingCart,
     color: "bg-pink-500",
     image: "/images/features/procurement.webp"
   },
   {
     id: "notifications",
-    title: "Service Tracking",
-    description: "Customers receive automated updates at every stage of service, while technicians get real-time notifications about parts and schedule changes.",
+    title: "Boost Customer Satisfaction by 40%",
+    description: "Delight customers with proactive updates at every stage. Reduce inbound 'where's my service tech?' calls by 75% while keeping your team perfectly coordinated with real-time notifications.",
     icon: Bell,
     color: "bg-rose-500",
     image: "/images/features/notifications.webp"
   },
   {
     id: "completion",
-    title: "Service Completion",
-    description: "Work completion is verified and documented. Payment is processed, and follow-up appointments are scheduled if needed.",
+    title: "Increase Cash Flow & Repeat Business",
+    description: "Close jobs faster with automated completion verification, instant payment processing, and intelligent follow-up scheduling. Increase your repeat business rate by 35% through perfectly-timed maintenance reminders.",
     icon: CheckCircle2,
     color: "bg-orange-500",
     image: "/images/features/completion.webp"
   },
   {
     id: "analytics",
-    title: "Business Analytics",
-    description: "Comprehensive dashboards show service metrics, customer satisfaction, revenue, and other KPIs to optimize your business performance.",
+    title: "Unlock Hidden Profit Opportunities",
+    description: "Transform data into dollars with powerful performance insights. Identify your most profitable services, optimize technician productivity, and spot revenue opportunities you're currently missing with our AI-powered analytics.",
     icon: BarChart4,
     color: "bg-amber-500",
     image: "/images/features/analytics.webp"
@@ -198,10 +199,10 @@ export function Features() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-2xl md:text-4xl font-bold mb-4">
-            The Complete Service Journey
+            AI-Powered Growth Engine for Service Businesses
           </h2>
           <p className="text-sm md:text-lg text-gray-400">
-            Follow how our AI automation transforms every step of your customer service process
+            From first customer contact to completed job, our platform eliminates costly inefficiencies while delighting your customers at every step.
           </p>
         </div>
 
@@ -240,14 +241,12 @@ export function Features() {
             <span className="text-sm font-medium">AI-Powered Automation</span>
           </div>
           <h3 className="text-2xl md:text-3xl font-bold mb-4">
-            Ready to transform your service business?
+            Join Service Leaders Increasing Revenue by 35%+
           </h3>
           <p className="text-gray-400 max-w-xl mx-auto mb-8">
-            Join thousands of businesses saving time and increasing revenue with our intelligent automation platform.
+            Elite service businesses are already using Matsource to outperform competitors. Will you be next?
           </p>
-          <button className="px-8 py-3 bg-matsource-500 text-white rounded-full hover:bg-matsource-400 transition-colors text-base md:text-lg font-medium">
-            Get Started Today
-          </button>
+          <WaitlistWidget />
         </div>
       </div>
     </section>

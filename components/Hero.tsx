@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import Script from 'next/script';
+import { WaitlistWidget } from "@/components/WaitlistWidget";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
+import { FeatureTicker } from "@/components/FeatureTicker";
 
 const industries = [
   "Home Services",
@@ -33,10 +36,23 @@ export function Hero() {
     return () => clearInterval(interval);
   }, []);
 
+  const features = [
+    "Inbound & outbound AI voice calls",
+    "Automated Parts Procurement",
+    "Job Management",
+    "Smart Quotes",
+    "Instant Customer Feedback",
+    "Service Notifications",
+    "Automated Invoicing",
+    "Detailed Analytics"
+  ];
+
   return (
     <section className="relative">
       {/* Gradient background with fade to black */}
       <div className="absolute inset-0 
+       
+       
        
         from-purple-900/90 via-blue-900/50 to-transparent"
       />
@@ -46,11 +62,12 @@ export function Hero() {
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-4 md:mb-6">
             <span
-              className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary"
+              className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-white"
             >
-              AI Automation Tools for{'  '} <br />
+              Reclaim Your Time.<br />
+              Reclaim Your Profits.<br />
             </span>
-            <AnimatePresence mode="wait">
+            {/* <AnimatePresence mode="wait">
               <motion.span
                 key={currentIndex}
                 initial={{ opacity: 0, y: 20 }}
@@ -66,19 +83,40 @@ export function Hero() {
               >
                 {industries[currentIndex]}
               </motion.span>
-            </AnimatePresence>
+            </AnimatePresence> */}
           </h1>
-          <p className="text-base md:text-xl mb-8 md:mb-12 max-w-2xl mx-auto px-4">
-            Boost revenue and save countless hours with AI-powered call automation and automated parts sourcing.
+          <p className="text-base md:text-xl mb-4 max-w-3xl mx-auto px-4">
+          AI-Powered Efficiency for Service Businesses: Dispatch Smarter, Serve Faster, Profit More.
           </p>
-          <div>
-            <>
-              <Script id="css-loader" type="" dangerouslySetInnerHTML={{ __html: cssLoader }}></Script>
-
-              <Script id="js-loader" src="https://prod-waitlist-widget.s3.us-east-2.amazonaws.com/getwaitlist.min.js"></Script>
-              <h3>We are currently in beta. Sign up for the waitlist to get early access.</h3>
-              <div id="getWaitlistContainer" className="w-full justify-center" data-waitlist_id="25576" data-widget_type="WIDGET_2"></div>
-            </>
+          
+          <div className="flex justify-center mb-8">
+            <Link 
+              href="https://bartholomewmediagroup.com/skilled-trades-and-digital-innovation-blended/" 
+              className="text-sm md:text-base font-medium text-matsource-400 group relative px-2 py-1"
+            >
+              <span className="relative z-10">
+                How Home Services, Auto Repair businesses are using AI to save time and money.
+              </span>
+              
+              {/* Animated underline */}
+              <span className="absolute bottom-0 left-0 h-0.5 bg-matsource-400/30 w-0 group-hover:w-full transition-all duration-300" />
+              
+              {/* Animated arrow */}
+              <motion.span 
+                className="inline-flex items-center ml-2"
+                initial={{ x: 0 }}
+                whileHover={{ x: 5 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              >
+                <ArrowRight className="w-5 h-5" />
+              </motion.span>
+            </Link>
+          </div>
+          
+          <WaitlistWidget />
+          
+          <div className="mt-6 md:mt-10 w-full max-w-6xl mx-auto bg-gray-900/50 backdrop-blur-sm rounded-lg border border-gray-800">
+            <FeatureTicker features={features} />
           </div>
         </div>
         <div style={{position: "relative", paddingBottom: "31.25000000000001%", height: "0", width:'60%', marginTop:'76px'}}>
