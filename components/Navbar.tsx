@@ -13,7 +13,7 @@ export function Navbar() {
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
               <span className="text-3xl mr-2" role="img" aria-label="Construction Worker">
-                👷‍♂️
+                👨‍🔧
               </span>
               <span className="text-xl font-bold">Matsource</span>
             </Link>
