@@ -157,7 +157,6 @@ const JourneyStep = ({ step, index, isActive }: JourneyStepProps) => {
 export function Features() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeStep, setActiveStep] = useState(0);
-  const [scrollProgress, setScrollProgress] = useState(0);
   
   // Use the original scroll logic but with better offset values
   const { scrollYProgress } = useScroll({ 
@@ -179,7 +178,6 @@ export function Features() {
   useEffect(() => {
     const unsubscribe = scrollYProgress.onChange(value => {
       // Save the raw scroll progress
-      setScrollProgress(value);
       
       // Calculate which step should be active based on scroll progress
       const stepIndex = Math.min(
@@ -199,7 +197,7 @@ export function Features() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-2xl md:text-4xl font-bold mb-4">
-            AI-Powered Growth Engine for Service Businesses
+            AI-Powered Automation Engine for Service Businesses
           </h2>
           <p className="text-sm md:text-lg text-gray-400">
             From first customer contact to completed job, our platform eliminates costly inefficiencies while delighting your customers at every step.
