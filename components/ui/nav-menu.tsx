@@ -17,17 +17,22 @@ const solutions = [
   {
     title: "Voice Automation",
     href: "/solutions/voice",
-    description: "Automate inbound and outbound calls with AI-powered voice technology."
+    description: "Automate inbound and outbound calls with Conversational AI voice agents."
   },
   {
-    title: "Semantic Search",
+    title: "Procurement Automation",
     href: "/solutions/search",
-    description: "Intelligent search for technical documentation and service manuals."
+    description: "Say what you need, and our AI Agent will find and purchase it for you."
+  },
+  {
+    title: "Job Management",
+    href: "/solutions/job-management",
+    description: "Manage jobs and dispatch technicians automatically."
   },
   {
     title: "Customer Service",
     href: "/solutions/customer-service",
-    description: "AI-powered support for auto and home service businesses."
+    description: "Increase customer satisfaction with AI-powered customer service."
   }
 ];
 

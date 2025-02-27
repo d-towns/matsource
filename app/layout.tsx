@@ -43,7 +43,7 @@ export const metadata = {
     type: "website",
     locale: "en_US",
     url: "https://matsource-production.up.railway.app",
-    title: "Matsource AI | Service Business Automation",
+    title: "Matsource | AI Automation for Skilled Trades Businesses",
     description: "AI-Powered Efficiency for Service Businesses: Dispatch Smarter, Serve Faster, Profit More.",
     siteName: "Matsource AI",
     images: [
