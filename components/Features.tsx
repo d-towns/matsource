@@ -80,10 +80,9 @@ interface JourneyStepProps {
   step: typeof journeySteps[0];
   index: number;
   isActive: boolean;
-  progress: number;
 }
 
-const JourneyStep = ({ step, index, isActive, progress }: JourneyStepProps) => {
+const JourneyStep = ({ step, index, isActive }: JourneyStepProps) => {
   const stepRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(stepRef, { once: true, margin: "-100px" });
   
@@ -238,7 +237,6 @@ export function Features() {
                 step={step}
                 index={index}
                 isActive={index <= activeStep}
-                progress={index === activeStep ? getCurrentStepProgress() : (index < activeStep ? 1 : 0)}
               />
             ))}
           </div>

@@ -14,8 +14,8 @@ export function GetStartedWidget() {
       <WaitlistWidget />
       
       <p className="text-sm text-gray-500 mt-4">
-        We're launching in phases to ensure the best experience. 
-        Your spot in line determines when you'll get access.
+        We&apos;re launching in phases to ensure the best experience. 
+        Your spot in line determines when you&apos;ll get access.
       </p>
     </motion.div>
   );
