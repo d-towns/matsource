@@ -59,18 +59,18 @@ const tiers = [
 
 export function Pricing() {
   return (
-    <section className="py-20">
+    <section className="py-12 md:py-20">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4 bg-clip-text  bg-gradient-to-r from-white to-gray-400">
+          <h2 className="text-3xl md:text-4xl font-bold mb-3 md:mb-4 bg-clip-text  bg-gradient-to-r from-white to-gray-400">
             Simple, transparent pricing
           </h2>
-          <p className="text-lg">
+          <p className="text-base md:text-lg">
             Choose the right plan for your business
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto">
           {tiers.map((tier) => (
             <div
               key={tier.name}
@@ -86,16 +86,16 @@ export function Pricing() {
                 </div>
               )}
 
-              <div className="p-8 flex flex-col flex-grow">
-                <h3 className="text-xl font-semibold text-white mb-2">{tier.name}</h3>
+              <div className="p-6 md:p-8 flex flex-col flex-grow">
+                <h3 className="text-xl md:text-2xl font-bold text-white mb-2">{tier.name}</h3>
                 {tier.price ? (
                   <div className="mt-4 flex items-baseline text-white">
-                    <span className="text-4xl font-bold tracking-tight">${tier.price}</span>
-                    <span className="ml-1 text-xl font-semibold">/month</span>
+                    <span className="text-3xl md:text-4xl font-bold tracking-tight">${tier.price}</span>
+                    <span className="ml-1 text-sm md:text-base text-gray-400">/month</span>
                   </div>
                 ) : (
                   <div className="mt-4 flex items-baseline text-white">
-                    <span className="text-4xl font-bold tracking-tight">Custom</span>
+                    <span className="text-3xl md:text-4xl font-bold tracking-tight">Custom</span>
                   </div>
                 )}
                 <p className="mt-6 text-gray-300">{tier.description}</p>
@@ -104,7 +104,7 @@ export function Pricing() {
                   {tier.features.map((feature) => (
                     <li key={feature} className="flex text-gray-300">
                       <Check className="h-5 w-5 flex-shrink-0 text-matsource-500" />
-                      <span className="ml-3">{feature}</span>
+                      <span className="ml-3 text-sm md:text-base">{feature}</span>
                     </li>
                   ))}
                 </ul>

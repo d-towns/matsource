@@ -1,5 +1,7 @@
 "use client";
 
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion";
+
 type FAQItem = {
   question: string;
   answer: string;
@@ -34,41 +36,29 @@ const faqs: FAQItem[] = [
 
 export function FAQ() {
   return (
-    <section id="faq" className="py-16">
+    <section className="py-12 md:py-20">
       <div className="container mx-auto px-4">
-        <div className="max-w-2xl mx-auto text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
-            Frequently Asked Questions
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold mb-3 md:mb-4">
+            Frequently asked questions
           </h2>
-          <p className="text-lg text-gray-300">
-            Still have questions?{" "}
-            <a 
-              href="mailto:hello@matsource.com" 
-              className="text-matsource-500 hover:text-matsource-400 underline transition-colors"
-            >
-              Reach out to us
-            </a>
+          <p className="text-base md:text-lg text-gray-400">
+            Everything you need to know about the product and billing.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-7xl mx-auto">
-          {faqs.map((faq, index) => (
-            <div
-              key={index}
-              className="relative rounded-2xl backdrop-blur-sm border border-gray-800 bg-gray-900/40 p-6 hover:bg-gray-900/60 transition-colors group"
-            >
-              <div className="relative z-10">
-                <h3 className="text-lg font-semibold text-white mb-3 group-hover:text-matsource-500 transition-colors">
+        <div className="max-w-3xl mx-auto space-y-3 md:space-y-4">
+          {faqs.map((faq) => (
+            <Accordion key={faq.question} type="single" collapsible>
+              <AccordionItem value="item-1">
+                <AccordionTrigger className="text-base md:text-lg">
                   {faq.question}
-                </h3>
-                <p className="text-gray-300">
+                </AccordionTrigger>
+                <AccordionContent className="text-sm md:text-base text-gray-400">
                   {faq.answer}
-                </p>
-              </div>
-              
-              {/* Subtle gradient overlay on hover */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-matsource-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-            </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           ))}
         </div>
       </div>
