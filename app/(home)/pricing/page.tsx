@@ -1,18 +1,11 @@
 import Link from "next/link";
-import { Hero } from "@/components/Hero";
-import { FAQ } from "@/components/FAQ";
-import { Features } from "@/components/Features";
+import { Pricing } from "@/components/Pricing";
 
-export default function Home() {
+export default function PricingPage() {
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
       <main>
-        {/* Hero Section */}
-        <Hero />
-
-        <Features />
-
-        <FAQ />
+        <Pricing />
       </main>
 
       {/* Footer */}
@@ -38,4 +31,4 @@ export default function Home() {
       </footer>
     </div>
   );
-}
+} 

@@ -19,8 +19,8 @@ export function Navbar() {
             </Link>
           </div>
           
-          {/* Center - Navigation Menu */}
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:block">
+          {/* Center - Navigation Menu with Pricing link */}
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:flex items-center gap-6">
             <NavMenu />
           </div>
           

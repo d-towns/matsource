@@ -100,15 +100,6 @@ export function Pricing() {
                 )}
                 <p className="mt-6 text-gray-300">{tier.description}</p>
 
-                <ul className="mt-6 space-y-4 flex-grow">
-                  {tier.features.map((feature) => (
-                    <li key={feature} className="flex text-gray-300">
-                      <Check className="h-5 w-5 flex-shrink-0 text-matsource-500" />
-                      <span className="ml-3 text-sm md:text-base">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
                 <Link
                   href={tier.href}
                   className={`mt-8 block w-full rounded-full px-6 py-3 text-center text-sm font-semibold leading-6 text-white transition-colors self-end ${
@@ -119,6 +110,14 @@ export function Pricing() {
                 >
                   {tier.cta}
                 </Link>
+                <ul className="mt-6 space-y-4 flex-grow">
+                  {tier.features.map((feature) => (
+                    <li key={feature} className="flex text-gray-300">
+                      <Check className="h-5 w-5 flex-shrink-0 text-matsource-500" />
+                      <span className="ml-3 text-sm md:text-base">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
           ))}
