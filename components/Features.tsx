@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useInView } from "framer-motion";
+import { motion, useScroll, useInView, useSpring, useTransform } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { 
@@ -15,6 +15,7 @@ import {
   Sparkles
 } from "lucide-react";
 import { WaitlistWidget } from "@/components/WaitlistWidget";
+import React from "react";
 
 const journeySteps = [
   {
@@ -75,30 +76,28 @@ const journeySteps = [
   }
 ];
 
-const JourneyStep = ({ 
-  step, 
-  index, 
-  isActive, 
-  progress 
-}: { 
-  step: typeof journeySteps[0], 
-  index: number, 
-  isActive: boolean,
-  progress: number 
-}) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { margin: "-40% 0px -40% 0px" });
+interface JourneyStepProps {
+  step: typeof journeySteps[0];
+  index: number;
+  isActive: boolean;
+  progress: number;
+}
+
+const JourneyStep = ({ step, index, isActive, progress }: JourneyStepProps) => {
+  const stepRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(stepRef, { once: true, margin: "-100px" });
   
   // Only show as active if in view AND we've scrolled to this step in the journey
   const showActive = isInView && isActive;
 
   return (
     <div 
-      ref={ref}
+      ref={stepRef}
       className={cn(
         "relative grid grid-cols-1 md:grid-cols-5 gap-8 md:gap-16 py-24 transition-opacity",
         isInView ? "opacity-100" : "opacity-50"
       )}
+      data-index={index}
     >
       {/* Content area - takes 3 columns on desktop */}
       <div className={cn(
@@ -161,15 +160,26 @@ export function Features() {
   const [activeStep, setActiveStep] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
   
+  // Use the original scroll logic but with better offset values
   const { scrollYProgress } = useScroll({ 
     target: containerRef,
-    offset: ["start center", "end center"]
+    offset: ["start 80%", "end 20%"] 
   });
-
+  
+  // Create a spring-based progress for smoother animation
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 50,  // Lower stiffness for smoother animation
+    damping: 15,    // Balance between bounce and stiffness
+    restDelta: 0.001
+  });
+  
+  // Transform the spring value to a percentage for the line height
+  const lineHeight = useTransform(smoothProgress, [0, 1], ["0%", "100%"]);
+  
   // Update active step based on scroll position
   useEffect(() => {
     const unsubscribe = scrollYProgress.onChange(value => {
-      // Save the overall progress
+      // Save the raw scroll progress
       setScrollProgress(value);
       
       // Calculate which step should be active based on scroll progress
@@ -183,17 +193,20 @@ export function Features() {
     
     return () => unsubscribe();
   }, [scrollYProgress]);
-
-  // Calculate how much of the current step is complete (for partial line filling)
+  
+  // Calculate how much of the current step is complete
   const getCurrentStepProgress = () => {
     const stepsCount = journeySteps.length;
     const stepSize = 1 / stepsCount;
     const currentStepStart = activeStep * stepSize;
     
     // How far through the current step (0-1)
-    return (scrollProgress - currentStepStart) / stepSize;
+    return Math.min(
+      Math.max((scrollProgress - currentStepStart) / stepSize, 0),
+      1
+    );
   };
-
+  
   return (
     <section className="py-20 bg-background relative overflow-hidden">
       <div className="container mx-auto px-4">
@@ -210,13 +223,10 @@ export function Features() {
         <div ref={containerRef} className="relative">
           {/* The vertical timeline line */}
           <div className="absolute left-6 md:left-1/2 top-12 bottom-12 w-0.5 bg-gray-800/50">
-            {/* The filled line that grows with scroll */}
-            <motion.div 
+            {/* The filled line that grows with scroll - now using smoothProgress */}
+            <motion.div
               className="absolute top-0 left-0 w-full bg-gradient-to-b from-blue-500 via-purple-500 to-amber-500"
-              style={{ 
-                height: `${scrollProgress * 100}%`,
-                transition: "height 0.1s ease-out" 
-              }}
+              style={{ height: lineHeight }}
             />
           </div>
 
@@ -228,7 +238,7 @@ export function Features() {
                 step={step}
                 index={index}
                 isActive={index <= activeStep}
-                progress={index === activeStep ? getCurrentStepProgress() : 1}
+                progress={index === activeStep ? getCurrentStepProgress() : (index < activeStep ? 1 : 0)}
               />
             ))}
           </div>

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { WaitlistWidget } from "@/components/WaitlistWidget";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight} from "lucide-react";
 import { motion } from "framer-motion";
 import { FeatureTicker } from "@/components/FeatureTicker";
 
@@ -24,17 +24,17 @@ head.appendChild(link);
 `
 
 export function Hero() {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  // const [currentIndex, setCurrentIndex] = useState(0);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeout(() => {
-        setCurrentIndex((prev) => (prev + 1) % industries.length);
-      }, 500); // Wait for exit animation
-    }, 3000); // Change every 3 seconds
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setTimeout(() => {
+  //       setCurrentIndex((prev) => (prev + 1) % industries.length);
+  //     }, 500); // Wait for exit animation
+  //   }, 3000); // Change every 3 seconds
 
-    return () => clearInterval(interval);
-  }, []);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   const features = [
     "Inbound & outbound AI voice calls",
@@ -48,6 +48,11 @@ export function Hero() {
   ];
 
   return (
+    <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5 }}
+  >
     <section className="relative">
       {/* Gradient background with fade to black */}
       <div className="absolute inset-0 
@@ -91,11 +96,11 @@ export function Hero() {
           
           <div className="flex justify-center mb-8">
             <Link 
-              href="https://bartholomewmediagroup.com/skilled-trades-and-digital-innovation-blended/" 
+              href="https://www.contractormag.com/technology/article/21278738/three-ways-ai-is-powering-contracting-businesses" 
               className="text-sm md:text-base font-medium text-matsource-400 group relative px-2 py-1"
             >
               <span className="relative z-10">
-                How Home Services, Auto Repair businesses are using AI to save time and money.
+                How Skilled Trades businesses are using AI to save time and money.
               </span>
               
               {/* Animated underline */}
@@ -103,7 +108,7 @@ export function Hero() {
               
               {/* Animated arrow */}
               <motion.span 
-                className="inline-flex items-center ml-2"
+                className="inline-flex relative top-1 items-center ml-2"
                 initial={{ x: 0 }}
                 whileHover={{ x: 5 }}
                 transition={{ type: "spring", stiffness: 400, damping: 10 }}
@@ -111,6 +116,22 @@ export function Hero() {
                 <ArrowRight className="w-5 h-5" />
               </motion.span>
             </Link>
+            {/* <div className="md:hidden mt-8">
+          <Link
+            href="https://www.loom.com/share/c4f3f49fc91243f7b5a56732ec16b6f8"
+            className="inline-flex items-center text-matsource-400 hover:text-matsource-300 transition-colors"
+          >
+            <motion.span
+              className="flex items-center gap-2"
+              initial={{ x: 0 }}
+              whileHover={{ x: 5 }}
+              transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            >
+              <PlayCircle className="w-5 h-5" />
+              <span>Watch our demo video</span>
+            </motion.span>
+          </Link>
+        </div> */}
           </div>
           
           <WaitlistWidget />
@@ -119,10 +140,27 @@ export function Hero() {
             <FeatureTicker features={features} />
           </div>
         </div>
+        {/* <Link
+            href="https://www.loom.com/share/c4f3f49fc91243f7b5a56732ec16b6f8"
+            className="inline-flex items-center text-matsource-400 hover:text-matsource-300 transition-colors"
+          >
+            <motion.span
+              className="flex items-center gap-2"
+              initial={{ x: 0 }}
+              whileHover={{ x: 5 }}
+              transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            >
+              <PlayCircle className="w-5 h-5" />
+              <span>Watch our demo video</span>
+            </motion.span>
+          </Link> */}
+          <>
         <div style={{position: "relative", paddingBottom: "31.25000000000001%", height: "0", width:'60%', marginTop:'76px'}}>
           <iframe src="https://www.loom.com/embed/c4f3f49fc91243f7b5a56732ec16b6f8?sid=675426df-d8a9-47b0-81e5-26aad5636ae2" frameBorder="0" allowFullScreen style={{position: "absolute", top: "0", left: "0", width: "100%", height: "100%"}}></iframe>
         </div>
+        </>
       </div>
     </section>
+    </motion.div>
   );
 } 
