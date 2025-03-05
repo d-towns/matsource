@@ -36,11 +36,11 @@ export function Hero() {
   // }, []);
 
   const features = [
-    "Inbound & outbound AI voice calls",
-    "Automated Parts Procurement",
     "Job Management",
     "Smart Quotes",
     "Instant Customer Feedback",
+    "Inbound & outbound AI voice calls",
+    "Automated Parts Procurement",
     "Service Notifications",
     "Automated Invoicing",
     "Detailed Analytics"

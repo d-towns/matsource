@@ -9,7 +9,7 @@ interface FeatureTickerProps {
   speed?: number; // pixels per second
 }
 
-export function FeatureTicker({ features, speed = 70 }: FeatureTickerProps) {
+export function FeatureTicker({ features, speed = 500 }: FeatureTickerProps) {
   const [contentWidth, setContentWidth] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
