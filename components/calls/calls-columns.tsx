@@ -7,8 +7,6 @@ import {
   ChevronRight, 
   PhoneIcon,
   PhoneOffIcon,
-  PhoneIncomingIcon,
-  PhoneOutgoingIcon,
   VoicemailIcon,
   CalendarIcon,
   ClockIcon,
