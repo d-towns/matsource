@@ -12,7 +12,8 @@ import {
   Settings2,
   CarIcon,
   PackageSearchIcon,
-  HomeIcon
+  HomeIcon,
+  PuzzleIcon
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -77,6 +78,11 @@ const navMenuItems = {
       title: "Vehicles",
       url: "#",
       icon: CarIcon,
+    },
+    {
+      title: "Integrations",
+      url: "/workspaces/integrations",
+      icon: PuzzleIcon,
     },
     {
       title: "Reports",
