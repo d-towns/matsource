@@ -250,11 +250,12 @@ async function LeadDetailContent({ id }: { id: string }) {
   )
 }
 
-export default function LeadPage({ params }: { params: { id: string } }) {
+export default async function LeadPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   return (
     <div className="container mx-auto py-4">
       <Suspense fallback={<div>Loading lead data...</div>}>
-        <LeadDetailContent id={params.id} />
+        <LeadDetailContent id={id} />
       </Suspense>
     </div>
   )

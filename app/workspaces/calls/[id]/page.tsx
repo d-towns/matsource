@@ -281,11 +281,12 @@ async function CallDetailContent({ id }: { id: string }) {
   )
 }
 
-export default function CallPage({ params }: { params: { id: string } }) {
+export default async function CallPage({params}: {params: Promise<{ id: string }> }) {
+  const { id } = await params;
   return (
     <div className="container mx-auto py-4">
       <Suspense fallback={<div>Loading call data...</div>}>
-        <CallDetailContent id={params.id} />
+        <CallDetailContent id={id} />
       </Suspense>
     </div>
   )
