@@ -9,7 +9,7 @@ import crypto from "crypto"
  * GET /api/api-keys
  * List all API keys for the authenticated user
  */
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   // Check authentication via session cookie
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser()

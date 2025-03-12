@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 import { Clipboard, Copy, Key, Loader2, Plus, Trash2 } from "lucide-react"
-import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -18,7 +17,6 @@ import { useUser } from "@/hooks/use-user"
 export default function ApiKeysPage() {
   const { user } = useUser()
   const { toast } = useToast()
-  const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [newKeyLoading, setNewKeyLoading] = useState(false)
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([])
@@ -201,7 +199,7 @@ export default function ApiKeysPage() {
                 <Key className="h-12 w-12 text-muted-foreground/50 mb-4" />
                 <h3 className="font-medium text-lg">No API Keys</h3>
                 <p className="text-muted-foreground max-w-md mt-2">
-                  You haven't created any API keys yet. Create your first API key to authenticate requests to the widget service.
+                  You haven&apos;t created any API keys yet. Create your first API key to authenticate requests to the widget service.
                 </p>
               </div>
             ) : (
@@ -252,7 +250,7 @@ export default function ApiKeysPage() {
             <CardHeader>
               <CardTitle className="text-primary">New API Key Created</CardTitle>
               <CardDescription>
-                This is your new API key. Make sure to copy it now as you won't be able to see it again.
+                This is your new API key. Make sure to copy it now as you won&apos;t be able to see it again.
               </CardDescription>
             </CardHeader>
             <CardContent>

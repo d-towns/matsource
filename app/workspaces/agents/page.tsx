@@ -59,7 +59,7 @@ export default function AgentsPage() {
     };
 
     fetchAgents();
-  }, []);
+  }, [supabase, user, toast]);
 
   // Navigate to create new agent page
   const handleCreateAgent = (type: 'voice' | 'browser') => {
@@ -88,9 +88,10 @@ export default function AgentsPage() {
       // Update local state to remove the deleted agent
       setAgents(agents.filter(agent => agent.id !== agentId));
       
-      useToast(
-
-      );
+      toast({
+        title: 'Agent deleted',
+        description: 'The agent has been deleted successfully.'
+      });
     } catch (error) {
       console.error('Error deleting agent:', error);
       toast({

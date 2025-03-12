@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
-import { CopyIcon, CheckIcon, GlobeIcon, PlusCircle, ExternalLink } from 'lucide-react';
+import { CopyIcon, CheckIcon, GlobeIcon } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 
 // Define domain and form types
@@ -48,7 +48,7 @@ export default function EmbedPage() {
   const [forms, setForms] = useState<Form[]>([]);
   const [agents, setAgents] = useState<Agent[]>([]);
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
   const [formName, setFormName] = useState('');
   const [selectedDomains, setSelectedDomains] = useState<string[]>([]);
@@ -63,7 +63,7 @@ export default function EmbedPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true);
+        setIsLoading(true);
         
         // Fetch domains
         const { data: domainData, error: domainError } = await supabase
@@ -122,12 +122,12 @@ export default function EmbedPage() {
           description: 'Please try again later.'
         });
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
 
     fetchData();
-  }, [supabase]);
+  }, [supabase, toast]);
 
   // Add a new domain
   const handleAddDomain = async () => {

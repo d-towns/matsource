@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import {useUser} from '@/hooks/use-user';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -78,7 +78,11 @@ Important guidelines:
         setAgent(data);
       } catch (error) {
         console.error('Error fetching agent:', error);
-        useToast()
+        toast({
+          variant: 'destructive',
+          title: 'Failed to fetch agent',
+          description: 'Please try again later.'
+        });
         router.push('/workspaces/agents');
       } finally {
         setLoading(false);
@@ -86,10 +90,10 @@ Important guidelines:
     };
 
     fetchAgent();
-  }, [supabase, params.id, isNewAgent, router, user]);
+  }, [supabase, params.id, isNewAgent, router, user, toast]);
 
   // Handle form field changes
-  const handleChange = (field: keyof Agent, value: any) => {
+  const handleChange = (field: keyof Agent, value: string | boolean) => {
     if (!agent) return;
     setAgent({ ...agent, [field]: value });
   };
