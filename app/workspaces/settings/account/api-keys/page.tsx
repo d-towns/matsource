@@ -29,7 +29,7 @@ export default function ApiKeysPage() {
     if (user) {
       fetchApiKeys()
     }
-  }, [user])
+  }, [user, fetchApiKeys])
 
   // Fetch API keys from the server
   async function fetchApiKeys() {

@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
-import { CopyIcon, CheckIcon, GlobeIcon } from 'lucide-react';
+import { CopyIcon, CheckIcon, GlobeIcon, Loader2 } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 
 // Define domain and form types
@@ -338,18 +338,24 @@ export default function EmbedPage() {
                 <div>
                   <Label>Allowed Domains</Label>
                   <div className="grid grid-cols-2 gap-2 mt-2">
-                    {domains.map(domain => (
-                      <Button
-                        key={domain.id}
-                        type="button"
-                        variant={selectedDomains.includes(domain.id) ? "default" : "outline"}
-                        className="justify-start"
-                        onClick={() => toggleDomain(domain.id)}
-                      >
-                        <GlobeIcon className="mr-2 h-4 w-4" />
-                        {domain.domain}
-                      </Button>
-                    ))}
+                    {isLoading ? (
+                      <div className="flex items-center justify-center h-24">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      </div>
+                    ) : (
+                      domains.map(domain => (
+                        <Button
+                          key={domain.id}
+                          type="button"
+                          variant={selectedDomains.includes(domain.id) ? "default" : "outline"}
+                          className="justify-start"
+                          onClick={() => toggleDomain(domain.id)}
+                        >
+                          <GlobeIcon className="mr-2 h-4 w-4" />
+                          {domain.domain}
+                        </Button>
+                      ))
+                    )}
                   </div>
                 </div>
               </CardContent>
