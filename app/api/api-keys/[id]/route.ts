@@ -11,17 +11,15 @@ const supabase = createClient(
  * DELETE /api/api-keys/:id
  * Revoke an API key by ID
  */
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest) {
   // Check authentication via session cookie
   const { data: { session } } = await supabase.auth.getSession()
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  const { id } = params
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get('id');
 
   if (!id) {
     return NextResponse.json({ error: "API key ID is required" }, { status: 400 })
