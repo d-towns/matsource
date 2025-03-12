@@ -10,12 +10,13 @@ import {
   Map,
   PieChart,
   Settings2,
-  CarIcon,
+  NotebookPen,
   PackageSearchIcon,
   HomeIcon,
   PuzzleIcon,
   UsersIcon,
-  PhoneCallIcon
+  PhoneCallIcon,
+  BotIcon
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -71,6 +72,11 @@ const navMenuItems = {
       icon: PhoneCallIcon,
     },
     {
+      title: "Agents",
+      url: '/workspaces/agents',
+      icon: BotIcon,
+    },
+    {
       title: "Search",
       url: "#",
       icon: PackageSearchIcon,
@@ -87,9 +93,9 @@ const navMenuItems = {
       ],
     },
     {
-      title: "Vehicles",
-      url: "#",
-      icon: CarIcon,
+      title: "Forms",
+      url: "/workspaces/integrations/embed",
+      icon: NotebookPen,
     },
     {
       title: "Integrations",

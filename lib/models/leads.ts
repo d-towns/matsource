@@ -8,13 +8,11 @@ export const LeadSchema = z.object({
   email: z.string().email().optional().nullable(),
   source: z.string().optional().nullable(),
   status: z.enum([
-    "new", 
-    "contacted", 
-    "in_progress", 
-    "appointment_scheduled", 
-    "qualified", 
-    "unqualified", 
-    "closed"
+    'appointment_set', 
+    'declined', 
+    'no_answer', 
+    'follow_up',
+    'new',
   ]).optional().default("new"),
   notes: z.string().optional().nullable(),
   created_at: z.string().datetime(),

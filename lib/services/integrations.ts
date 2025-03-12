@@ -57,9 +57,22 @@ export async function storeGoogleCalendarTokens(
 ): Promise<boolean> {
   try {
     const supabase = createClient();
-    const { error } = await supabase
+    
+    // First, delete all existing tokens for this user
+    const { error: deleteError } = await supabase
       .from('google_calendar_tokens')
-      .upsert({
+      .delete()
+      .eq('user_id', userId);
+      
+    if (deleteError) {
+      console.error('Error deleting existing Google Calendar tokens:', deleteError);
+      return false;
+    }
+    
+    // Then, insert the new token
+    const { error: insertError } = await supabase
+      .from('google_calendar_tokens')
+      .insert({
         user_id: userId,
         access_token: tokens.access_token,
         refresh_token: tokens.refresh_token,
@@ -67,7 +80,7 @@ export async function storeGoogleCalendarTokens(
         updated_at: new Date().toISOString()
       });
 
-    return !error;
+    return !insertError;
   } catch (error) {
     console.error('Error storing Google Calendar tokens:', error);
     return false;

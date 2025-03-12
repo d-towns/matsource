@@ -9,12 +9,16 @@ import Link from "next/link"
 
 async function getLeadsWithCallCounts() {
   const supabase = await createClient()
+  const {data:{ user} } = await supabase.auth.getUser()
   
   // Get all leads
   const { data: leads, error } = await supabase
     .from('leads')
-    .select('*, call_attempts(id, outcome, started_at)')
+    .select('*, call_attempts(id, status, created_at)')
+    .eq('user_id', user.id)
     .order('created_at', { ascending: false })
+
+  console.log(leads)
   
   if (error) {
     console.error('Error fetching leads:', error)
@@ -38,8 +42,8 @@ async function getLeadsWithCallCounts() {
     return {
       ...lead,
       call_count: callAttempts.length,
-      last_call_date: lastCall?.started_at,
-      last_call_outcome: lastCall?.outcome
+      last_call_date: lastCall?.created_at,
+      last_call_outcome: lastCall?.status
     }
   })
   
@@ -48,23 +52,24 @@ async function getLeadsWithCallCounts() {
 
 async function getMetrics() {
   const supabase = await createClient()
-  
+  const {data:{ user} } = await supabase.auth.getUser()
   // Get total leads count
   const { count: totalLeads, error: leadsError } = await supabase
     .from('leads')
     .select('*', { count: 'exact', head: true })
-  
+    .eq('user_id', user.id)
   // Get total call attempts count
   const { count: totalCalls, error: callsError } = await supabase
     .from('call_attempts')
     .select('*', { count: 'exact', head: true })
+    .eq('user_id', user.id)
   
   // Get leads with appointments count
   const { count: scheduledAppointments, error: appointmentsError } = await supabase
     .from('leads')
     .select('*', { count: 'exact', head: true })
     .eq('status', 'appointment_scheduled')
-  
+    .eq('user_id', user.id)
   if (leadsError || callsError || appointmentsError) {
     console.error('Error fetching metrics:', { leadsError, callsError, appointmentsError })
   }
