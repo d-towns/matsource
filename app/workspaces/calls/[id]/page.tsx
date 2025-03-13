@@ -18,6 +18,7 @@ import { Badge } from "@/components/ui/badge"
 import { format, parseISO, formatDistanceToNow } from "date-fns"
 import Link from "next/link"
 import React from "react"
+import { LoadingSpinner } from "@/components/ui/loading-spinner"
 
 // Helper function to format duration in mm:ss
 function formatDuration(seconds?: number): string {
@@ -285,7 +286,7 @@ export default async function CallPage({params}: {params: Promise<{ id: string }
   const { id } = await params;
   return (
     <div className="container mx-auto py-4">
-      <Suspense fallback={<div>Loading call data...</div>}>
+      <Suspense fallback={<LoadingSpinner text="Loading call data..." fullPage />}>
         <CallDetailContent id={id} />
       </Suspense>
     </div>

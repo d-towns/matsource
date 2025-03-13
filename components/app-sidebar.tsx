@@ -40,7 +40,7 @@ const navMenuItems = {
   },
   teams: [
     {
-      name: "Acme Inc",
+      name: "Superior Plumbing Co.",
       logo: GalleryVerticalEnd,
       plan: "Enterprise",
     },

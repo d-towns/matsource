@@ -17,6 +17,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { format, parseISO, formatDistanceToNow } from "date-fns"
 import Link from "next/link"
+import { LoadingSpinner } from "@/components/ui/loading-spinner"
 
 // Helper function to render status badge, similar to the one in leads-columns.tsx
 function getStatusBadge(status: string) {
@@ -254,7 +255,7 @@ export default async function LeadPage({ params }: { params: Promise<{ id: strin
   const { id } = await params;
   return (
     <div className="container mx-auto py-4">
-      <Suspense fallback={<div>Loading lead data...</div>}>
+      <Suspense fallback={<LoadingSpinner text="Loading lead data..." fullPage />}>
         <LeadDetailContent id={id} />
       </Suspense>
     </div>

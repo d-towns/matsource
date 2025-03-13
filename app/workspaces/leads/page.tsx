@@ -6,6 +6,7 @@ import { LeadWithCallCount } from "@/lib/models/leads"
 import { UsersIcon, PhoneIcon, CalendarIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { LoadingSpinner } from "@/components/ui/loading-spinner"
 
 async function getLeadsWithCallCounts() {
   const supabase = await createClient()
@@ -143,7 +144,7 @@ export default function LeadsPage() {
         </p>
       </div>
       
-      <Suspense fallback={<div>Loading leads data...</div>}>
+      <Suspense fallback={<LoadingSpinner text="Loading leads data..." fullPage />}>
         <LeadsContent />
       </Suspense>
     </div>

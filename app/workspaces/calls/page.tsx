@@ -6,6 +6,7 @@ import { CallAttemptWithLead } from "@/lib/models/leads"
 import { PhoneIcon, PhoneCallIcon, PhoneMissedIcon, ClockIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { LoadingSpinner } from "@/components/ui/loading-spinner"
 
 async function getCallsWithLeadInfo() {
   const supabase = await createClient()
@@ -141,7 +142,7 @@ export default function CallsPage() {
         </p>
       </div>
       
-      <Suspense fallback={<div>Loading calls data...</div>}>
+      <Suspense fallback={<LoadingSpinner text="Loading calls data..." fullPage />}>
         <CallsContent />
       </Suspense>
     </div>
