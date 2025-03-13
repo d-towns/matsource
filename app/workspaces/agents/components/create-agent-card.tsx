@@ -24,7 +24,7 @@ export function CreateAgentCard({ type }: CreateAgentCardProps) {
         <CardDescription>
           {type === 'voice' 
             ? 'Set up an agent for phone calls and voice interactions'
-            : 'Set up an agent for website chat widget interactions'
+            : 'Set up an agent for executing multi-step actions in a browser'
           }
         </CardDescription>
       </CardHeader>
