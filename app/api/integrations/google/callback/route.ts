@@ -19,12 +19,12 @@ export async function GET(request: NextRequest) {
   // Handle errors from Google
   if (error) {
     console.error('Google authentication error:', error);
-    return NextResponse.redirect(new URL('/workspaces/integrations?error=google_auth_denied', request.url));
+    return NextResponse.redirect(new URL('/workspaces/integrations?error=google_auth_denied', process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'));
   }
 
   // Validate required parameters
   if (!code || !state) {
-    return NextResponse.redirect(new URL('/workspaces/integrations?error=invalid_callback', request.url));
+    return NextResponse.redirect(new URL('/workspaces/integrations?error=invalid_callback', process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'));
   }
 
   try {
@@ -43,9 +43,9 @@ export async function GET(request: NextRequest) {
     });
 
     // Redirect to success page
-    return NextResponse.redirect(new URL('/workspaces/integrations?success=google_calendar_connected', request.url));
+    return NextResponse.redirect(new URL('/workspaces/integrations?success=google_calendar_connected', process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'));
   } catch (error) {
     console.error('Error handling Google callback:', error);
-    return NextResponse.redirect(new URL('/workspaces/integrations?error=token_exchange_failed', request.url));
+    return NextResponse.redirect(new URL('/workspaces/integrations?error=token_exchange_failed', process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'));
   }
 } 
