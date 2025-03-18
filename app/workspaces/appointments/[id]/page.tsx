@@ -8,7 +8,6 @@ import {
   CalendarIcon, 
   ClockIcon,
   ArrowLeftIcon,
-  FileTextIcon,
   UserIcon,
   CheckCircleIcon,
   XCircleIcon
