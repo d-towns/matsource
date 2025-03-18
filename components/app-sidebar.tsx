@@ -9,7 +9,6 @@ import {
   GalleryVerticalEnd,
   Map,
   PieChart,
-  Settings2,
   NotebookPen,
   PackageSearchIcon,
   HomeIcon,

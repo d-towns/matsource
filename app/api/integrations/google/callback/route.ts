@@ -42,6 +42,15 @@ export async function GET(request: NextRequest) {
       expiry_date: tokens.expiry_date,
     });
 
+    //TODO: use an interval to refresh the access token when it expires
+    setInterval(async () => {
+      const { credentials } = await oauth2Client.refreshAccessToken();
+      await storeGoogleCalendarTokens(state, {
+        access_token: credentials.access_token,
+        refresh_token: credentials.refresh_token,
+        expiry_date: credentials.expiry_date,
+      });
+    }, 1000 * 60 * 45); // 45 minutes
     // Redirect to success page
     return NextResponse.redirect(new URL('/workspaces/integrations?success=google_calendar_connected', process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'));
   } catch (error) {

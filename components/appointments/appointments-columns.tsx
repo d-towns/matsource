@@ -4,7 +4,7 @@ import { ColumnDef } from "@tanstack/react-table"
 import { Appointment } from "@/lib/models/appointments"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { ArrowUpDown, Calendar, CheckCircle, Clock, AlertCircle, XCircle } from "lucide-react"
+import { ArrowUpDown, Calendar, CheckCircle, AlertCircle, XCircle } from "lucide-react"
 import { format, parseISO } from "date-fns"
 import Link from "next/link"
 
