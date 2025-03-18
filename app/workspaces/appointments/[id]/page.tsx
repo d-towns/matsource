@@ -197,7 +197,8 @@ async function AppointmentDetailContent({ id }: { id: string }) {
   )
 }
 
-export default function AppointmentDetailPage({ id }: { id: string }) {
+export default async function AppointmentDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   return (
     <div className="container mx-auto py-4">
       <div className="mb-6">
