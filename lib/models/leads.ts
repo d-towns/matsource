@@ -25,7 +25,7 @@ export const CallAttemptSchema = z.object({
   lead_id: z.string().uuid(),
   user_id: z.string().uuid(),
   call_sid: z.string().optional().nullable(),
-  outcome: z.enum([
+  status: z.enum([
     "connected", 
     "voicemail", 
     "no_answer", 
@@ -33,7 +33,8 @@ export const CallAttemptSchema = z.object({
     "failed", 
     "appointment_scheduled", 
     "declined", 
-    "follow_up"
+    "follow_up",
+    "pending"
   ]).optional(),
   duration: z.number().optional(),
   notes: z.string().optional().nullable(),

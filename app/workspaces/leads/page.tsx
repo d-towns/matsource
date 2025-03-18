@@ -69,7 +69,7 @@ async function getMetrics() {
   const { count: scheduledAppointments, error: appointmentsError } = await supabase
     .from('leads')
     .select('*', { count: 'exact', head: true })
-    .eq('status', 'appointment_scheduled')
+    .eq('status', 'appointment_set')
     .eq('user_id', user.id)
   if (leadsError || callsError || appointmentsError) {
     console.error('Error fetching metrics:', { leadsError, callsError, appointmentsError })

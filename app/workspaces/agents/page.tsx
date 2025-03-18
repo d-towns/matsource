@@ -77,7 +77,7 @@ export default async function AgentsPage() {
         {/* Tab content for voice agents */}
         <TabsContent value="voice">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <CreateAgentCard type="voice" />
+            
             
             {/* Voice agents */}
             {agents
@@ -108,6 +108,7 @@ export default async function AgentsPage() {
                 </Card>
               ))
             }
+            <CreateAgentCard type="voice" />
           </div>
         </TabsContent>
         

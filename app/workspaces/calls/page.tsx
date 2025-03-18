@@ -45,15 +45,15 @@ async function getCallMetrics() {
   const { count: connectedCalls, error: connectedCallsError } = await supabase
     .from('call_attempts')
     .select('*', { count: 'exact', head: true })
-    .eq('outcome', 'connected')
+    .eq('status', 'connected')
   
   // Get scheduled calls count
   const { count: scheduledCalls, error: scheduledCallsError } = await supabase
     .from('call_attempts')
     .select('*', { count: 'exact', head: true })
-    .not('scheduled_time', 'is', null)
-    .is('started_at', null)
+    .not('start_time', 'is', null)
   
+    console.log(totalCallsError, connectedCallsError, scheduledCallsError)
   if (totalCallsError || connectedCallsError || scheduledCallsError) {
     console.error('Error fetching call metrics:', { totalCallsError, connectedCallsError, scheduledCallsError })
   }

@@ -16,7 +16,8 @@ import {
   PuzzleIcon,
   UsersIcon,
   PhoneCallIcon,
-  BotIcon
+  BotIcon,
+  CalendarIcon
 } from "lucide-react"
 
 import { NavMain } from "@/components/nav-main"
@@ -62,19 +63,32 @@ const navMenuItems = {
       icon: HomeIcon,
     },
     {
-      title: "Leads",
-      url: "/workspaces/leads",
+      title: "Sales",
+      url: "/workspaces/sales",
       icon: UsersIcon,
-    },
-    {
-      title: "Call Attempts",
-      url: "/workspaces/calls",
-      icon: PhoneCallIcon,
-    },
-    {
-      title: "Agents",
-      url: '/workspaces/agents',
-      icon: BotIcon,
+      isActive: true,
+      items: [
+        {
+          title: "Leads",
+          url: "/workspaces/leads",
+          icon: UsersIcon,
+        },
+        {
+          title: "Appointments",
+          url: "/workspaces/appointments",
+          icon: CalendarIcon,
+        },
+        {
+          title: "Call Attempts",
+          url: "/workspaces/calls",
+          icon: PhoneCallIcon,
+        },
+        {
+          title: "Forms",
+          url: "/workspaces/integrations/embed",
+          icon: NotebookPen,
+        },
+      ],
     },
     {
       title: "Search",
@@ -93,10 +107,12 @@ const navMenuItems = {
       ],
     },
     {
-      title: "Forms",
-      url: "/workspaces/integrations/embed",
-      icon: NotebookPen,
+      title: "Agents",
+      url: '/workspaces/agents',
+      icon: BotIcon,
     },
+
+
     {
       title: "Integrations",
       url: "/workspaces/integrations",
@@ -125,29 +141,29 @@ const navMenuItems = {
         },
       ],
     },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
-    },
+    // {
+    //   title: "Settings",
+    //   url: "#",
+    //   icon: Settings2,
+    //   items: [
+    //     {
+    //       title: "General",
+    //       url: "#",
+    //     },
+    //     {
+    //       title: "Team",
+    //       url: "#",
+    //     },
+    //     {
+    //       title: "Billing",
+    //       url: "#",
+    //     },
+    //     {
+    //       title: "Limits",
+    //       url: "#",
+    //     },
+    //   ],
+    // },
   ],
   projects: [
     {

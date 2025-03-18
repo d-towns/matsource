@@ -133,7 +133,7 @@ async function CallDetailContent({ id }: { id: string }) {
           <div>
             <h1 className="text-2xl font-bold">Call with {call.lead.name}</h1>
             <div className="mt-2">
-              {getOutcomeBadge(call.outcome)}
+              {getOutcomeBadge(call.status)}
               {call.started_at && (
                 <span className="ml-3 text-sm text-muted-foreground">
                   {formatDistanceToNow(parseISO(call.started_at), { addSuffix: true })}
@@ -165,7 +165,7 @@ async function CallDetailContent({ id }: { id: string }) {
             <div className="space-y-2">
               <div className="flex items-start">
                 <div className="min-w-24 text-sm text-muted-foreground">Status:</div>
-                <div>{getOutcomeBadge(call.outcome)}</div>
+                <div>{getOutcomeBadge(call.status)}</div>
               </div>
               <div className="flex items-start">
                 <div className="min-w-24 text-sm text-muted-foreground">Duration:</div>
