@@ -10,6 +10,10 @@ export async function getUserTeams(userId: string) : Promise<Team | null> {
   .from('users')
   .select('team:teams!users_team_id_fkey(*)')
   .eq('id', userId);
+  if (error) {
+    console.log("error", error);
+    return null;
+  }
   console.log("data", data);
   return data?.[0].team as Team
 

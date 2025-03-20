@@ -175,7 +175,7 @@ const navMenuItems = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const { user } = useUser();
-  const [team, setTeam] = React.useState<any>(null);
+  const [team, setTeam] = React.useState<{name: string, logo: any, plan: string} | null>(null);
 
   useEffect(() => {
     if(user) {  
