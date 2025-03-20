@@ -19,6 +19,8 @@ import {
   CalendarIcon
 } from "lucide-react"
 
+import { getUserTeams } from "./actions"
+
 import { NavMain } from "@/components/nav-main"
 // import { NavProjects } from "@/components/nav-projects"
 import { NavUser } from "@/components/nav-user"
@@ -30,6 +32,9 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import { useUser } from "@/hooks/use-user"
+import { useEffect } from "react"
+import { Team } from "@/lib/models/team"
 
 // This is sample data.
 const navMenuItems = {
@@ -39,21 +44,7 @@ const navMenuItems = {
     avatar: "/avatars/shadcn.jpg",
   },
   teams: [
-    {
-      name: "Superior Plumbing Co.",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
+
   ],
   navMain: [
     {
@@ -184,10 +175,29 @@ const navMenuItems = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+
+  const { user } = useUser();
+  const [team, setTeam] = React.useState<any>(null);
+
+  useEffect(() => {
+    if(user) {  
+      getUserTeams(user.id).then((teams) => {
+        console.log(teams);
+        setTeam({
+          name: teams.name,
+          logo: GalleryVerticalEnd,
+          plan: "Free",
+        });
+      })
+    }
+  }, [user]);
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <TeamSwitcher teams={navMenuItems.teams} />
+        {team && (
+          <TeamSwitcher teams={[team]} />
+        )}
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={navMenuItems.navMain} />
