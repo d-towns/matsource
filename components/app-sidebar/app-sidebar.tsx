@@ -2,9 +2,7 @@
 
 import * as React from "react"
 import {
-  AudioWaveform,
   BookOpen,
-  Command,
   Frame,
   GalleryVerticalEnd,
   Map,
@@ -34,7 +32,7 @@ import {
 } from "@/components/ui/sidebar"
 import { useUser } from "@/hooks/use-user"
 import { useEffect } from "react"
-import { Team } from "@/lib/models/team"
+// import { Team } from "@/lib/models/team"
 
 // This is sample data.
 const navMenuItems = {
