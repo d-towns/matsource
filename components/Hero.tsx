@@ -108,7 +108,7 @@ export function Hero() {
         </div>
           <>
         <div style={{position: "relative", paddingBottom: "31.25000000000001%", height: "0", width:'60%', marginTop:'76px'}}>
-          <iframe src="https://www.loom.com/embed/c4f3f49fc91243f7b5a56732ec16b6f8?sid=675426df-d8a9-47b0-81e5-26aad5636ae2" frameBorder="0" allowFullScreen style={{position: "absolute", top: "0", left: "0", width: "100%", height: "100%"}}></iframe>
+          <iframe src="https://www.loom.com/embed/5324cc3e6ca34aac95766faafddc52fc?sid=f535e952-aed5-45d3-8743-37bcb76a59d0" frameBorder="0" allowFullScreen style={{position: "absolute", top: "0", left: "0", width: "100%", height: "100%"}}></iframe>
         </div>
         </>
       </div>

@@ -31,8 +31,8 @@ function formatDuration(seconds?: number): string {
 }
 
 // Helper function to render outcome badge
-function getOutcomeBadge(outcome?: string) {
-  const outcomeConfig: Record<string, { class: string, icon: React.ReactNode }> = {
+function getStatusBadge(status?: string) {
+  const statusConfig: Record<string, { class: string, icon: React.ReactNode }> = {
     connected: { 
       class: "bg-green-100 text-green-800 border-green-200", 
       icon: <PhoneIcon className="h-3 w-3 mr-1" /> 
@@ -67,7 +67,7 @@ function getOutcomeBadge(outcome?: string) {
     },
   }
 
-  if (!outcome) {
+  if (!status) {
     return (
       <Badge variant="outline" className="bg-gray-100 text-gray-600 border-gray-200">
         <PhoneCallIcon className="h-3 w-3 mr-1" /> In Progress
@@ -75,14 +75,14 @@ function getOutcomeBadge(outcome?: string) {
     )
   }
 
-  const config = outcomeConfig[outcome] || { 
+  const config = statusConfig[status] || { 
     class: "bg-gray-100 text-gray-600 border-gray-200", 
     icon: <PhoneIcon className="h-3 w-3 mr-1" /> 
   }
   
   return (
     <Badge variant="outline" className={config.class}>
-      {config.icon} {outcome.replace('_', ' ')}
+      {config.icon} {status.replace('_', ' ')}
     </Badge>
   )
 }
@@ -98,7 +98,8 @@ async function getCallById(id: string): Promise<CallAttemptWithLead | null> {
         id,
         name,
         phone,
-        email
+        email,
+        status
       )
     `)
     .eq('id', id)
@@ -133,7 +134,7 @@ async function CallDetailContent({ id }: { id: string }) {
           <div>
             <h1 className="text-2xl font-bold">Call with {call.lead.name}</h1>
             <div className="mt-2">
-              {getOutcomeBadge(call.status)}
+              {getStatusBadge(call.status)}
               {call.started_at && (
                 <span className="ml-3 text-sm text-muted-foreground">
                   {formatDistanceToNow(parseISO(call.started_at), { addSuffix: true })}
@@ -165,7 +166,7 @@ async function CallDetailContent({ id }: { id: string }) {
             <div className="space-y-2">
               <div className="flex items-start">
                 <div className="min-w-24 text-sm text-muted-foreground">Status:</div>
-                <div>{getOutcomeBadge(call.status)}</div>
+                <div>{getStatusBadge(call.status)}</div>
               </div>
               <div className="flex items-start">
                 <div className="min-w-24 text-sm text-muted-foreground">Duration:</div>
