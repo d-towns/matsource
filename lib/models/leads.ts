@@ -34,14 +34,18 @@ export const CallAttemptSchema = z.object({
     "appointment_scheduled", 
     "declined", 
     "follow_up",
-    "pending"
+    "pending",
+    "in_progress"
   ]).optional(),
   duration: z.number().optional(),
   notes: z.string().optional().nullable(),
-  transcription: z.string().optional().nullable(),
+  transcript: z.array(z.object({
+    role: z.enum(["user", "assistant", "system"]),
+    content: z.string(),
+  })).optional().nullable(),
   scheduled_time: z.string().datetime().optional().nullable(),
-  started_at: z.string().datetime().optional().nullable(),
-  ended_at: z.string().datetime().optional().nullable(),
+  start_time: z.string().datetime().optional().nullable(),
+  end_time: z.string().datetime().optional().nullable(),
   appointment_id: z.string().uuid().optional().nullable(),
   created_at: z.string().datetime(),
   updated_at: z.string().datetime().optional(),
