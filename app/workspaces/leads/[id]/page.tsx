@@ -201,11 +201,11 @@ async function LeadDetailContent({ id }: { id: string }) {
               <div className="flex items-start">
                 <div className="min-w-24 text-sm text-muted-foreground">Last Call:</div>
                 <div>
-                  {calls.length > 0 && calls[0].started_at ? (
+                  {calls.length > 0 && calls[0].start_time ? (
                     <>
-                      {format(parseISO(calls[0].started_at), 'MMM d, yyyy')}
+                      {format(parseISO(calls[0].start_time), 'MMM d, yyyy')}
                       <div className="text-xs text-muted-foreground">
-                        {formatDistanceToNow(parseISO(calls[0].started_at), { addSuffix: true })}
+                        {formatDistanceToNow(parseISO(calls[0].start_time), { addSuffix: true })}
                       </div>
                     </>
                   ) : (
