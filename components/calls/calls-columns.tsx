@@ -29,8 +29,8 @@ function formatDuration(seconds?: number): string {
 }
 
 // Helper function to render outcome badge
-function getOutcomeBadge(outcome?: string) {
-  const outcomeConfig: Record<string, { class: string, icon: React.ReactNode }> = {
+function getStatusBadge(status?: string) {
+  const statusConfig: Record<string, { class: string, icon: React.ReactNode }> = {
     connected: { 
       class: "bg-green-100 text-green-800 border-green-200", 
       icon: <PhoneIcon className="h-3 w-3 mr-1" /> 
@@ -65,7 +65,7 @@ function getOutcomeBadge(outcome?: string) {
     },
   }
 
-  if (!outcome) {
+  if (!status) {
     return (
       <Badge variant="outline" className="bg-gray-100 text-gray-600 border-gray-200">
         <PhoneOutgoingIcon className="h-3 w-3 mr-1" /> In Progress
@@ -73,14 +73,14 @@ function getOutcomeBadge(outcome?: string) {
     )
   }
 
-  const config = outcomeConfig[outcome] || { 
+  const config = statusConfig[status] || { 
     class: "bg-gray-100 text-gray-600 border-gray-200", 
     icon: <PhoneIcon className="h-3 w-3 mr-1" /> 
   }
   
   return (
     <Badge variant="outline" className={config.class}>
-      {config.icon} {outcome.replace('_', ' ')}
+      {config.icon} {status.replace('_', ' ')}
     </Badge>
   )
 }
@@ -117,11 +117,11 @@ export const columns: ColumnDef<CallAttemptWithLead>[] = [
     }
   },
   {
-    accessorKey: "outcome",
-    header: "Outcome",
+    accessorKey: "status",
+    header: "Status",
     cell: ({ row }) => {
-      const outcome = row.getValue("outcome") as string | undefined
-      return getOutcomeBadge(outcome)
+      const status = row.getValue("status") as string | undefined
+      return getStatusBadge(status)
     }
   },
   {

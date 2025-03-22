@@ -44,9 +44,7 @@ async function getCallMetrics() {
   // Get connected calls count
   const { count: connectedCalls, error: connectedCallsError } = await supabase
     .from('call_attempts')
-    .select('*', { count: 'exact', head: true })
-    .eq('status', 'connected')
-  
+    .select('*', { count: 'exact', head: true }).neq('status', 'failed').neq('status', 'no_answer').neq('status', 'busy')
   // Get scheduled calls count
   const { count: scheduledCalls, error: scheduledCallsError } = await supabase
     .from('call_attempts')

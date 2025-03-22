@@ -19,6 +19,7 @@ import { format, parseISO, formatDistanceToNow } from "date-fns"
 import Link from "next/link"
 import React from "react"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
+import { Separator } from "@/components/ui/separator"
 
 // Helper function to format duration in mm:ss
 function formatDuration(seconds?: number): string {
@@ -135,9 +136,9 @@ async function CallDetailContent({ id }: { id: string }) {
             <h1 className="text-2xl font-bold">Call with {call.lead.name}</h1>
             <div className="mt-2">
               {getStatusBadge(call.status)}
-              {call.started_at && (
+              {call.start_time && (
                 <span className="ml-3 text-sm text-muted-foreground">
-                  {formatDistanceToNow(parseISO(call.started_at), { addSuffix: true })}
+                  {formatDistanceToNow(parseISO(call.start_time), { addSuffix: true })}
                 </span>
               )}
             </div>
@@ -228,19 +229,19 @@ async function CallDetailContent({ id }: { id: string }) {
                   </div>
                 </div>
               )}
-              {call.started_at && (
+              {call.start_time && (
                 <div className="flex items-start">
                   <div className="min-w-24 text-sm text-muted-foreground">Started:</div>
                   <div>
-                    {format(parseISO(call.started_at), 'MMM d, yyyy h:mm a')}
+                    {format(parseISO(call.start_time), 'MMM d, yyyy h:mm a')}
                   </div>
                 </div>
               )}
-              {call.ended_at && (
+              {call.end_time && (
                 <div className="flex items-start">
                   <div className="min-w-24 text-sm text-muted-foreground">Ended:</div>
                   <div>
-                    {format(parseISO(call.ended_at), 'MMM d, yyyy h:mm a')}
+                    {format(parseISO(call.end_time), 'MMM d, yyyy h:mm a')}
                   </div>
                 </div>
               )}
@@ -254,8 +255,8 @@ async function CallDetailContent({ id }: { id: string }) {
           </CardContent>
         </Card>
       </div>
-      
-      {call.notes && (
+      <div className="flex flex-col gap-4">
+      {/* {call.notes && (
         <Card className="mb-8">
           <CardHeader className="pb-2">
             <CardTitle className="text-md">Notes</CardTitle>
@@ -264,21 +265,30 @@ async function CallDetailContent({ id }: { id: string }) {
             <p className="whitespace-pre-line">{call.notes}</p>
           </CardContent>
         </Card>
-      )}
+      )} */}
       
-      {call.transcription && (
+      {call.transcript && (
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-md flex items-center">
+            <CardTitle className="text-xl flex items-center font-bold ">
               <FileTextIcon className="h-4 w-4 mr-2" />
-              Transcription
+             Call Transcript
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <p className="whitespace-pre-line">{call.transcription}</p>
+          <Separator />
+          <CardContent className="mt-4 ">
+            <div className="flex flex-col gap-2">
+              {call.transcript.map((turn, index) => (
+                <div key={index} className={`${turn.role === "user" ? "text-purple-500" : "text-orange-500"}`}>
+                  <div className="font-bold">{turn.role === "user" ? call.lead.name : "Agent" }:</div>
+                  <div className="whitespace-pre-line">{turn.content}</div>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
       )}
+      </div>
     </>
   )
 }
