@@ -1,8 +1,4 @@
 import { getAllPosts } from "./actions";
-import Image from "next/image";
-import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Calendar, Clock, User } from "lucide-react";
 import { Metadata } from "next";
 import BlogCard from "@/components/BlogCard";
 
@@ -18,10 +14,6 @@ export const metadata: Metadata = {
 
 export default async function BlogPage() {
   const allPosts = await getAllPosts();
-  
-  // Get the first post as featured
-  const featuredPost = allPosts[0];
-  const regularPosts = allPosts.slice(1);
   
   return (
     <div className="min-h-screen py-20">

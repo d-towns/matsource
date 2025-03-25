@@ -11,18 +11,18 @@ export const metadata: Metadata = {
 
 export default function PricingPage() {
   // Testimonial items
-  const testimonials = [
-    {
-      quote: "The ROI on Matsource's voice agents was immediate. We've reduced our call handling costs by 60% while improving customer satisfaction.",
-      author: "Sarah Johnson",
-      company: "TechSolutions Inc."
-    },
-    {
-      quote: "Our customers can't tell they're speaking with an AI. The voice quality and natural conversation flow is remarkable.",
-      author: "Michael Rodriguez",
-      company: "ServicePro Industries"
-    }
-  ];
+  // const testimonials = [
+  //   {
+  //     quote: "The ROI on Matsource's voice agents was immediate. We've reduced our call handling costs by 60% while improving customer satisfaction.",
+  //     author: "Sarah Johnson",
+  //     company: "TechSolutions Inc."
+  //   },
+  //   {
+  //     quote: "Our customers can't tell they're speaking with an AI. The voice quality and natural conversation flow is remarkable.",
+  //     author: "Michael Rodriguez",
+  //     company: "ServicePro Industries"
+  //   }
+  // ];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white overflow-x-hidden">
@@ -77,7 +77,7 @@ export default function PricingPage() {
         </section>
 
         {/* Testimonials */}
-        <section className="py-16">
+        {/* <section className="py-16">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-12">What Our Clients Say</h2>
             
@@ -102,7 +102,7 @@ export default function PricingPage() {
               ))}
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* FAQs */}
         <FAQ />

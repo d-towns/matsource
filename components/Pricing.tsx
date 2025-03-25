@@ -1,7 +1,6 @@
 "use client";
 
 import { Rocket } from "lucide-react";
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { BookDemoButton } from "./BookDemoButton";
 

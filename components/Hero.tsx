@@ -1,6 +1,5 @@
 "use client";
 
-import { WaitlistWidget } from "@/components/WaitlistWidget";
 import Link from "next/link";
 import { ArrowRight, PhoneCallIcon } from "lucide-react";
 import { motion } from "framer-motion";

@@ -1,8 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Check, CheckCircle, CheckCircle2, X, XCircle } from 'lucide-react';
-import { Button } from './ui/button';
+import { CheckCircle2, XCircle } from 'lucide-react';
 import { BookDemoButton } from './BookDemoButton';
 
 interface ComparisonItem {

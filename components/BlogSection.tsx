@@ -1,8 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Link from 'next/link';
-import Image from 'next/image';
 import { Blog } from '@/lib/models/blog';
 import BlogCard from './BlogCard';
 
@@ -27,7 +25,7 @@ export default function BlogSection({ allPosts }: { allPosts: Blog[] }) {
             Latest Insights
           </h2>
           <p className="  text-left w-full mx-auto">
-            Stay informed about the latest developments in AI technology and how it's transforming businesses.
+            Stay informed about the latest developments in AI technology and how it is transforming businesses.
           </p>
         </motion.div>
 
