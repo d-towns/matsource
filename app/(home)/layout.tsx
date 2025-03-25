@@ -6,7 +6,7 @@ export default function HomeLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-background text-foreground font-sans">
       <Navbar />
       {children}
     </div>

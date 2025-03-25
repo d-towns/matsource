@@ -1,11 +1,10 @@
 "use client";
 
-import { WaitlistWidget } from "@/components/WaitlistWidget";
 import Link from "next/link";
-import { ArrowRight} from "lucide-react";
+import { ArrowRight, PhoneCallIcon } from "lucide-react";
 import { motion } from "framer-motion";
 import { FeatureTicker } from "@/components/FeatureTicker";
-
+import { Button } from "@/components/ui/button";
 // const industries = [
 //   "Home Services",
 //   "Auto Service",
@@ -36,13 +35,12 @@ export function Hero() {
   // }, []);
 
   const features = [
-    "Job Management",
     "Smart Quotes",
     "Instant Customer Feedback",
-    "Inbound & outbound AI voice calls",
+    "Inbound Voice Calls",
+    "Outbound Voice Calls",
     "Automated Parts Procurement",
-    "Service Notifications",
-    "Automated Invoicing",
+    "24/7 Customer Support",
     "Detailed Analytics"
   ];
 
@@ -55,38 +53,35 @@ export function Hero() {
     <section className="relative">
       {/* Gradient background with fade to black */}
       <div className="absolute inset-0 
-       
-       
-       
         from-purple-900/90 via-blue-900/50 to-transparent"
       />
 
       {/* Content */}
       <div className="relative flex flex-col items-center pt-8 md:pt-12 pb-16 md:pb-20">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-4 md:mb-6">
+        <div className="container mx-auto px-4 text-center mt-8">
+          <h1 className="text-4xl md:text-8xl font-bold mb-4 md:mb-6">
             <span
-              className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-white"
+              className="font-sans font-medium"
             >
-              Reclaim Your Time.<br />
-              Reclaim Your Profits.<br />
+              Handle <span className="bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">Real Calls</span><br />
+              With Voice AI Agents.<br />
             </span>
           </h1>
           <p className="text-base md:text-xl mb-4 max-w-3xl mx-auto px-4">
-          AI-Powered Efficiency for Service Businesses: Dispatch Smarter, Serve Faster, Profit More.
+          Qualify More Leads. Book More Appointments. Close More Deals
           </p>
           
           <div className="flex justify-center mb-8">
             <Link 
               href="https://www.contractormag.com/technology/article/21278738/three-ways-ai-is-powering-contracting-businesses" 
-              className="text-sm md:text-base font-medium text-matsource-400 group relative px-2 py-1"
+              className="text-sm md:text-base font-medium text-primary group relative px-2 py-1"
             >
               <span className="relative z-10">
-                How Skilled Trades businesses are using AI to save time and money.
+                ContractorMag: How Skilled Trades businesses are using AI to save time and money.
               </span>
               
               {/* Animated underline */}
-              <span className="absolute bottom-0 left-0 h-0.5 bg-matsource-400/30 w-0 group-hover:w-full transition-all duration-300" />
+              <span className="absolute bottom-0 left-0 h-0.5 bg-primary/30 w-0 group-hover:w-full transition-all duration-300" />
               
               {/* Animated arrow */}
               <motion.span 
@@ -99,10 +94,39 @@ export function Hero() {
               </motion.span>
             </Link>
           </div>
+          <div className="flex justify-center">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 15 }}
+            >
+              <Button 
+                className="bg-gradient-to-r from-primary to-secondary text-white rounded-full px-8 py-6 relative overflow-hidden group"
+                style={{
+                  boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+                }}
+              >
+                <motion.div
+                  className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"
+                  initial={false}
+                  whileHover={{ opacity: 0.2 }}
+                />
+                <span className="text-white text-xl font-medium tracking-wide flex items-center ">
+                  Book a Demo 
+                  <motion.span
+                    className="ml-3"
+                    whileHover={{ rotate: 15 }}
+                  >
+                    <PhoneCallIcon className="w-5 h-5" />
+                  </motion.span>
+                </span>
+              </Button>
+            </motion.div>
+          </div>
           
-          <WaitlistWidget />
+          {/* <WaitlistWidget /> */}
           
-          <div className="mt-6 md:mt-10 w-full max-w-6xl mx-auto bg-gray-900/50 backdrop-blur-sm rounded-lg border border-gray-800">
+          <div className="mt-6 md:mt-10 w-full max-w-6xl mx-auto">
             <FeatureTicker features={features} />
           </div>
         </div>
@@ -115,4 +139,4 @@ export function Hero() {
     </section>
     </motion.div>
   );
-} 
+}

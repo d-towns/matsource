@@ -37,7 +37,7 @@ export function FeatureTicker({ features, speed = 50 }: FeatureTickerProps) {
   const duration = contentWidth / speed;
 
   return (
-    <div className="relative overflow-hidden" ref={containerRef}>
+    <div className="relative" ref={containerRef}>
       <motion.div
         key={`ticker-${features.length}`}
         ref={contentRef}
@@ -58,7 +58,7 @@ export function FeatureTicker({ features, speed = 50 }: FeatureTickerProps) {
           <div key={`${feature}-${index}`} className="flex items-center">
           <div
             key={`${feature}-${index}`}
-            className="inline-flex items-center mx-6 text-xs md:text-base text-gray-400"
+            className="inline-flex items-center mx-6 md:text-lg font-sans"
           >
             {feature}
           </div>

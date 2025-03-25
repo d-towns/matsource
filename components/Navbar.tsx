@@ -15,7 +15,7 @@ export function Navbar() {
               <span className="text-3xl mr-2" role="img" aria-label="Construction Worker">
                 👨‍🔧
               </span>
-              <span className="text-xl font-bold">Matsource</span>
+              <span className="text-xl font-bold font-sans">BlueAgent</span>
             </Link>
           </div>
           
