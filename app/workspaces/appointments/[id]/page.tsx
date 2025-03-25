@@ -58,10 +58,9 @@ async function getAppointmentById(id: string) {
       ),
       call_attempt:call_attempt_id (
         id,
-        started_at,
-        ended_at,
-        status,
-        outcome
+        start_time,
+        end_time,
+        status
       )
     `)
     .eq('id', id)

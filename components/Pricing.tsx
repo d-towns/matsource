@@ -1,127 +1,171 @@
 "use client";
 
-import { Check } from "lucide-react";
+import { Rocket } from "lucide-react";
 import Link from "next/link";
-
-const tiers = [
-  {
-    name: "Basic",
-    price: "99",
-    description: "Perfect for small service businesses getting started with AI.",
-    features: [
-      "Up to 1,000 voice minutes/month",
-      "Basic semantic search",
-      "Email support",
-      "1 AI agent",
-      "Standard response time",
-      "Basic analytics"
-    ],
-    cta: "Get Started",
-    href: "/signup?plan=basic"
-  },
-  {
-    name: "Pro",
-    price: "199",
-    description: "Ideal for growing businesses needing advanced features.",
-    features: [
-      "Up to 5,000 voice minutes/month",
-      "Advanced semantic search",
-      "Priority email & chat support",
-      "3 AI agents",
-      "Faster response time",
-      "Advanced analytics",
-      "Custom voice prompts",
-      "API access"
-    ],
-    cta: "Get Started",
-    href: "/signup?plan=pro",
-    featured: true
-  },
-  {
-    name: "Enterprise",
-    description: "Custom solutions for large-scale operations.",
-    features: [
-      "Unlimited voice minutes",
-      "Enterprise semantic search",
-      "24/7 priority support",
-      "Unlimited AI agents",
-      "Fastest response time",
-      "Enterprise analytics",
-      "Custom integrations",
-      "Dedicated account manager",
-      "Custom AI model training",
-      "SLA guarantees"
-    ],
-    cta: "Contact Sales",
-    href: "/contact-sales",
-  }
-];
+import { motion } from "framer-motion";
+import { BookDemoButton } from "./BookDemoButton";
 
 export function Pricing() {
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2
+      }
+    }
+  };
+
+  const item = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0 }
+  };
+
+  const featureItem = {
+    hidden: { opacity: 0, x: -10 },
+    show: { opacity: 1, x: 0 }
+  };
+
   return (
-    <section className="py-12 md:py-20">
+    <section className="py-20 overflow-hidden">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-3 md:mb-4 bg-clip-text  bg-gradient-to-r from-white to-gray-400">
-            Simple, transparent pricing
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex items-center mb-16"
+        >
+          <h2 className="text-4xl md:text-5xl font-bold">
+            <span className="text-black dark:text-white">Our</span>
+            <span className="text-primary ml-4">Pricing</span>
           </h2>
-          <p className="text-base md:text-lg">
-            Choose the right plan for your business
-          </p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto">
-          {tiers.map((tier) => (
-            <div
-              key={tier.name}
-              className={`relative rounded-2xl backdrop-blur-sm border border-gray-800 flex flex-col ${
-                tier.featured 
-                  ? 'bg-gradient-to-b from-matsource-500/10 to-purple-900/10 ring-2 ring-matsource-500' 
-                  : 'bg-gray-900/40'
-              }`}
-            >
-              {tier.featured && (
-                <div className="absolute -top-5 left-0 right-0 mx-auto w-32 rounded-full bg-gradient-to-r from-matsource-500 to-purple-600 px-3 py-1 text-sm font-medium text-white text-center">
-                  Most Popular
-                </div>
-              )}
-
-              <div className="p-6 md:p-8 flex flex-col flex-grow">
-                <h3 className="text-xl md:text-2xl font-bold text-white mb-2">{tier.name}</h3>
-                {tier.price ? (
-                  <div className="mt-4 flex items-baseline text-white">
-                    <span className="text-3xl md:text-4xl font-bold tracking-tight">${tier.price}</span>
-                    <span className="ml-1 text-sm md:text-base text-gray-400">/month</span>
-                  </div>
-                ) : (
-                  <div className="mt-4 flex items-baseline text-white">
-                    <span className="text-3xl md:text-4xl font-bold tracking-tight">Custom</span>
-                  </div>
-                )}
-                <p className="mt-6 text-gray-300">{tier.description}</p>
-
-                <Link
-                  href={tier.href}
-                  className={`mt-8 block w-full rounded-full px-6 py-3 text-center text-sm font-semibold leading-6 text-white transition-colors self-end ${
-                    tier.featured
-                      ? 'bg-matsource-500 hover:bg-matsource-400'
-                      : 'bg-gray-800 hover:bg-gray-700'
-                  }`}
-                >
-                  {tier.cta}
-                </Link>
-                <ul className="mt-6 space-y-4 flex-grow">
-                  {tier.features.map((feature) => (
-                    <li key={feature} className="flex text-gray-300">
-                      <Check className="h-5 w-5 flex-shrink-0 text-matsource-500" />
-                      <span className="ml-3 text-sm md:text-base">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
+        <motion.div 
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-8"
+        >
+          {/* Inbound Voice Agents Card */}
+          <motion.div 
+            variants={item}
+            className="bg-white rounded-3xl shadow-lg overflow-hidden"
+          >
+            <div className="p-8 md:p-10">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-2xl font-bold text-gray-900">Inbound Voice Agents</h3>
+                <span className="bg-green-100 text-green-800 text-sm font-medium px-4 py-2 rounded-full">Receive Calls</span>
               </div>
+              
+              <h4 className="text-3xl font-bold mb-2 text-gray-900">Your automated digital receptionist. Available 24/7.</h4>
+              
+              <div className="mt-10 mb-10">
+                <div className="flex items-baseline">
+                  <h3 className="text-3xl font-bold text-black">Starting From $4,000</h3>
+                  <span className="ml-2 text-gray-500">setup fee</span>
+                </div>
+              </div>
+
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center bg-black text-white rounded-full px-8 py-4 font-medium"
+              >
+                <Rocket className="w-5 h-5 mr-2" />
+                Get Started
+              </motion.button>
+
+              <motion.ul className="mt-10 space-y-4">
+                {[
+                  "Advanced Automations",
+                  "Weekly Development Calls",
+                  "Human Like Quality",
+                  "Rigorous Testing",
+                  "24/7 Priority Support",
+                  "Latest AI Models"
+                ].map((feature, index) => (
+                  <motion.li 
+                    key={feature}
+                    variants={featureItem}
+                    transition={{ delay: 0.1 * index }}
+                    className="flex items-center text-gray-700"
+                  >
+                    <span className="w-2 h-2 bg-gray-400 rounded-full mr-4"></span>
+                    {feature}
+                  </motion.li>
+                ))}
+              </motion.ul>
             </div>
-          ))}
-        </div>
+          </motion.div>
+
+          {/* Outbound Voice Agents Card */}
+          <motion.div 
+            variants={item}
+            className="bg-gray-900 rounded-3xl shadow-lg overflow-hidden"
+          >
+            <div className="p-8 md:p-10">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-2xl font-bold text-white">Outbound Voice Agents</h3>
+                <span className="bg-blue-500 text-white text-sm font-medium px-4 py-2 rounded-full">Send Calls</span>
+              </div>
+              
+              <h4 className="text-3xl font-bold mb-2 text-white">
+                <span className="text-gray-400">Fully automate</span> reminders, follow-ups & more.
+              </h4>
+              
+              <div className="mt-10 mb-10">
+                <div className="flex items-baseline">
+                  <h3 className="text-3xl font-bold text-white">Starting From $4,000</h3>
+                  <span className="ml-2 text-gray-400">setup fee</span>
+                </div>
+              </div>
+
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex items-center bg-white text-black rounded-full px-8 py-4 font-medium"
+              >
+                <Rocket className="w-5 h-5 mr-2" />
+                Get Started
+              </motion.button>
+
+              <motion.ul className="mt-10 space-y-4">
+                {[
+                  "Advanced Automations",
+                  "Weekly Development Calls",
+                  "Human Like Quality",
+                  "Rigorous Testing",
+                  "24/7 Priority Support",
+                  "Latest AI Models"
+                ].map((feature, index) => (
+                  <motion.li 
+                    key={feature}
+                    variants={featureItem}
+                    transition={{ delay: 0.1 * index }}
+                    className="flex items-center text-gray-400"
+                  >
+                    <span className="w-2 h-2 bg-gray-500 rounded-full mr-4"></span>
+                    {feature}
+                  </motion.li>
+                ))}
+              </motion.ul>
+            </div>
+          </motion.div>
+        </motion.div>
+
+        {/* Discovery Call CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          viewport={{ once: true }}
+          className="mt-16 rounded-3xl border shadow-md p-8 flex flex-col md:flex-row justify-between items-center"
+        >
+          <h3 className="text-2xl font-bold mb-4 md:mb-0">Book Your AI Voice Agent Discovery Call Today.</h3>
+          <BookDemoButton />
+        </motion.div>
       </div>
     </section>
   );

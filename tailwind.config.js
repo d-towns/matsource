@@ -23,11 +23,11 @@ module.exports = {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#6366F1",
+          DEFAULT: "#1264ed",
           foreground: "hsl(var(--primary-foreground))",
         },
         secondary: {
-          DEFAULT: "#8B5CF6",
+          DEFAULT: "#ED9B12",
           foreground: "hsl(var(--secondary-foreground))",
         },
         destructive: {
@@ -77,6 +77,10 @@ module.exports = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+      },
+      fontFamily: {
+        sans: ['Red Hat Display', 'sans-serif'],
+        serif: ['Merriweather', 'serif'],
       },
     },
   },

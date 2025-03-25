@@ -15,24 +15,24 @@ import {
 
 const solutions = [
   {
-    title: "Voice Automation",
-    href: "/solutions/voice",
+    title: "Inbound Voice AI",
+    href: "/solutions/inbound-voice-agents",
     description: "Automate inbound and outbound calls with Conversational AI voice agents."
   },
   {
-    title: "Procurement Automation",
-    href: "/solutions/search",
-    description: "Say what you need, and our AI Agent will find and purchase it for you."
+    title: "Outbound Voice AI",
+    href: "/solutions/outbound-voice-agents",
+    description: "Automate outbound calls with Conversational AI voice agents."
   },
   {
-    title: "Job Management",
-    href: "/solutions/job-management",
-    description: "Manage jobs and dispatch technicians automatically."
+    title: "Automated Procurement",
+    href: "/solutions/automated-procurement",
+    description: "Automate procurement processes with Ai Agents that can make phone calls and use the internet to find the best deals."
   },
   {
-    title: "Customer Service",
-    href: "/solutions/customer-service",
-    description: "Increase customer satisfaction with AI-powered customer service."
+    title: "Customer Support",
+    href: "/solutions/customer-support",
+    description: "Regular updates, performace boosts & fixes to ensure your agents run smoothly."
   }
 ];
 

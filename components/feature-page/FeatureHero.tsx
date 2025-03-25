@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { BookDemoButton } from "../BookDemoButton";
 
 interface FeatureHeroProps {
   title: string;
@@ -18,18 +19,18 @@ export function FeatureHero({ title, subtitle, description }: FeatureHeroProps) 
           transition={{ duration: 0.5 }}
         >
           <h1 className="text-3xl md:text-5xl font-bold mb-4">
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-white">
+            <span className="">
               {title}
             </span>
           </h1>
+        
           
-          <h2 className="text-xl md:text-2xl font-medium mb-6 bg-clip-text text-secondary-foreground">
-            {subtitle}
-          </h2>
-          
-          <p className="text-base md:text-lg text-gray-400 max-w-3xl mx-auto">
+          <p className="text-base md:text-lg max-w-3xl mx-auto">
             {description}
           </p>
+          <div className="mt-8">
+            <BookDemoButton />
+          </div>
         </motion.div>
       </div>
     </div>

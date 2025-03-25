@@ -1,0 +1,47 @@
+.prose {
+    font-family: 'Red Hat Display', sans-serif;
+}
+
+.prose h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.prose h2 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.prose h3 {
+    font-size: 1.25rem;
+    font-weight: 400;
+    margin-bottom: 0.25rem;
+}
+
+
+.prose p {
+    font-size: 1rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+}
+
+
+.prose ul {
+    list-style-type: disc;
+    margin-bottom: 1rem;
+}
+
+.prose ol {
+    list-style-type: decimal;
+    margin-bottom: 1rem;
+}
+
+
+
+.prose {
+    font-size: 1rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+}

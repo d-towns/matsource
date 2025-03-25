@@ -5,9 +5,9 @@ import { FeatureFAQ, FAQItem } from "@/components/feature-page/FeatureFAQ";
 
 const voiceFeatureSections = [
   {
-    title: "Never Miss a Customer Call Again",
-    description: "Our AI voice system answers 100% of calls, handling customer inquiries even during peak times. No more missed opportunities or frustrated customers waiting on hold.",
-    image: "/images/solutions/voice-automation-1.jpg",
+    title: "Virtual Receptionist",
+    description: "An AI voice agent handling reception work improves efficiency by instantly answering calls, reducing wait times, and handling multiple inquiries simultaneously. It ensures 24/7 availability, providing consistent and accurate information without breaks or fatigue.",
+    image: "https://zazznpnzzmueacffwutq.supabase.co/storage/v1/object/public/blog-images//virtual-receptionist.jpg",
     alt: "AI voice system answering customer calls",
     bulletPoints: [
       "24/7 automated call answering with natural-sounding voice",
@@ -16,9 +16,9 @@ const voiceFeatureSections = [
     ]
   },
   {
-    title: "Proactive Customer Outreach",
-    description: "Automatically reach out to customers for appointment confirmations, follow-ups, and maintenance reminders. Boost your retention rates while reducing the manual workload on your team.",
-    image: "/images/solutions/voice-automation-2.jpg",
+    title: "Appointment Setter",
+    description: "An AI appointment setter voice agent streamlines scheduling by quickly handling inbound calls, reducing wait times for customers. It ensures accuracy by integrating with calendars, preventing double bookings and scheduling conflicts. The AI operates 24/7, allowing customers to book, reschedule, or cancel appointments at their convenience. Additionally, it enhances efficiency and cost savings by automating routine scheduling tasks, freeing up human staff for more complex interactions.",
+    image: "https://zazznpnzzmueacffwutq.supabase.co/storage/v1/object/public/blog-images//google_calendar.jpg",
     alt: "Automated customer outreach system",
     bulletPoints: [
       "Schedule confirmation calls reduce no-shows by up to 35%",
@@ -27,9 +27,9 @@ const voiceFeatureSections = [
     ]
   },
   {
-    title: "Rich Customer Insights",
-    description: "Every call is transcribed, analyzed, and integrated into your customer database. Gain valuable insights about customer preferences, common issues, and service opportunities.",
-    image: "/images/solutions/voice-automation-3.jpg",
+    title: "Lead Qualifier",
+    description: "An AI-powered inbound voice agent for lead qualification efficiently filters inquiries by asking key questions and assessing potential customers based on predefined criteria. It saves businesses time by identifying high-intent leads and forwarding only the most relevant prospects to sales teams. The AI can handle large call volumes, ensuring that every lead is evaluated consistently and objectively without human bias. By automating the qualification process, companies can focus their efforts on closing deals rather than manually sorting through unqualified leads.",
+    image: "https://zazznpnzzmueacffwutq.supabase.co/storage/v1/object/public/blog-images//sales-funnel.jpg",
     alt: "Customer insights dashboard",
     bulletPoints: [
       "AI-generated call summaries and action items",
@@ -70,12 +70,13 @@ export default function VoiceAutomationPage() {
   return (
     <div>
       <FeatureHero 
-        title="AI Voice Automation"
-        subtitle="Transform your customer interactions"
-        description="Handle inbound inquiries and proactive outreach with intelligent AI voice technology tailored specifically for service businesses."
+        title="Inbound Voice AI Agents"
+        subtitle="Automate your customer interactions"
+        description="Handle customer inquiries and streamline your business operations with intelligent AI voice technology"
       />
       
       <div className="container mx-auto px-4">
+        <h2 className="text-4xl text-center font-bold mb-4">Many Use Cases</h2>
         {voiceFeatureSections.map((section, index) => (
           <FeatureSection 
             key={index}
