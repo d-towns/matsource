@@ -9,7 +9,7 @@ interface FeatureHeroProps {
   description: string;
 }
 
-export function FeatureHero({ title, subtitle, description }: FeatureHeroProps) {
+export function FeatureHero({ title, description }: FeatureHeroProps) {
   return (
     <div className="pt-20 pb-12 md:pt-24 md:pb-16">
       <div className="container mx-auto px-4 text-center">
