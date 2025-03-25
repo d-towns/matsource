@@ -32,9 +32,10 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function BlogPost({ params }: { params: { slug: string } }) {
-  const post = await getPostBySlug(params.slug);
-  const relatedPosts = await getRelatedPosts(params.slug, 3);
+export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
+  const slug = await params;
+  const post = await getPostBySlug(slug.slug);
+  const relatedPosts = await getRelatedPosts(slug.slug, 3);
   const readingTime = Math.ceil(post.content.split(' ').length / 200); // Rough estimate: 200 words per minute
   const publishedDate = new Date(post.created_at);
   const timeAgo = formatDistance(publishedDate, new Date(), { addSuffix: true });
