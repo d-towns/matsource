@@ -8,8 +8,9 @@ import Link from "next/link";
 import Markdown from "react-markdown";
 import './page.css'
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const post = await getPostBySlug(params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const slug = await params;
+  const post = await getPostBySlug(slug.slug);
   
   return {
     title: `${post.title} | Matsource Blog`,
