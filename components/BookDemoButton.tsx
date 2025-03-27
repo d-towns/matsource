@@ -1,14 +1,18 @@
+"use client";
 import { motion } from "framer-motion";
 import { Button } from "./ui/button";
 import { PhoneCallIcon } from "lucide-react";
-
+import Link from "next/link";
 export const BookDemoButton = () => {
     return (
+      
         <motion.div
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         transition={{ type: "spring", stiffness: 400, damping: 15 }}
+        className="w-fit m-auto"
       >
+        <Link href="#contact-us" className="w-fit m-auto" scroll={true}>
         <Button 
           className="bg-gradient-to-r from-primary to-secondary text-white rounded-full px-8 py-6 relative overflow-hidden group"
           style={{
@@ -30,6 +34,7 @@ export const BookDemoButton = () => {
             </motion.span>
           </span>
         </Button>
+        </Link>
       </motion.div>
     )
 }

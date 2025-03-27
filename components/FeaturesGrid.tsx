@@ -18,14 +18,14 @@ const features: Feature[] = [
     title: "Inbound Voice Calls",
     description: "Human-like virtual receptionist to handle your incoming calls.",
     image: "https://images.unsplash.com/photo-1525182008055-f88b95ff7980?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3Dttps://images.unsplash.com/photo-1521119989659-a83eee488004",
-    slug: "/solutions/inbound-calls",
+    slug: "/solutions/inbound-voice-agents",
     core: true
   },
   {
     title: "Outbound Voice Calls",
     description: "Fully automate reminders, follow-ups & more.",
     image: "https://images.unsplash.com/photo-1598257006458-087169a1f08d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    slug: "/solutions/outbound-calls",
+    slug: "/solutions/outbound-voice-agents",
     core: true
   },
     {
@@ -38,13 +38,13 @@ const features: Feature[] = [
     title: "Smart Quotes",
     description: "AI-powered pricing that adapts to your business needs in real-time.",
     image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71",
-    slug: "/solutions/smart-quotes"
+    slug: "/solutions/inbound-voice-agents"
   },
   {
     title: "Automated Procurement",
     description: "Streamline your supply chain with Automated, AI-driven procurement workflows.",
     image: "https://images.unsplash.com/photo-1699549196390-e31bfc88536d?q=80&w=2074&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    slug: "/solutions/parts-procurement",
+    slug: "/solutions/automated-procurement",
     core: true
   },
 ];

@@ -2,6 +2,22 @@
 
 import { motion } from "framer-motion";
 import { BookDemoButton } from "../BookDemoButton";
+import Ticker from "../Ticker/Ticker";
+
+
+const businessUseCases = [
+  "Plumbers",
+  "Electricians",
+  "Carpenters",
+  "Painters",
+  "Real Estate",
+  "Insurance",
+  "Financial Services",
+  "Restaurants",
+  "Hospitality",
+  "Legal",
+  "Healthcare"
+]
 
 interface FeatureHeroProps {
   title: string;
@@ -11,7 +27,7 @@ interface FeatureHeroProps {
 
 export function FeatureHero({ title, description }: FeatureHeroProps) {
   return (
-    <div className="pt-20 pb-12 md:pt-24 md:pb-16">
+    <div className="pt-20 pb-12 md:pt-24 md:pb-16 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-xl">
       <div className="container mx-auto px-4 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -30,6 +46,9 @@ export function FeatureHero({ title, description }: FeatureHeroProps) {
           </p>
           <div className="mt-8">
             <BookDemoButton />
+          </div>
+          <div className="mt-8">
+            <Ticker items={businessUseCases} />
           </div>
         </motion.div>
       </div>

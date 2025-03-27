@@ -2,39 +2,40 @@ import { FeatureHero } from "@/components/feature-page/FeatureHero";
 import { FeatureSection } from "@/components/feature-page/FeatureSection";
 import { FeatureCTA } from "@/components/feature-page/FeatureCTA";
 import { FeatureFAQ, FAQItem } from "@/components/feature-page/FeatureFAQ";
+import CalendarSection from "@/components/ui/CalendarSection";
 
-const customerServiceSections = [
+const supportFeatureSections = [
   {
-    title: "Automated Service Updates",
-    description: "Keep customers informed at every stage with personalized, automated updates about their service appointments, parts status, and completion estimates.",
-    image: "/images/solutions/customer-service-1.jpg",
-    alt: "Automated service updates interface",
+    title: "24/7 Customer Support",
+    description: "Our AI voice agents provide round-the-clock customer support, ensuring your customers receive immediate assistance at any time. This continuous availability significantly improves customer satisfaction while reducing operational costs.",
+    image: "https://zazznpnzzmueacffwutq.supabase.co/storage/v1/object/public/blog-images//customer-support.jpg",
+    alt: "24/7 customer support illustration",
     bulletPoints: [
-      "Proactive scheduling confirmations reduce no-shows by 35%",
-      "Real-time technician arrival updates improve customer satisfaction",
-      "Automatic completion notifications with invoice details"
+      "Instant response to customer inquiries",
+      "Multilingual support capabilities",
+      "Seamless escalation to human agents when needed"
     ]
   },
   {
-    title: "Smart Customer Portal",
-    description: "Give customers 24/7 access to their service history, upcoming appointments, and documentation through a branded portal customized for your business.",
-    image: "/images/solutions/customer-service-2.jpg",
-    alt: "Customer service portal",
+    title: "Automated Issue Resolution",
+    description: "Our AI agents can handle common customer issues and queries automatically, freeing up your human agents to focus on more complex cases. This efficient system reduces wait times and improves first-call resolution rates.",
+    image: "https://zazznpnzzmueacffwutq.supabase.co/storage/v1/object/public/blog-images//automated-support.jpg",
+    alt: "Automated support system illustration",
     bulletPoints: [
-      "Self-service appointment scheduling and modification",
-      "Secure storage for warranties, manuals, and service records",
-      "Maintenance reminder system for repeat business"
+      "Smart ticket categorization and routing",
+      "Automated resolution for common issues",
+      "Detailed analytics and reporting"
     ]
   },
   {
-    title: "Feedback & Review Management",
-    description: "Automatically collect customer feedback, respond to reviews, and turn satisfied customers into powerful advocates for your business.",
-    image: "/images/solutions/customer-service-3.jpg",
-    alt: "Customer feedback dashboard",
+    title: "CRM Integration",
+    description: "Seamlessly integrate our AI voice agents with your existing CRM system to maintain consistent customer records and provide personalized support. This integration ensures a unified customer experience across all touchpoints.",
+    image: "https://zazznpnzzmueacffwutq.supabase.co/storage/v1/object/public/blog-images//crm-integration.jpg",
+    alt: "CRM integration illustration",
     bulletPoints: [
-      "Automated post-service satisfaction surveys",
-      "Smart routing of negative feedback for immediate resolution",
-      "Review generation system for major platforms (Google, Yelp, etc.)"
+      "Real-time customer data synchronization",
+      "Automated ticket creation and updates",
+      "Custom workflow automation"
     ]
   }
 ];
@@ -76,7 +77,7 @@ export default function CustomerServicePage() {
       />
       
       <div className="container mx-auto px-4">
-        {customerServiceSections.map((section, index) => (
+        {supportFeatureSections.map((section, index) => (
           <FeatureSection 
             key={index}
             index={index}
@@ -100,6 +101,7 @@ export default function CustomerServicePage() {
         subtitle="Common questions about our customer service automation"
         faqs={customerServiceFAQs}
       />
+      <CalendarSection />
     </div>
   );
 } 

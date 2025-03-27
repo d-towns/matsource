@@ -5,6 +5,8 @@ import { ArrowRight, PhoneCallIcon } from "lucide-react";
 import { motion } from "framer-motion";
 import { FeatureTicker } from "@/components/FeatureTicker";
 import { Button } from "@/components/ui/button";
+import { BookDemoButton } from "./BookDemoButton";
+import Ticker from "./Ticker/Ticker";
 // const industries = [
 //   "Home Services",
 //   "Auto Service",
@@ -95,39 +97,13 @@ export function Hero() {
             </Link>
           </div>
           <div className="flex justify-center">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 400, damping: 15 }}
-            >
-              <Button 
-                className="bg-gradient-to-r from-primary to-secondary text-white rounded-full px-8 py-6 relative overflow-hidden group"
-                style={{
-                  boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
-                }}
-              >
-                <motion.div
-                  className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300"
-                  initial={false}
-                  whileHover={{ opacity: 0.2 }}
-                />
-                <span className="text-white text-xl font-medium tracking-wide flex items-center ">
-                  Book a Demo 
-                  <motion.span
-                    className="ml-3"
-                    whileHover={{ rotate: 15 }}
-                  >
-                    <PhoneCallIcon className="w-5 h-5" />
-                  </motion.span>
-                </span>
-              </Button>
-            </motion.div>
+            <BookDemoButton />
           </div>
           
           {/* <WaitlistWidget /> */}
           
           <div className="mt-6 md:mt-10 w-full max-w-6xl mx-auto">
-            <FeatureTicker features={features} />
+            <Ticker items={features} />
           </div>
         </div>
           <>

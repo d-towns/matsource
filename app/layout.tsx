@@ -22,14 +22,14 @@ export default function RootLayout({
 
 export const metadata = {
   title: {
-    default: "Matsource | AI Automation for Skilled Trades Businesses",
-    template: "%s | Matsource AI"
+    default: "BlueAgent | AI Automation for Service Businesses",
+    template: "%s | BlueAgent"
   },
   description: "AI-Powered Efficiency for Service Businesses: Dispatch Smarter, Serve Faster, Profit More.",
   keywords: ["AI automation", "service business", "voice AI", "customer service automation", "parts procurement"],
-  authors: [{ name: "Matsource Team" }],
-  creator: "Matsource AI",
-  publisher: "Matsource AI",
+  authors: [{ name: "BlueAgent Team" }],
+  creator: "BlueAgent",
+  publisher: "BlueAgent",
   formatDetection: {
     email: false,
     telephone: false,
@@ -43,23 +43,23 @@ export const metadata = {
     type: "website",
     locale: "en_US",
     url: "https://matsource-production.up.railway.app",
-    title: "Matsource | AI Automation for Skilled Trades Businesses",
+    title: "BlueAgent | AI Automation for Service Businesses",
     description: "AI-Powered Efficiency for Service Businesses: Dispatch Smarter, Serve Faster, Profit More.",
-    siteName: "Matsource AI",
+    siteName: "BlueAgent",
     images: [
       {
         url: "/marketing_splash.png",
         width: 1200,
         height: 630,
-        alt: "Matsource AI - Service Business Automation",
+        alt: "BlueAgent - Service Business Automation",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Matsource AI | Service Business Automation",
+    title: "BlueAgent | Service Business Automation",
     description: "AI-Powered Efficiency for Service Businesses: Dispatch Smarter, Serve Faster, Profit More.",
-    creator: "@matsourceai",
+    creator: "@blueagentai",
     images: ["/marketing_splash.png"],
   },
   robots: {

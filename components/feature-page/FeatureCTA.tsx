@@ -1,5 +1,6 @@
 import { Sparkles } from "lucide-react";
 import { WaitlistWidget } from "@/components/WaitlistWidget";
+import { BookDemoButton } from "../BookDemoButton";
 
 interface FeatureCTAProps {
   title: string;
@@ -9,9 +10,9 @@ interface FeatureCTAProps {
 
 export function FeatureCTA({ title, subtitle, statistic }: FeatureCTAProps) {
   return (
-    <div className="bg-gray-900/50 rounded-xl border border-gray-800 p-8 md:p-12 my-16">
+    <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-xl border border-gray-300 p-8 md:p-12 my-16">
       <div className="text-center max-w-3xl mx-auto">
-        <div className="inline-flex items-center justify-center gap-2 mb-6 bg-gradient-to-r from-blue-500 via-purple-500 to-amber-500 text-white px-4 py-2 rounded-full">
+        <div className="inline-flex items-center justify-center gap-2 mb-6 bg-primary text-white px-4 py-2 rounded-full">
           <Sparkles className="w-4 h-4" />
           <span className="text-sm font-medium">
             {statistic || "AI-Powered Solution"}
@@ -22,11 +23,11 @@ export function FeatureCTA({ title, subtitle, statistic }: FeatureCTAProps) {
           {title}
         </h3>
         
-        <p className="text-gray-400 mb-8">
+        <p className="text-gray-700 mb-8">
           {subtitle}
         </p>
         
-        <WaitlistWidget />
+      <BookDemoButton />
       </div>
     </div>
   );

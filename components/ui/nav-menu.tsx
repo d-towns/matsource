@@ -27,7 +27,7 @@ const solutions = [
   {
     title: "Automated Procurement",
     href: "/solutions/automated-procurement",
-    description: "Automate procurement processes with Ai Agents that can make phone calls and use the internet to find the best deals."
+    description: "Automate procurement processes with AI Agents that can make phone calls and use the internet to find the best deals."
   },
   {
     title: "Customer Support",
@@ -38,21 +38,21 @@ const solutions = [
 
 const resources = [
 
-  {
-    title: "Case Studies",
-    href: "/case-studies",
-    description: "See how other businesses are using Matsource."
-  },
+  // {
+  //   title: "Case Studies",
+  //   href: "/case-studies",
+  //   description: "See how other businesses are using Matsource."
+  // },
   {
     title: "Blog",
     href: "/blog",
     description: "Latest updates, best practices, and industry insights."
-  },,
-  {
-    title: "About",
-    href: "/about",
-    description: "Learn more about Matsource and our mission.",
-  }
+  },
+  // {
+  //   title: "About",
+  //   href: "/about",
+  //   description: "Learn more about Matsource and our mission.",
+  // }
 ];
 
 const ListItem = React.forwardRef<
@@ -65,13 +65,13 @@ const ListItem = React.forwardRef<
         <a
           ref={ref}
           className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-900 hover:text-white focus:bg-gray-900 focus:text-white text-white",
+            "block text-black select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors duration-300 hover:bg-gradient-to-r from-primary/10 to-secondary/10 focus:bg-gradient-to-r from-primary/20 to-secondary/20",
             className
           )}
           {...props}
         >
           <div className="text-sm font-medium leading-none">{title}</div>
-          <p className="line-clamp-2 text-sm leading-snug text-gray-200">
+          <p className="line-clamp-2 text-sm leading-snug text-gray-700">
             {children}
           </p>
         </a>
@@ -87,7 +87,7 @@ export function NavMenu() {
       <NavigationMenuList>
         <NavigationMenuItem>
           <NavigationMenuTrigger>Solutions</NavigationMenuTrigger>
-          <NavigationMenuContent>
+          <NavigationMenuContent className="bg-white rounded-xl">
             <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
               {solutions.map((item) => (
                 <ListItem
@@ -104,7 +104,7 @@ export function NavMenu() {
         
         <NavigationMenuItem>
           <NavigationMenuTrigger>Resources</NavigationMenuTrigger>
-          <NavigationMenuContent>
+          <NavigationMenuContent className="bg-white rounded-xl">
             <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px]">
               {resources.map((item) => (
                 <ListItem

@@ -63,14 +63,14 @@ export function FeatureSection({
             viewport={{ once: true, margin: "-100px" }}
           >
             <h3 className="text-2xl md:text-3xl font-bold">{title}</h3>
-            <p className="text-gray-800">{description}</p>
+            <p className="">{description}</p>
             
             {bulletPoints.length > 0 && (
               <ul className="mt-6 space-y-2">
                 {bulletPoints.map((point, i) => (
                   <li key={i} className="flex items-start">
                     <span className="flex-shrink-0 w-1.5 h-1.5 mt-2 bg-matsource-500 rounded-full mr-2"></span>
-                    <span className="text-gray-800">{point}</span>
+                    <span className="">{point}</span>
                   </li>
                 ))}
               </ul>

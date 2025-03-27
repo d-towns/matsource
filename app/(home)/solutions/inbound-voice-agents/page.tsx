@@ -1,7 +1,10 @@
 import { FeatureHero } from "@/components/feature-page/FeatureHero";
 import { FeatureSection } from "@/components/feature-page/FeatureSection";
-import { FeatureCTA } from "@/components/feature-page/FeatureCTA";
 import { FeatureFAQ, FAQItem } from "@/components/feature-page/FeatureFAQ";
+import CalendarSection from "@/components/ui/CalendarSection";
+import { Separator } from "@/components/ui/separator";
+import { FeatureCTA } from "@/components/feature-page/FeatureCTA";
+
 
 const voiceFeatureSections = [
   {
@@ -76,8 +79,10 @@ export default function VoiceAutomationPage() {
       />
       
       <div className="container mx-auto px-4">
-        <h2 className="text-4xl text-center font-bold mb-4">Many Use Cases</h2>
+        {/* <h2 className="text-4xl text-center font-bold mb-4">Many Use Cases</h2> */}
         {voiceFeatureSections.map((section, index) => (
+          <div key={index}>
+          <Separator />
           <FeatureSection 
             key={index}
             index={index}
@@ -87,6 +92,7 @@ export default function VoiceAutomationPage() {
             alt={section.alt}
             bulletPoints={section.bulletPoints}
           />
+          </div>
         ))}
         
         <FeatureCTA 
@@ -101,6 +107,8 @@ export default function VoiceAutomationPage() {
         subtitle="Common questions about our AI voice solution"
         faqs={voiceFAQs}
       />
+
+      <CalendarSection />
     </div>
   );
 } 
