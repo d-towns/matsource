@@ -1,10 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, PhoneCallIcon } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
-import { FeatureTicker } from "@/components/FeatureTicker";
-import { Button } from "@/components/ui/button";
 import { BookDemoButton } from "./BookDemoButton";
 import Ticker from "./Ticker/Ticker";
 // const industries = [

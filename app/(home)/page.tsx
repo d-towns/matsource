@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Hero } from "@/components/Hero";
 import { FAQ } from "@/components/FAQ";
 import FeaturesGrid from "@/components/FeaturesGrid";
@@ -18,18 +17,16 @@ export default async function Home() {
         <FeaturesGrid />
 
         <ExpertiseSection />
-        
+
         {/* Pricing Section */}
         <Pricing />
 
         <BlogSection allPosts={allPosts} />
 
-          <FAQ />
+        <FAQ />
 
-          <CalendarSection />
+        <CalendarSection />
       </main>
-
-    {/* Footer */}
     </div>
   );
 }

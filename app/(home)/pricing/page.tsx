@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { Pricing } from "@/components/Pricing";
 import { Metadata } from "next";
 import { CheckCircle } from "lucide-react";

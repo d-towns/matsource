@@ -11,7 +11,7 @@ export default function CustomerSupportPage() {
     <div>
         <div className="my-20">
             <div className="max-w-2xl mx-auto flex flex-col items-center">
-          <h2 className="text-6xl text-center font-semibold mb-12">We'll <span></span>support you <br/> all the way.</h2>
+          <h2 className="text-6xl text-center font-semibold mb-12">We&apos;ll <span></span>support you <br/> all the way.</h2>
           <BookDemoButton />
             </div> 
           <p className="text-center text-gray-600 mb-12"></p>

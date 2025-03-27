@@ -1,5 +1,4 @@
 import { Sparkles } from "lucide-react";
-import { WaitlistWidget } from "@/components/WaitlistWidget";
 import { BookDemoButton } from "../BookDemoButton";
 
 interface FeatureCTAProps {
