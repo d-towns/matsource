@@ -3,27 +3,27 @@ import { SupportMaintenanceCard } from "@/components/pricing/SupportMaintenanceC
 import CalendarSection from "@/components/ui/CalendarSection";
 import { BookDemoButton } from "@/components/BookDemoButton";
 import { supportMaintenanceFAQs } from "@/data/support-maintenance-faqs";
+import { FeatureHero } from "@/components/feature-page/FeatureHero";
+import { Separator } from "@/components/ui/separator";
 
 
 
 export default function CustomerSupportPage() {
-  return (
-    <div>
-        <div className="my-20">
-            <div className="max-w-2xl mx-auto flex flex-col items-center">
-          <h2 className="text-6xl text-center font-semibold mb-12">We&apos;ll <span></span>support you <br/> all the way.</h2>
-          <BookDemoButton />
-            </div> 
-          <p className="text-center text-gray-600 mb-12"></p>
-          <div className="max-w-2xl mx-auto">
-            <h3 className="text-4xl font-semibold mb-4">Optional Support Packages</h3>
-            <SupportMaintenanceCard />
-          </div>
+    return (
+        <div>
+            <div className="">
+                <FeatureHero title="We'll support you all the way." subtitle="We offer optional support packages to help you get the most out of your AI voice agents." description="AI development is moving at a rapid pace, and we want to make sure you're always on the cutting edge. AI is evolving rapidly, and we want to make sure you're always on the cutting edge." />
+                <div className="max-w-2xl mx-auto mt-20">
+                    <h3 className="text-4xl font-semibold mb-4">Optional Support Packages</h3>
+                    <SupportMaintenanceCard />
+                </div>
+                    <Separator className="mt-12 w-full" />
+            </div>
+            <div className="mt-20">
+                <FeatureFAQ faqs={supportMaintenanceFAQs} title="Frequently Asked Questions" subtitle="Got questions? We've got answers." />
+            </div>
+            <Separator className="mt-12 w-full" />
+            <CalendarSection />
         </div>
-        <div className="my-20">
-            <FeatureFAQ faqs={supportMaintenanceFAQs} title="Frequently Asked Questions" subtitle="Got questions? We've got answers." />
-        </div>
-        <CalendarSection />
-    </div>
-  );
+    );
 }
