@@ -5,9 +5,11 @@ import Link from 'next/link'
 
 interface AuthStatusClientProps {
   user: User | null
+  showSignOut?: boolean
+  showGetStarted?: boolean
 }
 
-export function AuthStatusClient({ user }: AuthStatusClientProps) {
+export function AuthStatusClient({ user, showSignOut = true, showGetStarted = true }: AuthStatusClientProps) {
   if (!user) {
     return (
       <div className="flex items-center gap-4">
@@ -17,12 +19,14 @@ export function AuthStatusClient({ user }: AuthStatusClientProps) {
         >
           Sign In
         </Link>
-        <Link
-          href="/get-started"
-          className="bg-primary hover:bg-primary/90 px-6 py-2 rounded-lg transition-colors text-secondary-foreground"
+        {showGetStarted && (
+          <Link
+            href="/get-started"
+            className="bg-primary hover:bg-primary/90 px-6 py-2 rounded-lg transition-colors text-secondary-foreground"
         >
-          Get Started
-        </Link>
+            Get Started
+          </Link>
+        )}
       </div>
     )
   }
@@ -35,11 +39,13 @@ export function AuthStatusClient({ user }: AuthStatusClientProps) {
       >
         Dashboard
       </Link>
-      <button 
-        className="text-muted-foreground hover:text-foreground transition-colors"
-      >
-        Sign Out
-      </button>
+      {showSignOut && (
+        <button 
+          className="text-muted-foreground hover:text-foreground transition-colors"
+        >
+          Sign Out
+        </button>
+      )}
     </div>
   )
 } 

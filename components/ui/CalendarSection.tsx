@@ -1,6 +1,5 @@
 'use client'
 
-import CalComDialogEmbed from "../CalComDialogEmbed";
 import CalComEmbed from "./CalComEmbed";
 
 export default function CalendarSection() {
@@ -11,12 +10,6 @@ export default function CalendarSection() {
             <p className="text-left text-gray-500 mb-4 md:mb-16 px-4 md:px-0 w-full md:w-1/4">If you&lsquo;re ready to explore an AI Voice solution for your business, feel free to schedule a discovery call.</p>
         </div>
         <CalComEmbed />
-        {/* { window.innerWidth > 768 && (
-            <CalComEmbed />
-        )}
-        { window.innerWidth < 768 && (
-            <CalComDialogEmbed />
-        )} */}
     </div>
   );
 }

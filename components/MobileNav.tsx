@@ -10,40 +10,66 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import Link from "next/link";
 import { AuthStatusClient } from "@/components/auth/auth-status-client";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { PhoneIncoming, PhoneOutgoing, PackageCheck, HandshakeIcon, BookOpen} from "lucide-react";
+// import { ThemeToggle } from "@/components/ThemeToggle";
 import { useUser } from "@/hooks/use-user";
+import { BookDemoButton } from "./BookDemoButton";
 
 const solutions = [
   {
-    title: "Voice Automation",
-    href: "/solutions/voice",
+    title: "Inbound Voice AI",
+    href: "/solutions/inbound-voice-agents",
+    description: "Automate inbound and outbound calls with Conversational AI voice agents.",
+    icon: PhoneIncoming
   },
   {
-    title: "Semantic Search",
-    href: "/solutions/search",
+    title: "Outbound Voice AI",
+    href: "/solutions/outbound-voice-agents",
+    description: "Automate outbound calls with Conversational AI voice agents.",
+    icon: PhoneOutgoing
   },
   {
-    title: "Customer Service",
-    href: "/solutions/customer-service",
+    title: "Automated Procurement",
+    href: "/solutions/automated-procurement",
+    description: "Automate procurement processes with AI agents that can make phone calls and use the internet",
+    icon: PackageCheck
+  },
+  {
+    title: "Customer Support",
+    href: "/solutions/customer-support",
+    description: "Regular updates, performace boosts & fixes to ensure your agents run smoothly.",
+    icon: HandshakeIcon
   }
 ];
 
 const resources = [
-  {
-    title: "Case Studies",
-    href: "/case-studies",
-  },
+
+  // {
+  //   title: "Case Studies",
+  //   href: "/case-studies",
+  //   description: "See how other businesses are using Matsource."
+  // },
   {
     title: "Blog",
     href: "/blog",
+    description: "Latest updates, best practices, and industry insights.",
+    icon: BookOpen
   },
-  {
-    title: "About",
-    href: "/about",
-  }
+  // {
+  //   title: "About",
+  //   href: "/about",
+  //   description: "Learn more about Matsource and our mission.",
+  // }
 ];
+
 
 export function MobileNav() {
   const { user } = useUser();
@@ -56,52 +82,85 @@ export function MobileNav() {
           <span className="sr-only">Toggle menu</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="top" className="w-[300px] sm:w-[400px]">
-        <SheetHeader>
+      <SheetContent side="top" className="w-full p-0 font-sans">
+        <SheetHeader className="px-4 py-4 border-b flex flex-row justify-between">
           <SheetTitle>
             <Link href="/" className="flex items-center">
               <span className="text-3xl mr-2" role="img" aria-label="Construction Worker">
                 👷‍♂️
               </span>
-              <span className="text-xl font-bold">Matsource</span>
+              <span className="text-xl font-bold">BlueAgent</span>
             </Link>
           </SheetTitle>
         </SheetHeader>
-        <div className="flex flex-col gap-4 mt-8">
-          <div className="flex flex-col gap-2">
-            <h3 className="text-lg font-semibold mb-2">Solutions</h3>
-            {solutions.map((item) => (
-              <Link
-                key={item.title}
-                href={item.href}
-                className="text-muted-foreground hover:text-foreground transition-colors px-2 py-1.5 rounded-md hover:bg-muted"
-              >
-                {item.title}
-              </Link>
-            ))}
-          </div>
-          <div className="flex flex-col gap-2">
-            <h3 className="text-lg font-semibold mb-2">Resources</h3>
-            {resources.map((item) => (
-              <Link
-                key={item.title}
-                href={item.href}
-                className="text-muted-foreground hover:text-foreground transition-colors px-2 py-1.5 rounded-md hover:bg-muted"
-              >
-                {item.title}
-              </Link>
-            ))}
-          </div>
+        <div className="px-4 border-b">
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="solutions">
+              <AccordionTrigger className="text-xl py-4">Solutions</AccordionTrigger>
+              <AccordionContent>
+                <div className="flex flex-col space-y-4 pb-4 border-t pt-4">
+                  {solutions.map((item) => (
+                    <Link
+                      key={item.title}
+                      href={item.href}
+                      className="flex flex-col space-y-1 px-2"
+                    >
+                      <div className="grid grid-cols-12 gap-4">
+                        <div className="col-span-2 flex items-center justify-center bg-gray-100 rounded-md">
+                          <item.icon className="w-6 h-6" />
+                        </div>
+                        <div className="col-span-10">
+                          <div className="flex flex-col">
+                            <span className="font-medium">{item.title}</span>
+                            <span className="text-sm text-muted-foreground">{item.description}</span>
+                          </div>
+                        </div>
+                      </div>
+                      
+                    </Link>
+                  ))}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+
+            <AccordionItem value="resources">
+              <AccordionTrigger className="text-xl py-4">Resources</AccordionTrigger>
+              <AccordionContent>
+                <div className="flex flex-col space-y-4 pb-4">
+                  {resources.map((item) => (
+                    <Link
+                      key={item.title}
+                      href={item.href}
+                      className="flex flex-col space-y-1 px-2"
+                    >
+                      <div className="grid grid-cols-12 gap-4">
+                        <div className="col-span-2 flex items-center justify-center bg-gray-100 rounded-md">
+                          <item.icon className="w-6 h-6" />
+                        </div>
+                        <div className="col-span-10">
+                          <div className="flex flex-col">
+                            <span className="font-medium">{item.title}</span>
+                            <span className="text-sm text-muted-foreground">{item.description}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+
           <Link
             href="/pricing"
-            className="text-muted-foreground hover:text-foreground transition-colors px-2 py-1.5 rounded-md hover:bg-muted"
+            className="block text-xl py-4 hover:text-foreground transition-colors"
           >
             Pricing
           </Link>
-          <div className="mt-4 flex flex-col gap-4">
-            <AuthStatusClient user={user} />
-            <ThemeToggle />
-          </div>
+        </div>
+        <div className="mt-4 flex justify-center flex-row gap-4 pb-4">
+          <AuthStatusClient user={user} showSignOut={false} showGetStarted={false} />
+          <BookDemoButton />
         </div>
       </SheetContent>
     </Sheet>

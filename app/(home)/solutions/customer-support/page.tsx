@@ -1,7 +1,6 @@
 import { FeatureFAQ } from "@/components/feature-page/FeatureFAQ";
 import { SupportMaintenanceCard } from "@/components/pricing/SupportMaintenanceCard";
 import CalendarSection from "@/components/ui/CalendarSection";
-import { BookDemoButton } from "@/components/BookDemoButton";
 import { supportMaintenanceFAQs } from "@/data/support-maintenance-faqs";
 import { FeatureHero } from "@/components/feature-page/FeatureHero";
 import { Separator } from "@/components/ui/separator";
