@@ -27,13 +27,13 @@ const solutions = [
   {
     title: "Inbound Voice AI",
     href: "/solutions/inbound-voice-agents",
-    description: "Automate inbound and outbound calls with Conversational AI voice agents.",
+    description: "Automate inbound calls with conversational AI voice agents. Have you own digital receptionist, available 24/7.",
     icon: PhoneIncoming
   },
   {
     title: "Outbound Voice AI",
     href: "/solutions/outbound-voice-agents",
-    description: "Automate outbound calls with Conversational AI voice agents.",
+    description: "Save time and resources by qualifying leads, scheduling appointments, and following up with customers via conversational AI voice agents.",
     icon: PhoneOutgoing
   },
   {

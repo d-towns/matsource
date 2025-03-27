@@ -22,7 +22,7 @@ export function AuthStatusClient({ user, showSignOut = true, showGetStarted = tr
         {showGetStarted && (
           <Link
             href="/get-started"
-            className="bg-primary hover:bg-primary/90 px-6 py-2 rounded-lg transition-colors text-secondary-foreground"
+            className="bg-primary hover:bg-primary/90 px-6 py-2 rounded-lg transition-colors"
         >
             Get Started
           </Link>
