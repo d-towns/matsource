@@ -25,8 +25,9 @@ export function FeatureCTA({ title, subtitle, statistic }: FeatureCTAProps) {
         <p className="text-gray-700 mb-8">
           {subtitle}
         </p>
-        
-      <BookDemoButton />
+        <div className="mt-8 flex justify-center">  
+          <BookDemoButton />
+        </div>
       </div>
     </div>
   );

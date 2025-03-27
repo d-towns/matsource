@@ -81,7 +81,7 @@ export default function VoiceAutomationPage() {
       />
       
       <div className="container mx-auto px-4 mt-24">
-        <h2 className="text-4xl text-left font-bold mb-4">Use Cases</h2>
+        <h2 className="text-5xl text-center font-bold mb-4">Use Cases</h2>
         {voiceFeatureSections.map((section, index) => (
           <div key={index}>
           <Separator /> 

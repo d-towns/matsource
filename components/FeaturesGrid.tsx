@@ -36,7 +36,7 @@ const features: Feature[] = [
   },
   {
     title: "Smart Quotes",
-    description: "AI-powered pricing that adapts to your business needs in real-time.",
+    description: "Give your customers accurate quotes based on their needs.",
     image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71",
     slug: "/solutions/inbound-voice-agents"
   },
@@ -82,7 +82,7 @@ export default function FeaturesGrid() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1, duration: 0.5 }}
-              className={`${feature.core ? 'col-span-2' : ''}`}
+              className={`${feature.core ? 'md:col-span-2' : 'max-md:hidden'}`}
             >
               <Link href={feature.slug}>
                 <motion.div 

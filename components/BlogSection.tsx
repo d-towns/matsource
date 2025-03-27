@@ -7,7 +7,7 @@ import BlogCard from './BlogCard';
 export default function BlogSection({ allPosts }: { allPosts: Blog[] }) {
   return (
     <motion.section
-      className="py-24 px-4 md:px-6 lg:px-8"
+      className="py-16 md:py-24 px-4 md:px-6 lg:px-8"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}

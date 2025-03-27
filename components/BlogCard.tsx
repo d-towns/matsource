@@ -33,14 +33,14 @@ export default function BlogCard({ post, index }: { post: Blog, index: number })
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                   
                   <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                    <h3 className="text-xl md:text-2xl font-bold mb-2 group-hover:text-primary transition-colors">
+                    <h3 className="text-xl md:text-2xl font-bold mb-2 transition-colors">
                       {post.title}
                     </h3>
                     <p className="text-gray-200 text-sm line-clamp-2">
                       {post.subtitle}
                     </p>
                     <motion.div 
-                      className="mt-4 inline-flex items-center text-primary font-medium"
+                      className="mt-4 inline-flex items-center font-medium"
                       whileHover={{ x: 5 }}
                     >
                       Read More

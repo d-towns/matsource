@@ -10,9 +10,9 @@ export const BookDemoButton = () => {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         transition={{ type: "spring", stiffness: 400, damping: 15 }}
-        className="w-fit m-auto"
+        className="w-fit"
       >
-        <Link href="#contact-us" className="w-fit m-auto" scroll={true}>
+        <Link href="#contact-us" className="w-fit" scroll={true}>
         <Button 
           className="bg-gradient-to-r from-primary to-secondary text-white rounded-full px-8 py-6 relative overflow-hidden group"
           style={{
@@ -24,8 +24,8 @@ export const BookDemoButton = () => {
             initial={false}
             whileHover={{ opacity: 0.2 }}
           />
-          <span className="text-white text-xl font-medium tracking-wide flex items-center ">
-            Book a Demo 
+          <span className="text-white text-sm md:text-xl font-medium tracking-wide flex items-center ">
+            Book a Call 
             <motion.span
               className="ml-3"
               whileHover={{ rotate: 15 }}

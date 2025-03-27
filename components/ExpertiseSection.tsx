@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { CheckCircle2, XCircle } from 'lucide-react';
 import { BookDemoButton } from './BookDemoButton';
+import { Separator } from './ui/separator';
 
 interface ComparisonItem {
   us: string;
@@ -45,38 +46,40 @@ const comparisons: ComparisonItem[] = [
 
 export default function ExpertiseSection() {
   return (
-    <section className="py-24 px-4 md:px-6 lg:px-8 ">
+    <section className="py-12 md:py-24 px-4 md:px-6 lg:px-8 ">
 
       <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between">
-      <h2 className="text-4xl font-bold font-sans text-left mb-8">
-        Why Work with Us?
-      </h2>
-      <BookDemoButton />
-      </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-none gap-y-4 border rounded-lg p-8 shadow-lg">
+        <div className="flex w-full items-center justify-between mb-8">
+          <h2 className="text-2xl md:text-4xl font-bold font-sans text-left">
+            Why work with us?
+          </h2>
+          <BookDemoButton />
+        </div>
+        <div className="grid grid-cols-2 gap-x-10 gap-y-4 border rounded-lg p-8 shadow-lg">
           {/* Left Column - Company Name */}
+          
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="col-span-1 mb-4"
           >
-          <h2 className="text-3xl font-bold font-sans">
+            <h2 className="text-xl md:text-3xl font-bold font-sans">
               BlueAgent
             </h2>
           </motion.div>
-          <motion.div
+          <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="col-span-1 mb-4"
           >
 
-            <h3 className="text-xl mt-2 font-sans">
-              Other Development Agencies
+            <h3 className="text-base md:text-xl mt-2 font-sans">
+              Other Agencies
             </h3>
           </motion.div>
+          <Separator orientation="horizontal" className="w-full col-span-2" />
 
           {/* Comparison Items */}
           {comparisons.map((item, index) => (
@@ -90,23 +93,26 @@ export default function ExpertiseSection() {
             >
               {/* Our Approach */}
               <motion.div
-                className="flex items-start gap-3 py-6 border-t"
+                className="flex items-start gap-3 py-6"
                 whileHover={{ x: 5 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 <CheckCircle2 className="w-6 h-6 flex-shrink-0 mt-0.5 text-green-500" />
-                <span className="text-lg">{item.us}</span>
+                <span className="text-base md:text-lg">{item.us}</span>
               </motion.div>
 
               {/* Their Approach */}
-              <motion.div
-                className="flex items-start gap-3 py-6 border-t"
+              <motion.div 
+                className="flex items-start gap-3 py-6"
                 whileHover={{ x: 5 }}
                 transition={{ type: "spring", stiffness: 300 }}
               >
                 <XCircle className="w-6 h-6 flex-shrink-0 mt-0.5 text-red-500" />
-                <span className="text-lg">{item.them}</span>
+                <span className="text-base md:text-lg">{item.them}</span>
               </motion.div>
+              {index !== comparisons.length - 1 && (
+                <Separator orientation="horizontal" className="w-full col-span-2" />
+              )}
             </motion.div>
           ))}
         </div>
