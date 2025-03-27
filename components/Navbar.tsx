@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { NavMenu } from "@/components/ui/nav-menu";
 import { AuthStatus } from "@/components/auth/auth-status";
-import { ThemeToggle } from "@/components/ThemeToggle";
+// import { ThemeToggle } from "@/components/ThemeToggle";
 import { MobileNav } from "@/components/MobileNav";
 
 export function Navbar() {
