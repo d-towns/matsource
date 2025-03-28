@@ -15,14 +15,14 @@ export function AuthStatusClient({ user, showSignOut = true, showGetStarted = tr
       <div className="flex items-center gap-4">
         <Link 
           href="/signin"
-          className="text-muted-foreground border rounded-lg px-6 py-2 hover:text-foreground hover:bg-primary hover:text-secondary-foreground transition-colors"
+          className="text-muted-foreground border border-gray-400 rounded-lg px-6 py-2 hover:text-white hover:bg-primary hover:text-secondary-foreground transition-colors"
         >
           Sign In
         </Link>
         {showGetStarted && (
           <Link
             href="/get-started"
-            className="bg-primary hover:bg-primary/90 px-6 py-2 rounded-lg transition-colors"
+            className="bg-primary hover:bg-primary/90 px-6 py-2 rounded-lg transition-colors text-white"
         >
             Get Started
           </Link>
