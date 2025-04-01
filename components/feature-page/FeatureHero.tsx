@@ -34,14 +34,14 @@ export function FeatureHero({ title, description }: FeatureHeroProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-3xl md:text-5xl font-bold mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">
             <span className="">
               {title}
             </span>
           </h1>
         
           
-          <p className="text-base md:text-lg max-w-3xl mx-auto">
+          <p className="text-lg md:text-lg max-w-3xl mx-auto">
             {description}
           </p>
           <div className="mt-8 flex justify-center">

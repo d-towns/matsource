@@ -2,6 +2,8 @@ import { GetStartedHeader } from "@/components/get-started/GetStartedHeader";
 import { GetStartedBenefits } from "@/components/get-started/GetStartedBenefits";
 import { GetStartedWidget } from "@/components/get-started/GetStartedWidget";
 import { GetStartedFooter } from "@/components/get-started/GetStartedFooter";
+import CalendarSection from "@/components/ui/CalendarSection";
+import { Separator } from "@/components/ui/separator";
 
 export default function GetStartedPage() {
   const benefits = [
@@ -13,7 +15,7 @@ export default function GetStartedPage() {
   ];
 
   return (
-    <div className="min-h-screen py-20 flex flex-col items-center justify-center">
+    <div className="min-h-screen py-20 flex flex-col items-center ">
       <div className="container max-w-4xl mx-auto px-4">
         <GetStartedHeader />
         
@@ -23,6 +25,8 @@ export default function GetStartedPage() {
         </div>
         
         <GetStartedFooter />
+        <Separator className="w-full my-8" orientation="horizontal" />
+        <CalendarSection />
       </div>
     </div>
   );

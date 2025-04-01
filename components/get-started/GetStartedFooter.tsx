@@ -11,7 +11,7 @@ export function GetStartedFooter() {
       className="text-center"
     >
       <p className="text-gray-400">
-        Have questions? Contact us at <span className="text-matsource-400">support@matsource.io</span>
+        Have questions? Contact us at <span className="text-primary">support@blueagent.co</span>
       </p>
     </motion.div>
   );

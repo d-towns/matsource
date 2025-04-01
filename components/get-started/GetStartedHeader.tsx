@@ -11,9 +11,11 @@ export function GetStartedHeader() {
       className="text-center mb-8"
     >
       <h1 className="text-3xl md:text-5xl font-bold mb-4">
-        <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-white">
-          Join the Matsource Waitlist
+        Join the {' '}
+        <span className="bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">
+          BlueAgent
         </span>
+        {' '}Waitlist
       </h1>
       
       <p className="text-xl text-gray-400 max-w-2xl mx-auto mb-8">

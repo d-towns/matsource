@@ -5,6 +5,7 @@ import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetHeader,
   SheetTitle,
@@ -100,10 +101,10 @@ export function MobileNav() {
               <AccordionContent>
                 <div className="flex flex-col space-y-4 pb-4 border-t pt-4">
                   {solutions.map((item) => (
-                    <Link
-                      key={item.title}
-                      href={item.href}
-                      className="flex flex-col space-y-1 px-2"
+                    <SheetClose asChild key={item.title}>
+                      <Link
+                        href={item.href}
+                        className="flex flex-col space-y-1 px-2"
                     >
                       <div className="grid grid-cols-12 gap-4">
                         <div className="col-span-2 flex items-center justify-center bg-gray-100 rounded-md">
@@ -117,7 +118,8 @@ export function MobileNav() {
                         </div>
                       </div>
                       
-                    </Link>
+                      </Link>
+                    </SheetClose>
                   ))}
                 </div>
               </AccordionContent>
@@ -128,10 +130,10 @@ export function MobileNav() {
               <AccordionContent>
                 <div className="flex flex-col space-y-4 pb-4">
                   {resources.map((item) => (
-                    <Link
-                      key={item.title}
-                      href={item.href}
-                      className="flex flex-col space-y-1 px-2"
+                    <SheetClose asChild key={item.title}>
+                      <Link
+                        href={item.href}
+                        className="flex flex-col space-y-1 px-2"
                     >
                       <div className="grid grid-cols-12 gap-4">
                         <div className="col-span-2 flex items-center justify-center bg-gray-100 rounded-md">
@@ -145,22 +147,29 @@ export function MobileNav() {
                         </div>
                       </div>
                     </Link>
+                    </SheetClose>
                   ))}
                 </div>
               </AccordionContent>
             </AccordionItem>
           </Accordion>
 
-          <Link
-            href="/pricing"
-            className="block text-xl py-4 hover:text-foreground transition-colors"
-          >
-            Pricing
-          </Link>
+          <SheetClose asChild>
+            <Link
+              href="/pricing"
+              className="block text-xl py-4 hover:text-foreground transition-colors"
+            >
+              Pricing
+            </Link>
+          </SheetClose>
         </div>
         <div className="mt-4 flex justify-center flex-row gap-4 pb-4">
-          <AuthStatusClient user={user} showSignOut={false} showGetStarted={false} />
-          <BookDemoButton />
+            <SheetClose >
+            <AuthStatusClient user={user} showSignOut={false} showGetStarted={false} />
+          </SheetClose>
+          <SheetClose asChild>
+            <BookDemoButton />
+          </SheetClose>
         </div>
       </SheetContent>
     </Sheet>

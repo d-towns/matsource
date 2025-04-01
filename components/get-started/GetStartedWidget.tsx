@@ -9,7 +9,7 @@ export function GetStartedWidget() {
       initial={{ opacity: 0, x: 20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className="bg-gray-900/50 backdrop-blur-sm rounded-xl border border-gray-800 p-6"
+      className="bg-gradient-to-r from-primary/10 to-secondary/10 backdrop-blur-sm rounded-xl border border-gray-800 p-6 "
     >
       <WaitlistWidget />
       

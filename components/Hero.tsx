@@ -59,7 +59,7 @@ export function Hero() {
       {/* Content */}
       <div className="relative flex flex-col items-center pt-8 md:pt-12 pb-16 md:pb-20">
         <div className="container mx-auto px-4 text-center mt-8">
-          <h1 className="text-4xl md:text-8xl font-bold mb-4 md:mb-6">
+          <h1 className="text-5xl md:text-8xl font-bold mb-4 md:mb-6">
             <span
               className="font-sans font-medium"
             >
@@ -68,7 +68,9 @@ export function Hero() {
             </span>
           </h1>
           <p className="text-base md:text-xl mb-4 max-w-3xl mx-auto px-4">
-          Qualify More Leads. Book More Appointments. Close More Deals
+          <span className="font-semibold">Qualify </span>More Leads. {' '}
+          <span className=" font-semibold">Book </span> More Appointments. {' '}
+          <span className="font-semibold">Close </span>More Deals.
           </p>
           
           <div className="flex justify-center mb-8">

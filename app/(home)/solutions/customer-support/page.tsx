@@ -11,9 +11,9 @@ export default function CustomerSupportPage() {
     return (
         <div>
             <div className="">
-                <FeatureHero title="We'll support you all the way." subtitle="We offer optional support packages to help you get the most out of your AI voice agents." description="AI development is moving at a rapid pace, and we want to make sure you're always on the cutting edge. AI is evolving rapidly, and we want to make sure you're always on the cutting edge." />
-                <div className="max-w-2xl mx-auto mt-20">
-                    <h3 className="text-4xl font-semibold mb-4">Optional Support Packages</h3>
+                <FeatureHero title="We'll support you all the way." subtitle="We offer optional support packages to help you get the most out of your AI voice agents." description="AI is evolving rapidly, and we want to make sure you're always on the cutting edge." />
+                <div className="max-w-2xl mx-auto mt-20 p-8">
+                    <h3 className="text-4xl font-semibold mb-4"><span className="text-primary underline">Optional</span> Support Packages</h3>
                     <SupportMaintenanceCard />
                 </div>
                     <Separator className="mt-12 w-full" />

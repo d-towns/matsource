@@ -7,6 +7,7 @@ import { Pricing } from "@/components/Pricing";
 import { getAllPosts } from "./blog/actions";
 import CalendarSection from "@/components/ui/CalendarSection";
 import { AudioPlayer } from "@/components/AudioPlayer";
+import { ValidationSection } from "@/components/ValidationSection";
 
 export default async function Home() {
   const allPosts = await getAllPosts();
@@ -24,10 +25,11 @@ export default async function Home() {
           </div>
         </section>
 
-
         <FeaturesGrid />
 
         <ExpertiseSection />
+
+        <ValidationSection />
 
         {/* Audio Player Section */}
 

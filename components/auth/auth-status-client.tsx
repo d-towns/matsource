@@ -2,7 +2,7 @@
 
 import { User } from '@supabase/supabase-js'
 import Link from 'next/link'
-
+import { signOut } from "@/app/(home)/signin/actions";
 interface AuthStatusClientProps {
   user: User | null
   showSignOut?: boolean
@@ -42,6 +42,9 @@ export function AuthStatusClient({ user, showSignOut = true, showGetStarted = tr
       {showSignOut && (
         <button 
           className="text-muted-foreground hover:text-foreground transition-colors"
+          onClick={() => {
+            signOut()
+          }}
         >
           Sign Out
         </button>
