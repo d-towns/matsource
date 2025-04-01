@@ -23,8 +23,13 @@ const BUSINESS_AUDIO_MAP = {
       {
         name: 'Google Calendar',
         icon: '/logos/google-calendar.png',
-        description: 'Create appointments'
+        description: 'Create events'
       },
+      {
+        name: 'ServiceTitan',
+        icon: '/logos/service-titan.png',
+        description: 'Create and assign a new job'
+      }
     ]
   },
   electrician: {
@@ -188,9 +193,9 @@ export function AudioPlayer() {
               <Button
                 onClick={togglePlayPause}
                 disabled={isLoading}
-                className="w-full p-8"
+                className="w-full p-8 md:text-2xl text-lg"
               >
-                {isPlaying ? <PauseCircle className="w-8 h-8" /> : <PlayCircle className="w-8 h-8" />}
+                {isPlaying ? 'Pause' : 'Play Audio'}
               </Button>
             </div>
           </div>
@@ -215,15 +220,16 @@ export function AudioPlayer() {
             )}
 
             {/* show integrations used */}
+            <h3 className="font-sans font-semibold text-lg mb-4 text-center">During this call, the agent used these tools</h3>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {BUSINESS_AUDIO_MAP[currentBusiness].integrationsUsed.map((integration) => (
                 <div key={integration.name} className="flex items-center gap-2 w-full border border-gray-200 rounded-lg p-2">
                   <div className="flex flex-col items-center gap-2">
-                    <img src={integration.icon} alt={integration.name} className="w-4 h-4" />
-                    <p className="text-gray-500 text-xs text-center">{integration.name}</p>
+                    <img src={integration.icon} alt={integration.name} className="max-w-12 max-h-12" />
+                    <p className="text-gray-500 text-xs text-center md:block hidden">{integration.name}</p>
                   </div>
                   <Separator className="" orientation='vertical' />
-                  <p className="text-xs text-gray-500 text-center">{integration.description}</p>
+                  <p className="md:text-sm text-xs text-gray-500 text-center">{integration.description}</p>
                 </div>
               ))}
             </div>
