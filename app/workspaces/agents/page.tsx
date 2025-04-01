@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AgentActions } from './components/agent-actions';
 import { CreateAgentCard } from './components/create-agent-card';
+import Link from 'next/link';
 
 export default async function AgentsPage() {
   const supabase = await createClient();
@@ -45,6 +46,7 @@ export default async function AgentsPage() {
             ) : (
               agents.map(agent => (
                 <Card key={agent.id}>
+                  <Link href={`/workspaces/agents/${agent.id}`}>
                   <CardHeader>
                     <div className="flex justify-between items-start">
                       <CardTitle>{agent.name}</CardTitle>
@@ -68,6 +70,7 @@ export default async function AgentsPage() {
                   <CardFooter className="flex justify-between">
                     <AgentActions agent={agent} />
                   </CardFooter>
+                  </Link>
                 </Card>
               ))
             )}

@@ -6,6 +6,8 @@ import ExpertiseSection from "@/components/ExpertiseSection";
 import { Pricing } from "@/components/Pricing";
 import { getAllPosts } from "./blog/actions";
 import CalendarSection from "@/components/ui/CalendarSection";
+import { AudioPlayer } from "@/components/AudioPlayer";
+
 export default async function Home() {
   const allPosts = await getAllPosts();
   return (
@@ -13,10 +15,21 @@ export default async function Home() {
       <main>
         {/* Hero Section */}
         <Hero />
+        <section className="py-16 bg-gradient-to-r from-primary/10 to-secondary/10">
+          <div className="container">
+            <h2 className="text-4xl font-sans font-bold text-center mb-8">
+              Listen to a sample of our work!
+            </h2>
+            <AudioPlayer />
+          </div>
+        </section>
+
 
         <FeaturesGrid />
 
         <ExpertiseSection />
+
+        {/* Audio Player Section */}
 
         {/* Pricing Section */}
         <Pricing />
