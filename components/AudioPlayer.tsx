@@ -4,13 +4,14 @@ import { useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Droplet, PlugZap, CarFront, House } from 'lucide-react';
+import { Droplet, PlugZap, CarFront, House, PlayCircle, PauseCircle } from 'lucide-react';
 import { Separator } from './ui/separator';
+import { Skeleton } from './ui/skeleton';
 // Audio file mapping for different business types
 const BUSINESS_AUDIO_MAP = {
   plumbing: {
     label: 'Plumbing',
-    audioFile: '/audio/plumbing-test.wav',
+    audioFile: 'https://zazznpnzzmueacffwutq.supabase.co/storage/v1/object/public/test-audio//plumbing-test.wav',
     icon: Droplet,
     integrationsUsed: [
       {
@@ -18,7 +19,7 @@ const BUSINESS_AUDIO_MAP = {
         icon: '/logos/google-calendar.png',
         description: 'Get available timeslots'
       },
-      
+
       {
         name: 'Google Calendar',
         icon: '/logos/google-calendar.png',
@@ -28,7 +29,7 @@ const BUSINESS_AUDIO_MAP = {
   },
   electrician: {
     label: 'Electrician',
-    audioFile: '/audio/electrician-test.wav',
+    audioFile: 'https://zazznpnzzmueacffwutq.supabase.co/storage/v1/object/public/test-audio//electrician-test.wav',
     icon: PlugZap,
     integrationsUsed: [
       {
@@ -36,7 +37,7 @@ const BUSINESS_AUDIO_MAP = {
         icon: '/logos/google-calendar.png',
         description: 'Get available timeslots'
       },
-      
+
       {
         name: 'Google Calendar',
         icon: '/logos/google-calendar.png',
@@ -52,7 +53,7 @@ const BUSINESS_AUDIO_MAP = {
   },
   roofing: {
     label: 'Roofing',
-    audioFile: '/audio/roofing-test.wav',
+    audioFile: 'https://zazznpnzzmueacffwutq.supabase.co/storage/v1/object/public/test-audio//roofing-test.wav',
     icon: House,
     integrationsUsed: [
       {
@@ -74,7 +75,7 @@ const BUSINESS_AUDIO_MAP = {
   },
   autoService: {
     label: 'Auto',
-    audioFile: '/audio/auto-service-test.wav',
+    audioFile: 'https://zazznpnzzmueacffwutq.supabase.co/storage/v1/object/public/test-audio//auto-service-test.wav',
     icon: CarFront,
     integrationsUsed: [
       {
@@ -103,7 +104,7 @@ export function AudioPlayer() {
   const wavesurferRef = useRef<WaveSurfer | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentBusiness, setCurrentBusiness] = useState<BusinessType>('plumbing');
-
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     if (!waveformRef.current) return;
 
@@ -126,6 +127,10 @@ export function AudioPlayer() {
     wavesurfer.on('finish', () => setIsPlaying(false));
     wavesurfer.on('ready', () => {
       console.log('WaveSurfer is ready');
+      setIsLoading(false);
+    });
+    wavesurfer.on('load', () => {
+      setIsLoading(true);
     });
     wavesurfer.on('error', (err) => {
       console.error('WaveSurfer error:', err);
@@ -139,6 +144,8 @@ export function AudioPlayer() {
 
   const togglePlayPause = () => {
     if (!wavesurferRef.current) return;
+
+    waveformRef.current
 
     if (isPlaying) {
       wavesurferRef.current.pause();
@@ -156,65 +163,72 @@ export function AudioPlayer() {
   return (
     <div className="w-full max-w-4xl mx-auto p-6 space-y-6">
       <Card className="p-6">
-
-
-        <div className="flex gap-6">
-          {/* Waveform and controls */}
-
-
-          <div className="flex-1">
-            <div
-              ref={waveformRef}
-              className="w-full mb-4 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg"
-            />
-            {/* show integrations used */}
-            <div className="flex flex-row  gap-4">
-              {BUSINESS_AUDIO_MAP[currentBusiness].integrationsUsed.map((integration) => (
-                <div key={integration.name} className="flex  items-center gap-2 w-[150px] border border-gray-200 rounded-lg p-2">
-                  <div className="flex flex-col items-center gap-2">
-                    <img src={integration.icon} alt={integration.name} className="w-4 h-4" />
-                    <p className=" text-gray-500 text-xs text-center">{integration.name}</p>
-                  </div>
-                  <Separator className="" orientation='vertical' />
-                  <p className="text-xs text-gray-500 text-center">{integration.description}</p>
-
-                </div>
-              ))}
-            </div>
-
-          </div>
-          {/* Business type selector */}
-          <div className="w-48 space-y-2 mb-2 flex flex-col justify-between">
+        <div className={`flex flex-col md:flex-row gap-6 h-full`}>
+          {/* Business type selector - Now on left/top */}
+          <div className="w-full md:w-48 space-y-2 mb-2 flex flex-col justify-between">
             <div>
-            <h3 className="font-sans font-semibold text-lg mb-4 text-center">Business Type</h3>
-            <div className="grid grid-cols-2 gap-2 mb-8">
-              {Object.entries(BUSINESS_AUDIO_MAP).map(([type, data]) => (
-                <Button
-                  key={type}
-                  onClick={() => changeBusiness(type as BusinessType)}
-                  variant={currentBusiness === type ? "default" : "outline"}
-                  className="w-full p-8"
-                >
-                  <div className="flex flex-col items-center gap-2">
-                    <data.icon className="w-6 h-6" />
-                    {data.label}
-                  </div>
-                </Button>
-              ))}
-            </div>
+              <h3 className="font-sans font-semibold text-lg mb-4 text-center">Select Your Business</h3>
+              <div className="grid grid-cols-2 gap-2 mb-8">
+                {Object.entries(BUSINESS_AUDIO_MAP).map(([type, data]) => (
+                  <Button
+                    key={type}
+                    onClick={() => changeBusiness(type as BusinessType)}
+                    variant={currentBusiness === type ? "default" : "outline"}
+                    className="w-full p-8"
+                  >
+                    <div className="flex flex-col items-center gap-2">
+                      <data.icon className="w-6 h-6" />
+                      {data.label}
+                    </div>
+                  </Button>
+                ))}
+              </div>
             </div>
             <div className="flex justify-center gap-4 mb-8">
               <Button
                 onClick={togglePlayPause}
-                className="min-w-[100px]"
+                disabled={isLoading}
+                className="w-full p-8"
               >
-                {isPlaying ? 'Pause' : 'Play'}
+                {isPlaying ? <PauseCircle className="w-8 h-8" /> : <PlayCircle className="w-8 h-8" />}
               </Button>
             </div>
           </div>
 
-        </div>
+          <div className="hidden md:block">
+            <Separator className="h-full" orientation='vertical' />
+          </div>
+          <div className="block md:hidden">
+            <Separator className="w-full" orientation='horizontal' />
+          </div>
 
+          {/* Waveform and integrations */}
+          <div className="flex-1">
+            <div
+              ref={waveformRef}
+              className={`w-full mb-4 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg ${isLoading ? 'hidden' : ''}`}
+            />
+            {isLoading && (
+              <div>
+                <Skeleton className="w-full h-48 w-full mb-4 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg" />
+              </div>
+            )}
+
+            {/* show integrations used */}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {BUSINESS_AUDIO_MAP[currentBusiness].integrationsUsed.map((integration) => (
+                <div key={integration.name} className="flex items-center gap-2 w-full border border-gray-200 rounded-lg p-2">
+                  <div className="flex flex-col items-center gap-2">
+                    <img src={integration.icon} alt={integration.name} className="w-4 h-4" />
+                    <p className="text-gray-500 text-xs text-center">{integration.name}</p>
+                  </div>
+                  <Separator className="" orientation='vertical' />
+                  <p className="text-xs text-gray-500 text-center">{integration.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </Card>
     </div>
   );
