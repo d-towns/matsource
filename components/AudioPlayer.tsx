@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Droplet, PlugZap, CarFront, House, PlayCircle, PauseCircle } from 'lucide-react';
+import { Droplet, PlugZap, CarFront, House} from 'lucide-react';
 import { Separator } from './ui/separator';
 import { Skeleton } from './ui/skeleton';
 // Audio file mapping for different business types
