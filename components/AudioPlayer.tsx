@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { Droplet, PlugZap, CarFront, House} from 'lucide-react';
 import { Separator } from './ui/separator';
 import { Skeleton } from './ui/skeleton';
+import Image from 'next/image';
 // Audio file mapping for different business types
 const BUSINESS_AUDIO_MAP = {
   plumbing: {
@@ -44,9 +45,9 @@ const BUSINESS_AUDIO_MAP = {
       },
 
       {
-        name: 'Google Calendar',
-        icon: '/logos/google-calendar.png',
-        description: 'Create appointments'
+        name: 'HouseCall Pro',
+        icon: '/logos/housecall.webp',
+        description: 'Create and assign a new job'
       },
 
       {
@@ -150,8 +151,6 @@ export function AudioPlayer() {
   const togglePlayPause = () => {
     if (!wavesurferRef.current) return;
 
-    waveformRef.current
-
     if (isPlaying) {
       wavesurferRef.current.pause();
     } else {
@@ -225,7 +224,7 @@ export function AudioPlayer() {
               {BUSINESS_AUDIO_MAP[currentBusiness].integrationsUsed.map((integration) => (
                 <div key={integration.name} className="flex items-center gap-2 w-full border border-gray-200 rounded-lg p-2">
                   <div className="flex flex-col items-center gap-2">
-                    <img src={integration.icon} alt={integration.name} className="max-w-12 max-h-12" />
+                    <Image src={integration.icon} alt={integration.name} className="max-w-12 max-h-12" width={48} height={48} />
                     <p className="text-gray-500 text-xs text-center md:block hidden">{integration.name}</p>
                   </div>
                   <Separator className="" orientation='vertical' />
