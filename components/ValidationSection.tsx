@@ -180,7 +180,7 @@ const CombinedCard = ({ benefit, chart }) => {
                           className="fill-muted-foreground"
                           fontSize={14}
                         >
-                          Of SMB's have adopted AI
+                          Of SMB&apos;s have adopted AI
                         </tspan>
                       </text>
                     )

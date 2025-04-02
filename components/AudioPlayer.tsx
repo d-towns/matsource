@@ -165,22 +165,22 @@ export function AudioPlayer() {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-6 space-y-6">
+    <div className="w-full max-w-6xl mx-auto p-6 space-y-6">
       <Card className="p-6">
         <div className={`flex flex-col md:flex-row gap-6 h-full`}>
           {/* Business type selector - Now on left/top */}
           <div className="w-full md:w-48 space-y-2 mb-2 flex flex-col justify-between">
             <div>
-              <h3 className="font-sans font-semibold text-lg mb-4 text-center">Select Your Business</h3>
+              <h3 className="font-sans font-semibold text-xl mb-4 text-center">Select Your Business</h3>
               <div className="grid grid-cols-2 gap-2 mb-8">
                 {Object.entries(BUSINESS_AUDIO_MAP).map(([type, data]) => (
                   <Button
                     key={type}
                     onClick={() => changeBusiness(type as BusinessType)}
                     variant={currentBusiness === type ? "default" : "outline"}
-                    className="w-full p-8"
+                    className="w-full p-10"
                   >
-                    <div className="flex flex-col items-center gap-2">
+                    <div className="flex flex-col items-center gap-2 ">
                       <data.icon className="w-6 h-6" />
                       {data.label}
                     </div>
