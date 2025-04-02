@@ -7,7 +7,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import Link from "next/link"
 
 export default function SignInPage() {
-  const [mode, setMode] = useState<"signin" | "signup">("signin")
+  const mode = "signin"
 
   return (
     <div className="container flex min-h-[calc(100vh-80px)] flex-col items-center justify-center">
