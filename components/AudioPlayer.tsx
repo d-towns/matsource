@@ -225,7 +225,7 @@ export function AudioPlayer() {
                 <div key={integration.name} className="flex flex-col md:flex-row items-center justify-center gap-2 w-full border border-gray-200 rounded-lg p-2">
                   <div className="flex flex-col items-center gap-2">
                     <Image src={integration.icon} alt={integration.name} className="max-w-12 max-h-12" width={48} height={48} />
-                    <p className="text-gray-500 text-xs text-center md:block hidden">{integration.name}</p>
+                    <p className="text-gray-500 text-xs text-center md:block hidden font-semibold">{integration.name}</p>
                   </div>
                   <div className='hidden md:block h-full'>
                   <Separator className="h-full" orientation="vertical" />
@@ -233,7 +233,7 @@ export function AudioPlayer() {
                   <div className='block md:hidden w-full'>
                     <Separator className="w-full" orientation="horizontal" />
                   </div>
-                  <p className="md:text-sm text-xs text-gray-500 text-center">{integration.description}</p>
+                  <p className="md:text-base text-xs text-gray-500 text-center">{integration.description}</p>
                 </div>
               ))}
             </div>

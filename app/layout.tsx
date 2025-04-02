@@ -35,14 +35,14 @@ export const metadata = {
     telephone: false,
     address: false,
   },
-  metadataBase: new URL("https://matsource-production.up.railway.app"),
+  metadataBase: new URL("https://blueagent.co"),
   alternates: {
     canonical: "/",
   },
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://matsource-production.up.railway.app",
+    url: "https://blueagent.co",
     title: "BlueAgent | AI Automation for Service Businesses",
     description: "AI-Powered Efficiency for Service Businesses: Dispatch Smarter, Serve Faster, Profit More.",
     siteName: "BlueAgent",

@@ -35,9 +35,9 @@ const validationData = {
     },
     {
       "headline": "Cost-Effective and Easy to Implement",
-      "description": "Despite common misconceptions, modern Voice AI solutions are accessible and affordable for small businesses. Intuitive interfaces and pre-built models make adoption seamless and cost-effective.",
-      "source": "Axios",
-      "link": "https://www.axios.com/sponsored/whats-new-and-whats-next-how-small-business-owners-are-using-ai?utm_source=chatgpt.com"
+      "description": "Voice AI is a natural for customer service operations; indeed, we estimate that the technology, once implemented at scale, could increase productivity by 30% to 50%—or more.",
+      "source": "Boston Consulting Group",
+      "link": "https://www.bcg.com/publications/2023/how-generative-ai-transforms-customer-service?utm_source=chatgpt.com"
     }
   ],
   "charts": [
@@ -119,24 +119,24 @@ const CombinedCard = ({ benefit, chart }) => {
     >
       <Link href={benefit.link} target="_blank" rel="noopener noreferrer">
         <div className="h-full p-6 rounded-2xl bg-card hover:bg-card/80 border border-border transition-all duration-300 hover:shadow-lg">
-          <div className="flex flex-col h-full">
+          <div className="flex flex-col h-full justify-between">
             <h3 className="text-xl font-sans font-semibold mb-3">
               {benefit.headline}
             </h3>
             <p className="text-base font-sans text-muted-foreground mb-6">
               {benefit.description}
             </p>
-            
+
             <div className="h-[250px] w-full mb-6">
               <ChartContainer config={chartConfig}>
                 <ResponsiveContainer width="100%" height="100%">
                   {chart.type === "BarChart" ? (
                     <BarChart data={chartData}>
-                      <XAxis dataKey="name" 
-                            tickLine={false}
-                            tickMargin={10}
-                            axisLine={false}
-                            />
+                      <XAxis dataKey="name"
+                        tickLine={false}
+                        tickMargin={10}
+                        axisLine={false}
+                      />
                       <YAxis />
                       <Bar
                         dataKey="value"
@@ -156,40 +156,40 @@ const CombinedCard = ({ benefit, chart }) => {
                         innerRadius={100}
                         outerRadius={120}
                       >
-<Label
-                content={({ viewBox }) => {
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                    return (
-                      <text
-                        x={viewBox.cx}
-                        y={viewBox.cy}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                        fontSize={16}
-                      >
-                        <tspan
-                          x={viewBox.cx}
-                          y={viewBox.cy}
-                          className="fill-foreground text-4xl font-bold"
-                        >
-                          {chartData.reduce((acc, curr) => curr.value > acc ? curr.value : acc, 0)}%
-                        </tspan>
-                        <tspan
-                          x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 24}
-                          className="fill-muted-foreground"
-                          fontSize={14}
-                        >
-                          Of SMB&apos;s have adopted AI
-                        </tspan>
-                      </text>
-                    )
-                  }
-                }}
-              />
+                        <Label
+                          content={({ viewBox }) => {
+                            if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                              return (
+                                <text
+                                  x={viewBox.cx}
+                                  y={viewBox.cy}
+                                  textAnchor="middle"
+                                  dominantBaseline="middle"
+                                  fontSize={16}
+                                >
+                                  <tspan
+                                    x={viewBox.cx}
+                                    y={viewBox.cy}
+                                    className="fill-foreground text-4xl font-bold"
+                                  >
+                                    {chartData.reduce((acc, curr) => curr.value > acc ? curr.value : acc, 0)}%
+                                  </tspan>
+                                  <tspan
+                                    x={viewBox.cx}
+                                    y={(viewBox.cy || 0) + 24}
+                                    className="fill-muted-foreground"
+                                    fontSize={14}
+                                  >
+                                    Of SMB&apos;s have adopted AI
+                                  </tspan>
+                                </text>
+                              )
+                            }
+                          }}
+                        />
                         {chartData.map((entry, index) => (
-                          <Cell 
-                            key={`cell-${index}`} 
+                          <Cell
+                            key={`cell-${index}`}
                             fill={index === 0 ? "hsl(var(--chart-3))" : "hsl(var(--chart-4))"}
                           />
                         ))}
@@ -230,7 +230,7 @@ const RegularCard = ({ benefit }) => (
     className="lg:col-span-2 group relative"
   >
     <Link href={benefit.link} target="_blank" rel="noopener noreferrer">
-      <div className="h-full p-6 rounded-2xl bg-card hover:bg-card/80 border border-border transition-all duration-300 hover:shadow-lg">
+      <div className="h-full p-6 flex flex-col justify-between rounded-2xl bg-card hover:bg-card/80 border border-border transition-all duration-300 hover:shadow-lg">
         <h3 className="text-xl font-sans font-semibold mb-3">
           {benefit.headline}
         </h3>
@@ -262,10 +262,10 @@ export const ValidationSection = () => {
   // Find matching benefits for charts
   const productivityChart = validationData.charts.find(c => c.title.includes("Productivity"));
   const adoptionChart = validationData.charts.find(c => c.title.includes("Adoption"));
-  
+
   const productivityBenefit = validationData.benefits.find(b => b.headline.includes("Productivity"));
   const adoptionBenefit = validationData.benefits.find(b => b.headline.includes("Level the Playing Field"));
-  
+
   // Filter out benefits that are combined with charts
   const regularBenefits = validationData.benefits.filter(
     b => b !== productivityBenefit && b !== adoptionBenefit
@@ -281,13 +281,13 @@ export const ValidationSection = () => {
           variants={containerVariants}
           className="max-w-6xl mx-auto"
         >
-          <motion.h2 
+          <motion.h2
             variants={itemVariants}
             className="text-4xl font-sans font-bold text-center mb-4"
           >
             {validationData.title}
           </motion.h2>
-          <motion.p 
+          <motion.p
             variants={itemVariants}
             className="text-lg font-sans text-muted-foreground text-center mb-12 max-w-3xl mx-auto"
           >
@@ -296,15 +296,15 @@ export const ValidationSection = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6">
             {/* Combined chart + text cards */}
-            <CombinedCard 
-              benefit={productivityBenefit} 
+            <CombinedCard
+              benefit={productivityBenefit}
               chart={productivityChart}
             />
-            <CombinedCard 
-              benefit={adoptionBenefit} 
+            <CombinedCard
+              benefit={adoptionBenefit}
               chart={adoptionChart}
             />
-            
+
             {/* Regular benefit cards */}
             {regularBenefits.map((benefit, index) => (
               <RegularCard key={`benefit-${index}`} benefit={benefit} />
