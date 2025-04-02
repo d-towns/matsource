@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
 
 type FAQItem = {
   question: string;
@@ -9,6 +10,18 @@ type FAQItem = {
 };
 
 const faqs: FAQItem[] = [
+  {
+    question: "What is an AI Voice Agent?",
+    answer: <>
+    <p>An AI Voice Agent is a virtual assistant that uses natural language processing and voice recognition to interact with customers. It can be used to answer questions, make appointments, and more. They can integrate with your existing CRM, email, and calendar systems to give accurate responses and actions.</p>
+    <p>They can be used for inbound or outbound calls, and can be used for a variety of purposes, such as sales, support, and marketing.</p>
+    <Link href="https://chatgpt.com/c/67ed75ff-9668-8013-9fd3-a38b454f6ac5" target="_blank" className="text-primary">Learn More</Link>
+    </>
+  },
+  {
+    question: "My business already user IVR, why would I need an AI Voice Agent?",
+    answer: "IVR systems are great for handling basic customer inquiries, but they lack the ability to understand complex customer needs and provide personalized responses. AI Voice Agents can handle more complex customer needs and provide a more personalized experience."
+  },
   {
     question: "What types of AI Voice Agents do you offer?",
     answer: "We specialize in building AI Voice Agents, for either inbound or outbound calls."

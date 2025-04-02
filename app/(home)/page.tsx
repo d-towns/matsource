@@ -1,16 +1,17 @@
 import { Hero } from "@/components/Hero";
 import { FAQ } from "@/components/FAQ";
 import FeaturesGrid from "@/components/FeaturesGrid";
-import BlogSection from "@/components/BlogSection";
+// import BlogSection from "@/components/BlogSection";
 import ExpertiseSection from "@/components/ExpertiseSection";
 import { Pricing } from "@/components/Pricing";
-import { getAllPosts } from "./blog/actions";
+// import { getAllPosts } from "./blog/actions";
 import CalendarSection from "@/components/ui/CalendarSection";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { ValidationSection } from "@/components/ValidationSection";
+import { QuestionSection } from "@/components/QuestionSection";
 
 export default async function Home() {
-  const allPosts = await getAllPosts();
+  // const allPosts = await getAllPosts();
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
       <main>
@@ -26,6 +27,8 @@ export default async function Home() {
         </section>
 
         <FeaturesGrid />
+        
+        {/* <QuestionSection /> */}
 
         <ExpertiseSection />
 
@@ -36,7 +39,7 @@ export default async function Home() {
         {/* Pricing Section */}
         <Pricing />
 
-        <BlogSection allPosts={allPosts} />
+        {/* <BlogSection allPosts={allPosts} /> */}
 
         <FAQ />
 
