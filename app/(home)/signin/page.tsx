@@ -10,12 +10,12 @@ export default function SignInPage() {
   return (
     <div className="container flex min-h-[calc(100vh-80px)] flex-col items-center justify-center">
       <div className="lg:p-8">
-        <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
+        <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[400px]">
           <div className="flex flex-col space-y-2 text-center">
-            <h1 className="text-2xl font-semibold tracking-tight">
+            <h1 className="text-4xl font-semibold tracking-tight">
               {mode === "signin" ? "Welcome back" : "Create an account"}
             </h1>
-            <p className="text-sm text-gray-400">
+            <p className="text-xl text-gray-400">
               {mode === "signin" 
                 ? "Enter your email to sign in to your account" 
                 : "Enter your email below to create your account"}

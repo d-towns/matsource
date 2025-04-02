@@ -14,7 +14,8 @@ function SubmitButton({ isLoading }: { isLoading: boolean }) {
     <button
       type="submit"
       disabled={isLoading}
-      className="inline-flex items-center justify-center rounded-full bg-matsource-500 px-8 py-3 text-base font-medium text-white transition-colors hover:bg-matsource-400 focus:outline-none focus:ring-2 focus:ring-matsource-500 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none"
+      className="inline-flex items-center justify-center rounded-full bg-primary px-8 py-3 text-base font-medium text-white transition-colors hover:bg-primary/80 
+      focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none"
     >
       {isLoading ? "Signing in..." : "Sign in"}
     </button>
@@ -40,7 +41,7 @@ export function SignInForm() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid gap-4">
           <div className="grid gap-2">
-            <label className="text-base text-gray-300" htmlFor="email">
+            <label className="text-xl" htmlFor="email">
               Email
             </label>
             <input
@@ -49,19 +50,19 @@ export function SignInForm() {
               autoCapitalize="none"
               autoComplete="email"
               autoCorrect="off"
-              className="rounded-md border border-gray-800 bg-black px-4 py-3 text-base text-gray-300 focus:border-matsource-500 focus:outline-none focus:ring-2 focus:ring-matsource-500"
+              className="rounded-md border border-gray-800 px-4 py-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary"
             />
             {errors.email && <span className="text-red-500">Email is required</span>}
           </div>
           <div className="grid gap-2">
-            <label className="text-base text-gray-300" htmlFor="password">
+            <label className="text-xl" htmlFor="password">
               Password
             </label>
             <input
               {...register("password", { required: true })}
               type="password"
               autoComplete="current-password"
-              className="rounded-md border border-gray-800 bg-black px-4 py-3 text-base text-gray-300 focus:border-matsource-500 focus:outline-none focus:ring-2 focus:ring-matsource-500"
+              className="rounded-md border border-gray-800 px-4 py-3 text-base focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary"
             />
             {errors.password && <span className="text-red-500">Password is required</span>}
           </div>
@@ -82,7 +83,7 @@ export function SignInForm() {
         type="button"
         disabled={isGoogleLoading}
         onClick={() => setIsGoogleLoading(true)}
-        className="inline-flex items-center justify-center rounded-full border border-gray-800 bg-black px-8 py-2 text-sm font-medium text-gray-300 transition-colors hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-matsource-500 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none"
+        className="inline-flex items-center justify-center rounded-full border border-gray-800 px-8 py-2 text-sm font-medium  transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none"
       >
         <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
           <path
