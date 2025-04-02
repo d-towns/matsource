@@ -8,7 +8,7 @@ import { Pricing } from "@/components/Pricing";
 import CalendarSection from "@/components/ui/CalendarSection";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { ValidationSection } from "@/components/ValidationSection";
-import { QuestionSection } from "@/components/QuestionSection";
+// import { QuestionSection } from "@/components/QuestionSection";
 
 export default async function Home() {
   // const allPosts = await getAllPosts();
