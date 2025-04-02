@@ -14,13 +14,13 @@ export default function Footer() {
               </span>
             </div>
             <nav className="flex flex-wrap justify-center gap-4 md:gap-6 text-sm md:text-base">
-              <Link href="/privacy-policy" className=" hover:text-primary transition-colors">
-                Privacy Policy
+              <Link href="/#services" className=" hover:text-primary transition-colors">
+                Services
               </Link>
-              <Link href="/terms" className=" hover:text-primary transition-colors">
-                Terms of Service
+              <Link href="/pricing" className=" hover:text-primary transition-colors">
+                Pricing
               </Link>
-              <Link href="/contact" className=" hover:text-primary transition-colors">
+              <Link href="/#contact-us" className=" hover:text-primary transition-colors">
                 Contact
               </Link>
             </nav>

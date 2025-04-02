@@ -52,6 +52,7 @@ const features: Feature[] = [
 export default function FeaturesGrid() {
   return (
     <motion.section 
+      id="services"
       className="py-16 px-4 md:px-6 lg:px-8"
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
