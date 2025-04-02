@@ -127,7 +127,7 @@ const CombinedCard = ({ benefit, chart }) => {
               {benefit.description}
             </p>
 
-            <div className="h-[250px] w-full mb-6">
+            <div className="h-full w-full mb-6">
               <ChartContainer config={chartConfig}>
                 <ResponsiveContainer width="100%" height="100%">
                   {chart.type === "BarChart" ? (
@@ -146,15 +146,15 @@ const CombinedCard = ({ benefit, chart }) => {
                       {/* <ChartTooltip content={<ChartTooltipContent />} /> */}
                     </BarChart>
                   ) : (
-                    <PieChart>
+                    <PieChart height={250}>
                       <Pie
                         data={chartData}
                         dataKey="value"
                         nameKey="name"
                         cx="50%"
                         cy="50%"
-                        innerRadius={100}
-                        outerRadius={120}
+                        innerRadius={window.innerWidth < 768 ? 70 : 90}
+                        outerRadius={window.innerWidth < 768 ? 90 : 110}
                       >
                         <Label
                           content={({ viewBox }) => {
@@ -178,7 +178,7 @@ const CombinedCard = ({ benefit, chart }) => {
                                     x={viewBox.cx}
                                     y={(viewBox.cy || 0) + 24}
                                     className="fill-muted-foreground"
-                                    fontSize={14}
+                                    fontSize={10}
                                   >
                                     Of SMB&apos;s have adopted AI
                                   </tspan>
@@ -201,7 +201,7 @@ const CombinedCard = ({ benefit, chart }) => {
               </ChartContainer>
             </div>
 
-            <div className="flex items-center text-xs text-primary mt-8 ">
+            <div className="flex items-center text-xs text-primary mt-8 h-fit ">
               <span className="font-sans font-medium">Source: {benefit.source}</span>
               <svg
                 className="w-4 h-4 ml-1 transform transition-transform group-hover:translate-x-1"
@@ -230,7 +230,7 @@ const RegularCard = ({ benefit }) => (
     className="lg:col-span-2 group relative"
   >
     <Link href={benefit.link} target="_blank" rel="noopener noreferrer">
-      <div className="h-full p-6 flex flex-col justify-between rounded-2xl bg-card hover:bg-card/80 border border-border transition-all duration-300 hover:shadow-lg">
+      <div className="h-full p-6 rounded-2xl bg-card hover:bg-card/80 border border-border transition-all duration-300 hover:shadow-lg">
         <h3 className="text-xl font-sans font-semibold mb-3">
           {benefit.headline}
         </h3>
