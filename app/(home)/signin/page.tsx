@@ -3,6 +3,8 @@
 import { useState } from "react"
 import { SignInForm } from "@/components/auth/SignInForm"
 import { SignUpForm } from "@/components/auth/SignUpForm"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import Link from "next/link"
 
 export default function SignInPage() {
   const [mode, setMode] = useState<"signin" | "signup">("signin")
@@ -12,6 +14,12 @@ export default function SignInPage() {
       <div className="lg:p-8">
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[400px]">
           <div className="flex flex-col space-y-2 text-center">
+            <Alert variant="default" className="mb-4 bg-gradient-to-r from-primary/10 to-secondary/10">
+              <AlertTitle>Attention</AlertTitle>
+              <AlertDescription>
+                Accounts are only for active clients. If you are not an active client, please <Link href="/get-started" className="underline text-matsource-500 hover:text-matsource-400">contact us</Link> to get access.
+              </AlertDescription>
+            </Alert>
             <h1 className="text-4xl font-semibold tracking-tight">
               {mode === "signin" ? "Welcome back" : "Create an account"}
             </h1>
@@ -24,7 +32,7 @@ export default function SignInPage() {
 
           {mode === "signin" ? <SignInForm /> : <SignUpForm />}
 
-          <p className="px-8 text-center text-sm text-gray-400">
+          {/* <p className="px-8 text-center text-sm text-gray-400">
             {mode === "signin" ? (
               <>
                 Don&apos;t have an account?{" "}
@@ -45,8 +53,8 @@ export default function SignInPage() {
                   Sign in
                 </button>
               </>
-            )}
-          </p>
+            )} 
+          </p> */}
         </div>
       </div>
     </div>
