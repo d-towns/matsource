@@ -2,14 +2,16 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 // Initialize Supabase client for API calls to widget service
-const widgetServiceUrl = process.env.WIDGET_SERVICE_URL || 'http://localhost:3002';
+const widgetServiceUrl = process.env.NEXT_PUBLIC_NODE_ENV === 'development' ? process.env.NEXT_PUBLIC_DEV_WIDGET_SERVICE_URL! : process.env.WIDGET_SERVICE_URL || 'http://localhost:3002';
+
+
+const supabaseUrl = process.env.NEXT_PUBLIC_NODE_ENV === 'development' ? process.env.NEXT_PUBLIC_DEV_SUPABASE_URL! : process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseServiceKey = process.env.NEXT_PUBLIC_NODE_ENV === 'development' ? process.env.NEXT_PUBLIC_DEV_SUPABASE_SERVICE_ROLE_KEY! : process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY!;
+const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 export async function POST(req: NextRequest) {
   try {
-    // Initialize Supabase client
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
 
     // Get API key from headers
     const apiKeyId = req.headers.get('x-api-key');
@@ -70,6 +72,8 @@ export async function POST(req: NextRequest) {
       }
     )
     // Call the widget service to generate a token
+    const generateTokenUrl = `${widgetServiceUrl}/api/generate-token`;
+    console.log('generateTokenUrl', generateTokenUrl);
     const response = await fetch(`${widgetServiceUrl}/api/generate-token`, {
       method: 'POST',
       headers: {
