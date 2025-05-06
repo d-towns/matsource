@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { PlusCircle } from 'lucide-react';
 
 interface CreateAgentCardProps {
-  type: 'voice' | 'browser';
+  type: 'inbound_voice' | 'outbound_voice' | 'browser';
 }
 
 export function CreateAgentCard({ type }: CreateAgentCardProps) {
@@ -20,11 +20,13 @@ export function CreateAgentCard({ type }: CreateAgentCardProps) {
   return (
     <Card className="border-dashed border-2 hover:border-primary cursor-pointer">
       <CardHeader>
-        <CardTitle>Create {type === 'voice' ? 'Voice' : 'Browser'} Agent</CardTitle>
+        <CardTitle>Create {type === 'inbound_voice' ? 'Inbound Voice' : type === 'outbound_voice' ? 'Outbound Voice' : 'Browser'} Agent</CardTitle>
         <CardDescription>
-          {type === 'voice' 
+          {type === 'inbound_voice' 
             ? 'Set up an agent for phone calls and voice interactions'
-            : 'Set up an agent for executing multi-step actions in a browser'
+            : type === 'outbound_voice'
+              ? 'Set up an agent for outbound voice calls'
+              : 'Set up an agent for executing multi-step actions in a browser'
           }
         </CardDescription>
       </CardHeader>
@@ -37,7 +39,7 @@ export function CreateAgentCard({ type }: CreateAgentCardProps) {
           variant="outline"
           onClick={handleCreateAgent}
         >
-          Create {type === 'voice' ? 'Voice' : 'Browser'} Agent
+          Create {type === 'inbound_voice' ? 'Inbound Voice' : type === 'outbound_voice' ? 'Outbound Voice' : 'Browser'} Agent
         </Button>
       </CardFooter>
     </Card>

@@ -4,9 +4,9 @@ import { SignInForm } from "@/components/auth/SignInForm"
 import { SignUpForm } from "@/components/auth/SignUpForm"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import Link from "next/link"
-
+import { useState } from "react"
 export default function SignInPage() {
-  const mode = "signin"
+  const [mode, setMode] = useState("signin")
 
   return (
     <div className="container flex min-h-[calc(100vh-80px)] flex-col items-center justify-center">
@@ -31,7 +31,7 @@ export default function SignInPage() {
 
           {mode === "signin" ? <SignInForm /> : <SignUpForm />}
 
-          {/* <p className="px-8 text-center text-sm text-gray-400">
+          <p className="px-8 text-center text-sm text-gray-400">
             {mode === "signin" ? (
               <>
                 Don&apos;t have an account?{" "}
@@ -53,7 +53,7 @@ export default function SignInPage() {
                 </button>
               </>
             )} 
-          </p> */}
+          </p>
         </div>
       </div>
     </div>

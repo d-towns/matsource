@@ -15,7 +15,7 @@ import { Switch } from '@/components/ui/switch';
 export interface Agent {
   id: string;
   name: string;
-  type: 'voice' | 'browser';
+  type: 'inbound_voice' | 'outbound_voice' | 'browser';
   description: string;
   script: string;
   is_active: boolean;
@@ -35,13 +35,13 @@ export function AgentEditForm({ initialAgent, isNewAgent, searchType }: AgentEdi
   const [agent, setAgent] = useState<Agent | null>(() => {
     if (initialAgent) return initialAgent;
     if (isNewAgent) {
-      const type = searchType as 'voice' | 'browser' || 'voice';
+      const type = searchType as 'inbound_voice' | 'outbound_voice' | 'browser' || 'inbound_voice';
       return {
         id: '',
         name: '',
         type,
         description: '',
-        script: type === 'voice' 
+        script: type === 'inbound_voice' || type === 'outbound_voice'
           ? `You are a friendly and professional representative for our company.
 Your goal is to have a natural conversation with the customer to understand their needs.
 

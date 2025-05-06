@@ -6,7 +6,7 @@ import { createClient } from '@/utils/supabase/server';
 const oauth2Client = new google.auth.OAuth2(
   process.env.GOOGLE_CLIENT_ID,
   process.env.GOOGLE_CLIENT_SECRET,
-  `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/integrations/google/callback`
+  `${process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASE_URL : 'http://localhost:3000'}/api/integrations/google/callback`
 );
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -15,6 +15,7 @@ export async function POST(_request: NextRequest) {
     // Verify user is authenticated via Supabase
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
+    console.log('user', user)
     
     if (!user) {
       return NextResponse.json(
