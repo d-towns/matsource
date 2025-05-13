@@ -1,0 +1,79 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
+import { getCallById, updateCall, deleteCall } from '@/lib/services/CallAttemptService';
+import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
+import { CallAttemptStatusEnum, CallResultEnum } from '@/lib/models/callAttempt';
+
+// Schema for updating a call attempt
+const UpdateCallSchema = z.object({
+  twilio_call_sid: z.string().optional(),
+  end_time: z.string().optional(),
+  duration: z.number().optional(),
+  recording_url: z.string().optional(),
+  transcript: z.array(z.object({ role: z.string(), content: z.string() })).optional(),
+  result: CallResultEnum.optional(),
+  notes: z.string().optional(),
+  status: CallAttemptStatusEnum.optional(),
+  to_number: z.string().optional(),
+});
+
+// GET /api/calls/[id]
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const supabase = await createSupabaseSSRClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  try {
+    const call = await getCallById(params.id, user.id);
+    return NextResponse.json(call);
+  } catch (err) {
+    console.error('Error fetching call attempt:', err);
+    return NextResponse.json({ error: 'Failed to fetch call' }, { status: 500 });
+  }
+}
+
+// PATCH /api/calls/[id]
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const supabase = await createSupabaseSSRClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  try {
+    const updates = UpdateCallSchema.parse(await req.json());
+    const call = await updateCall(params.id, user.id, updates);
+    return NextResponse.json(call);
+  } catch (err: any) {
+    console.error('Error updating call attempt:', err);
+    if (err instanceof z.ZodError) {
+      return NextResponse.json({ error: err.errors }, { status: 400 });
+    }
+    return NextResponse.json({ error: 'Failed to update call' }, { status: 500 });
+  }
+}
+
+// DELETE /api/calls/[id]
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  const supabase = await createSupabaseSSRClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+  try {
+    await deleteCall(params.id, user.id);
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error('Error deleting call attempt:', err);
+    return NextResponse.json({ error: 'Failed to delete call' }, { status: 500 });
+  }
+} 
