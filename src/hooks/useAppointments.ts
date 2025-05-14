@@ -1,12 +1,41 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as api from '@/lib/api/appointmentApi';
 import { Appointment } from '@/lib/models/appointment';
+import {
+  AppointmentWithLead,
+  AppointmentWithCallAttempt,
+  AppointmentWithLeadAndCallAttempt,
+} from '@/lib/models/appointment-shared';
 
 // Hook to fetch all appointments
 export function useAppointments() {
   return useQuery({
     queryKey: ['appointments'],
     queryFn: api.fetchAppointments,
+  });
+}
+
+// Hook to fetch all appointments with joined lead
+export function useAppointmentsWithLead() {
+  return useQuery<AppointmentWithLead[]>({
+    queryKey: ['appointments', 'withLead'],
+    queryFn: api.fetchAppointmentsWithLead,
+  });
+}
+
+// Hook to fetch all appointments with joined call attempt
+export function useAppointmentsWithCallAttempt() {
+  return useQuery<AppointmentWithCallAttempt[]>({
+    queryKey: ['appointments', 'withCallAttempt'],
+    queryFn: api.fetchAppointmentsWithCallAttempt,
+  });
+}
+
+// Hook to fetch all appointments with joined lead and call attempt
+export function useAppointmentsWithLeadAndCallAttempt() {
+  return useQuery<AppointmentWithLeadAndCallAttempt[]>({
+    queryKey: ['appointments', 'withLeadAndCallAttempt'],
+    queryFn: api.fetchAppointmentsWithLeadAndCallAttempt,
   });
 }
 

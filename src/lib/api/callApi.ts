@@ -1,4 +1,5 @@
 import { CallAttempt } from '@/lib/models/callAttempt';
+import { CallAttemptWithLead } from '@/lib/models/lead-callAttempt-shared';
 
 function checkStatus(res: Response) {
   if (!res.ok) throw new Error(res.statusText);
@@ -50,4 +51,18 @@ export async function updateCallApi(
 export async function deleteCallApi(id: string): Promise<void> {
   const res = await fetch(`/api/calls/${id}`, { method: 'DELETE' });
   checkStatus(res);
+}
+
+// Fetch all call attempts with joined lead info
+export async function fetchCallsWithLead(): Promise<CallAttemptWithLead[]> {
+  const res = await fetch('/api/calls?withLead=true');
+  if (!res.ok) throw new Error(res.statusText);
+  return res.json();
+}
+
+// Fetch a single call attempt with joined lead info
+export async function fetchCallWithLead(id: string): Promise<CallAttemptWithLead> {
+  const res = await fetch(`/api/calls/${id}?withLead=true`);
+  if (!res.ok) throw new Error(res.statusText);
+  return res.json();
 } 

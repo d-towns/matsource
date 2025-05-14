@@ -3,7 +3,8 @@ import { createSupabaseSSRClient } from "@/lib/supabase/ssr"
 import { notFound } from "next/navigation"
 import { DataTable } from "@/components/ui/data-table"
 import { columns } from "@/components/calls/calls-columns"
-import { Lead, CallAttemptWithLead } from "@/lib/models/leads"
+import { CallAttemptWithLead } from "@/lib/models/lead-callAttempt-shared"
+import { Lead } from "@/lib/models/lead"
 import { 
   PhoneIcon, 
   MailIcon, 
@@ -18,6 +19,9 @@ import { Badge } from "@/components/ui/badge"
 import { format, parseISO, formatDistanceToNow } from "date-fns"
 import Link from "next/link"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
+import { getLeadById } from "@/lib/services/LeadService"
+import { getCallsForLead } from "@/lib/services/CallAttemptService"
+import { cookies } from "next/headers"
 
 // Helper function to render status badge, similar to the one in leads-columns.tsx
 function getStatusBadge(status: string) {
@@ -61,48 +65,18 @@ function getStatusBadge(status: string) {
   )
 }
 
-async function getLeadById(id: string): Promise<Lead | null> {
-  const res = await fetch(`/api/leads/${id}`)
-  if (!res.ok) {
-    console.error('Error fetching lead:', res.statusText)
-    return null
-  }
-  return (await res.json()) as Lead
-}
-
-async function getCallsForLead(leadId: string): Promise<CallAttemptWithLead[]> {
-  const supabase = await createSupabaseSSRClient()
-  
-  const { data, error } = await supabase
-    .from('call_attempts')
-    .select(`
-      *,
-      lead:lead_id (
-        id,
-        name,
-        phone,
-        email
-      )
-    `)
-    .eq('lead_id', leadId)
-    .order('created_at', { ascending: false })
-  
-  if (error) {
-    console.error('Error fetching call attempts for lead:', error)
-    return []
-  }
-  
-  return data as CallAttemptWithLead[]
-}
-
 async function LeadDetailContent({ id }: { id: string }) {
-  const lead = await getLeadById(id)
+  const cookieStore = await cookies();
+  const teamId = cookieStore.get('activeTeam')?.value;
+  if (!teamId) notFound();
+
+  const lead = await getLeadById(id, teamId)
   
   if (!lead) {
     notFound()
   }
   
-  const calls = await getCallsForLead(id)
+  const calls = await getCallsForLead(teamId, id)
   
   return (
     <>

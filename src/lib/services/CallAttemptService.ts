@@ -1,5 +1,6 @@
 import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
 import { CallAttempt, CallAttemptSchema } from '@/lib/models/callAttempt';
+import { CallAttemptWithLead, CallAttemptWithLeadSchema } from '@/lib/models/lead-callAttempt-shared';
 
 // Fetch all call attempts for the user's team
 export async function getCalls(userId: string, teamId: string): Promise<CallAttempt[]> {
@@ -17,12 +18,15 @@ export async function getCalls(userId: string, teamId: string): Promise<CallAtte
 // Fetch a single call attempt by ID
 export async function getCallById(id: string, teamId: string): Promise<CallAttempt> {
   const supabase = await createSupabaseSSRClient();
+  console.log('id', id)
+  console.log('teamId', teamId)
   const { data, error } = await supabase
     .from('call_attempts')
     .select('*')
     .eq('id', id)
     .eq('team_id', teamId)
     .single();
+  console.log('data', CallAttemptSchema.parse(data))
   if (error) throw error;
   return CallAttemptSchema.parse(data);
 }
@@ -76,38 +80,30 @@ export async function deleteCall(id: string, teamId: string): Promise<void> {
 }
 
 // Fetch all call attempts for a specific lead
-export async function getCallsForLead(teamId: string, leadId: string): Promise<CallAttempt[]> {
+export async function getCallsForLead(teamId: string, leadId: string): Promise<CallAttemptWithLead[]> {
   const supabase = await createSupabaseSSRClient();
   const { data, error } = await supabase
     .from('call_attempts')
-    .select('*')
+    .select('*, leads(*)')
     .eq('lead_id', leadId)
     .eq('team_id', teamId)
     .order('created_at', { ascending: false });
   if (error) throw error;
-  return data.map(d => CallAttemptSchema.parse(d));
+  return (data || []).map(d => CallAttemptWithLeadSchema.parse(d));
 }
 
 /**
  * Fetch all call attempts along with nested lead info for a user
  */
-export async function getCallsWithLeadInfo(teamId: string) {
+export async function getCallsWithLeadInfo(teamId: string): Promise<CallAttemptWithLead[]> {
   const supabase = await createSupabaseSSRClient();
   const { data: calls, error } = await supabase
     .from('call_attempts')
-    .select(`
-      *,
-      lead:lead_id (
-        id,
-        name,
-        phone,
-        email
-      )
-    `)
+    .select('*, leads(*)')
     .eq('team_id', teamId)
     .order('created_at', { ascending: false });
   if (error) throw error;
-  return calls as any[]; // typed as CallAttemptWithLead[] in page
+  return (calls || []).map(d => CallAttemptWithLeadSchema.parse(d));
 }
 
 /**

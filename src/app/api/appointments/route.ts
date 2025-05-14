@@ -1,14 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { getAppointments, createAppointment } from '@/lib/services/AppointmentService';
+import {
+  getAppointments,
+  createAppointment,
+  getAppointmentsWithLead,
+  getAppointmentsWithCallAttempt,
+  getAppointmentsWithLeadAndCallAttempt,
+} from '@/lib/services/AppointmentService';
+import { AppointmentStatusEnum } from '@/lib/models/appointment';
 import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
 import { cookies } from 'next/headers';
 
 const CreateAppointmentSchema = z.object({
   lead_id: z.string().uuid(),
-  scheduled_for: z.string(),
-  location: z.string().optional(),
+  call_attempt_id: z.string().uuid(),
+  scheduled_time: z.string(),
+  duration: z.number().optional(),
+  status: AppointmentStatusEnum.optional(),
   notes: z.string().optional(),
+  reminder_sent: z.boolean().optional(),
+  user_id: z.string().uuid().optional(),
+  event_id: z.string().optional(),
+  meeting_type: z.string().optional(),
+  team_id: z.string().uuid().optional(),
+  address: z.string().optional(),
 });
 
 // GET /api/appointments - list all appointments for the authenticated user
@@ -26,6 +41,19 @@ export async function GET(req: NextRequest) {
   }
 
   try {
+    const { searchParams } = new URL(req.url);
+    if (searchParams.get('withLeadAndCallAttempt') === 'true') {
+      const appointments = await getAppointmentsWithLeadAndCallAttempt(teamId);
+      return NextResponse.json(appointments);
+    }
+    if (searchParams.get('withLead') === 'true') {
+      const appointments = await getAppointmentsWithLead(teamId);
+      return NextResponse.json(appointments);
+    }
+    if (searchParams.get('withCallAttempt') === 'true') {
+      const appointments = await getAppointmentsWithCallAttempt(teamId);
+      return NextResponse.json(appointments);
+    }
     const appointments = await getAppointments(teamId);
     return NextResponse.json(appointments);
   } catch (err) {
@@ -48,8 +76,14 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { lead_id, scheduled_for, location, notes } = CreateAppointmentSchema.parse(await req.json());
-    const appointment = await createAppointment(session.user.id, teamId, { lead_id, scheduled_for, location, notes });
+    const parsed = CreateAppointmentSchema.parse(await req.json());
+    // Ensure status is a valid enum value
+    const appointment = await createAppointment(session.user.id, teamId, {
+      ...parsed,
+      status: parsed.status ?? 'scheduled',
+      lead_id: parsed.lead_id,
+      call_attempt_id: parsed.call_attempt_id,
+    });
     return NextResponse.json(appointment, { status: 201 });
   } catch (err: any) {
     console.error('Error creating appointment:', err);

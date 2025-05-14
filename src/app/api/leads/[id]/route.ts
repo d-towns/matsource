@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { getLeadById, updateLeadById, deleteLeadById } from '@/lib/services/LeadService';
+import { getLeadById, updateLeadById, deleteLeadById, getLeadWithCallAttempts } from '@/lib/services/LeadService';
 import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
 import { LeadStatusEnum } from '@/lib/models/lead';
 
@@ -25,8 +25,19 @@ export async function GET(
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
   try {
-    const lead = await getLeadById(params.id, user.id);
-    return NextResponse.json(lead);
+    const { searchParams } = new URL(req.url);
+    const withCalls = searchParams.get('withCalls') === 'true';
+    if (withCalls) {
+      const teamId = (await import('next/headers')).cookies().then(c => c.get('activeTeam')?.value);
+      if (!teamId) {
+        return NextResponse.json({ error: 'No active team selected' }, { status: 400 });
+      }
+      const lead = await getLeadWithCallAttempts(params.id, await teamId);
+      return NextResponse.json(lead);
+    } else {
+      const lead = await getLeadById(params.id, user.id);
+      return NextResponse.json(lead);
+    }
   } catch (err) {
     console.error('Error fetching lead:', err);
     return NextResponse.json({ error: 'Failed to fetch lead' }, { status: 500 });

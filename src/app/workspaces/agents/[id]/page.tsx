@@ -1,6 +1,8 @@
 import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
 import { notFound, redirect } from 'next/navigation';
 import { AgentEditForm } from './components/agent-edit-form';
+import { cookies } from 'next/headers';
+import { getAgentById } from '@/lib/services/AgentService';
 
 export default async function AgentEditPage({ 
   params,
@@ -19,32 +21,17 @@ export default async function AgentEditPage({
   try {
     // For existing agents, fetch data
     if (!isNewAgent) {
-      const supabase = await createSupabaseSSRClient();
-      
-      // Check if user is authenticated
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        redirect('/login');
+      try{
+          const cookieStore = await cookies()
+          const teamId = cookieStore.get('activeTeam')?.value
+          if (!teamId) {
+            throw new Error('No active team found');
+          }
+          agent = await getAgentById(id, teamId);
+      } catch (err) {
+        console.error('Error fetching agent:', err);
+        error = err;
       }
-      
-      // Fetch agent data
-      const { data, error: fetchError } = await supabase
-        .from('agents')
-        .select('*')
-        .eq('id', id)
-        .eq('user_id', session.user.id)
-        .single();
-      
-      if (fetchError) {
-        if (fetchError.code === 'PGRST116') {
-          // No rows returned - agent not found
-          notFound();
-        } else {
-          throw fetchError;
-        }
-      }
-      
-      agent = data;
     }
   } catch (err) {
     console.error('Error fetching agent:', err);

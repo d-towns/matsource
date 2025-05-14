@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { getCalls, createCall } from '@/lib/services/CallAttemptService';
+import { getCalls, createCall, getCallsWithLeadInfo } from '@/lib/services/CallAttemptService';
 import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
 import { CallAttemptStatusEnum, CallResultEnum } from '@/lib/models/callAttempt';
 import { cookies } from 'next/headers';
@@ -30,7 +30,11 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'No active team selected' }, { status: 400 });
   }
   try {
-    const calls = await getCalls(user.id, teamId);
+    const { searchParams } = new URL(req.url);
+    const withLead = searchParams.get('withLead') === 'true';
+    const calls = withLead
+      ? await getCallsWithLeadInfo(teamId)
+      : await getCalls(user.id, teamId);
     return NextResponse.json(calls);
   } catch (err) {
     console.error('Error fetching call attempts:', err);

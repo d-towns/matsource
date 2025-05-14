@@ -15,8 +15,9 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { formatDistanceToNow, parseISO, format } from "date-fns"
-import { CallAttemptWithLead } from "@/lib/models/leads"
+import { CallAttempt } from "@/lib/models/callAttempt"
 import React from "react"
+import { CallAttemptWithLead } from "@/lib/models/lead-callAttempt-shared"
 
 // Helper function to format duration in mm:ss
 function formatDuration(seconds?: number): string {
@@ -87,7 +88,7 @@ function getStatusBadge(status?: string) {
 
 export const columns: ColumnDef<CallAttemptWithLead>[] = [
   {
-    accessorKey: "lead.name",
+    accessorKey: "leads.name",
     header: "Lead",
     cell: ({ row }) => {
       return (
@@ -96,17 +97,17 @@ export const columns: ColumnDef<CallAttemptWithLead>[] = [
             href={`/workspaces/leads/${row.original.lead_id}`}
             className="hover:underline text-blue-600 flex items-center"
           >
-            {row.original.lead.name}
+            {row.original.leads.name}
           </Link>
         </div>
       )
     }
   },
   {
-    accessorKey: "lead.phone",
+    accessorKey: "leads.phone",
     header: "Phone",
     cell: ({ row }) => {
-      const phone = row.original.lead.phone
+      const phone = row.original.leads.phone
       
       return (
         <div className="flex items-center">
@@ -145,7 +146,7 @@ export const columns: ColumnDef<CallAttemptWithLead>[] = [
       const startedAt = row.getValue("started_at") as string | undefined | null
       
       if (!startedAt) {
-        const scheduledTime = row.original.scheduled_time
+        const scheduledTime = row.original.start_time
         
         if (scheduledTime) {
           return (

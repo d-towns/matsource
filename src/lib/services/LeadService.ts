@@ -1,5 +1,7 @@
 import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
 import { Lead, LeadSchema } from '@/lib/models/lead';
+import { LeadWithCallAttempts, LeadWithCallAttemptsSchema } from '@/lib/models/lead-callAttempt-shared';
+import { LeadWithCallCount, LeadWithCallCountSchema } from '@/lib/models/lead-callAttempt-shared';
 
 // Fetch all leads associated with the current user's team
 export async function getLeads(teamId: string): Promise<Lead[]> {
@@ -16,13 +18,13 @@ export async function getLeads(teamId: string): Promise<Lead[]> {
 }
 
 // Fetch a single lead by its ID, ensuring the requesting user owns it
-export async function getLeadById(id: string, userId: string): Promise<Lead> {
+export async function getLeadById(id: string, teamId: string): Promise<Lead> {
   const supabase = await createSupabaseSSRClient();
   const { data, error } = await supabase
     .from('leads')
     .select('*')
     .eq('id', id)
-    .eq('user_id', userId)
+    .eq('team_id', teamId)
     .single();
   if (error) throw error;
   return LeadSchema.parse(data);
@@ -74,4 +76,24 @@ export async function deleteLeadById(id: string, userId: string): Promise<void> 
     .eq('id', id)
     .eq('user_id', userId);
   if (error) throw error;
+}
+
+export async function getLeadWithCallAttempts(id: string, teamId: string): Promise<LeadWithCallAttempts> {
+  const supabase = await createSupabaseSSRClient();
+  const { data, error } = await supabase
+    .from('leads')
+    .select('*, call_attempts(*)')
+    .eq('id', id)
+    .eq('team_id', teamId)
+    .single();
+  if (error) throw error;
+  return LeadWithCallAttemptsSchema.parse(data);
+}
+
+export async function getLeadsWithCallCount(teamId: string): Promise<LeadWithCallCount[]> {
+  const supabase = await createSupabaseSSRClient();
+  // Use a custom SQL query for aggregation
+  const { data, error } = await supabase.rpc('leads_with_call_count', { team_id: teamId });
+  if (error) throw error;
+  return (data || []).map((d: any) => LeadWithCallCountSchema.parse(d));
 } 

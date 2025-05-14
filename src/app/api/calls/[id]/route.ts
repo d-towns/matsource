@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { getCallById, updateCall, deleteCall } from '@/lib/services/CallAttemptService';
+import { getCallById, updateCall, deleteCall, getCallsWithLeadInfo } from '@/lib/services/CallAttemptService';
 import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
 import { CallAttemptStatusEnum, CallResultEnum } from '@/lib/models/callAttempt';
+import { cookies } from 'next/headers';
 
 // Schema for updating a call attempt
 const UpdateCallSchema = z.object({
@@ -27,9 +28,22 @@ export async function GET(
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+  const teamId = (await cookies()).get('activeTeam')?.value;
+  if (!teamId) {
+    return NextResponse.json({ error: 'No active team selected' }, { status: 400 });
+  }
   try {
-    const call = await getCallById(params.id, user.id);
-    return NextResponse.json(call);
+    const { searchParams } = new URL(req.url);
+    const withLead = searchParams.get('withLead') === 'true';
+    if (withLead) {
+      const calls = await getCallsWithLeadInfo(teamId);
+      const call = calls.find(c => c.id === params.id);
+      if (!call) return NextResponse.json({ error: 'Not found' }, { status: 404 });
+      return NextResponse.json(call);
+    } else {
+      const call = await getCallById(params.id, teamId);
+      return NextResponse.json(call);
+    }
   } catch (err) {
     console.error('Error fetching call attempt:', err);
     return NextResponse.json({ error: 'Failed to fetch call' }, { status: 500 });

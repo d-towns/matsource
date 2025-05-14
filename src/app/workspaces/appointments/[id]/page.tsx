@@ -1,7 +1,7 @@
 import { Suspense } from "react"
 import { createSupabaseSSRClient } from "@/lib/supabase/ssr"
 import { notFound } from "next/navigation"
-import { Appointment } from "@/lib/models/appointments"
+import { AppointmentWithLead } from "@/lib/models/appointment-shared"
 import { 
   PhoneIcon, 
   MailIcon, 
@@ -19,6 +19,8 @@ import { format, parseISO, formatDistanceToNow } from "date-fns"
 import Link from "next/link"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { useAppointment } from "@/hooks/useAppointments"
+import { cookies } from "next/headers"
+import { getAppointmentById, getAppointmentByIdWithLead } from "@/lib/services/AppointmentService"
 
 // Status badge configuration
 const statusConfig: Record<string, { class: string, icon: React.ReactNode }> = {
@@ -46,7 +48,11 @@ const statusConfig: Record<string, { class: string, icon: React.ReactNode }> = {
 
 
 async function AppointmentDetailContent({ id }: { id: string }) {
-  const { data: appointment, isLoading, error } = useAppointment(id)
+  const cookieStore = await cookies()
+  const teamId = cookieStore.get('activeTeam')?.value;
+  if (!teamId) notFound();
+
+  const appointment = await getAppointmentByIdWithLead(id, teamId)
   if (!appointment) {
     notFound()
   }

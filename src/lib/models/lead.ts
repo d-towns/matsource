@@ -10,7 +10,7 @@ export const LeadStatusEnum = z.enum([
   'in_progress',
 ]);
 
-// Zod schema for the leads table
+// Base schema (no call_attempts)
 export const LeadSchema = z.object({
   id: z.string().uuid(),
   name: z.string().nullable().optional(),
@@ -25,5 +25,4 @@ export const LeadSchema = z.object({
   team_id: z.string().uuid().nullable().optional(),
 });
 
-// TypeScript type inferred from the schema
 export type Lead = z.infer<typeof LeadSchema>; 

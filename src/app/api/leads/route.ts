@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { getLeads, createLead } from '@/lib/services/LeadService';
+import { getLeads, createLead, getLeadWithCallAttempts, getLeadsWithCallCount } from '@/lib/services/LeadService';
 import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
 import { cookies } from 'next/headers';
 
@@ -28,6 +28,15 @@ export async function GET(req: NextRequest) {
   }
 
   try {
+    const { searchParams } = new URL(req.url);
+    const withCallCount = searchParams.get('withCallCount') === 'true';
+    if (withCallCount) {
+      // Implement getLeadsWithCallCount in LeadService if needed
+      const leads = await getLeadsWithCallCount(teamId);
+      return NextResponse.json(leads);
+      // return NextResponse.json([]); // Placeholder
+    }
+    // Default: get all leads
     const leads = await getLeads(teamId);
     return NextResponse.json(leads);
   } catch (err) {

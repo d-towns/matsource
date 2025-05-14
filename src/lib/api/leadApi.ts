@@ -1,4 +1,5 @@
 import { Lead } from '@/lib/models/lead';
+import { LeadWithCallAttempts, LeadWithCallCount } from '../models/lead-callAttempt-shared';
 
 function checkStatus(res: Response) {
   if (!res.ok) throw new Error(res.statusText);
@@ -50,4 +51,18 @@ export async function updateLead(
 export async function deleteLead(id: string): Promise<void> {
   const res = await fetch(`/api/leads/${id}`, { method: 'DELETE' });
   checkStatus(res);
+}
+
+// Fetch a lead with its call attempts
+export async function fetchLeadWithCallAttempts(id: string): Promise<LeadWithCallAttempts> {
+  const res = await fetch(`/api/leads/${id}?withCalls=true`);
+  if (!res.ok) throw new Error(res.statusText);
+  return res.json();
+}
+
+// Fetch all leads with call count (for summary table)
+export async function fetchLeadsWithCallCount(): Promise<LeadWithCallCount[]> {
+  const res = await fetch('/api/leads?withCallCount=true');
+  if (!res.ok) throw new Error(res.statusText);
+  return res.json();
 } 

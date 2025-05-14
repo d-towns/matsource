@@ -1,7 +1,7 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
-import { Appointment } from "@/lib/models/appointments"
+import { AppointmentWithLead } from "@/lib/models/appointment-shared"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { ArrowUpDown, Calendar, CheckCircle, AlertCircle, XCircle } from "lucide-react"
@@ -32,14 +32,14 @@ const statusConfig: Record<string, { class: string, icon: React.ReactNode }> = {
   }
 }
 
-export const columns: ColumnDef<Appointment>[] = [
+export const columns: ColumnDef<AppointmentWithLead>[] = [
   // Lead name column (with link to lead detail)
   {
     accessorKey: "lead",
     header: "Lead",
     cell: ({ row }) => {
       const lead = row.original.lead
-      
+      if (!lead) return <span className="text-muted-foreground">—</span>
       return (
         <Link 
           href={`/workspaces/leads/${lead.id}`}

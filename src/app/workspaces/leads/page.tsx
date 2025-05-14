@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import { UsersIcon } from 'lucide-react'
-import { LeadWithCallCount } from '@/lib/models/leads'
+import { Lead } from '@/lib/models/lead'
 
 export default function LeadsPage() {
   const { data: leads, isLoading, error } = useLeads()
@@ -33,7 +33,7 @@ export default function LeadsPage() {
         </Link>
       </div>
 
-      <DataTable columns={columns} data={(leads || []) as LeadWithCallCount[]} />
+      <DataTable columns={columns} data={(leads || []) as Lead[]} />
     </div>
   )
 } 

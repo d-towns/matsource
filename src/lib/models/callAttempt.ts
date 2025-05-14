@@ -22,7 +22,7 @@ export const CallResultEnum = z.enum([
   'undetermined',
 ]);
 
-// Zod schema for call_attempts table
+// Base schema (no lead)
 export const CallAttemptSchema = z.object({
   id: z.string().uuid(),
   lead_id: z.string().uuid(),
@@ -32,7 +32,7 @@ export const CallAttemptSchema = z.object({
   duration: z.number().nullable().optional(),
   recording_url: z.string().nullable().optional(),
   transcript: z
-    .array(z.object({ role: z.string(), content: z.string() }))
+    .array(z.object({ role: z.string(), content: z.string().optional(), tool_call_id: z.string().nullable().optional()}))
     .nullable()
     .optional(),
   result: CallResultEnum.nullable().optional(),
@@ -45,5 +45,4 @@ export const CallAttemptSchema = z.object({
   to_number: z.string().nullable().optional(),
 });
 
-// TypeScript type for call attempts
 export type CallAttempt = z.infer<typeof CallAttemptSchema>; 

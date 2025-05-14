@@ -53,6 +53,7 @@ export default async function CallPage({ params }: { params: { id: string } }) {
   if (!call) notFound();
 
   const lead = await getLeadById(call.lead_id, teamId);
+  // console.log('lead:', lead)
   if (!lead) notFound();
   console.log(teamId)
   const history = await getCallsForLead(teamId, call.lead_id);

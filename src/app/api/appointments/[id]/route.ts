@@ -1,13 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { getAppointmentById, updateAppointment, deleteAppointment } from '@/lib/services/AppointmentService';
+import {
+  getAppointmentById,
+  updateAppointment,
+  deleteAppointment,
+  getAppointmentsWithLead,
+  getAppointmentsWithCallAttempt,
+  getAppointmentsWithLeadAndCallAttempt,
+} from '@/lib/services/AppointmentService';
+import { AppointmentStatusEnum } from '@/lib/models/appointment';
 import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
 import { cookies } from 'next/headers';
 
 const UpdateAppointmentSchema = z.object({
-  scheduled_for: z.string().optional(),
-  location: z.string().optional(),
+  lead_id: z.string().uuid().optional(),
+  call_attempt_id: z.string().uuid().optional(),
+  scheduled_time: z.string().optional(),
+  duration: z.number().optional(),
+  status: AppointmentStatusEnum.optional(),
   notes: z.string().optional(),
+  reminder_sent: z.boolean().optional(),
+  user_id: z.string().uuid().optional(),
+  event_id: z.string().optional(),
+  meeting_type: z.string().optional(),
+  team_id: z.string().uuid().optional(),
+  address: z.string().optional(),
 });
 
 // GET /api/appointments/:id - fetch a single appointment
@@ -24,6 +41,25 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   }
 
   try {
+    const { searchParams } = new URL(req.url);
+    if (searchParams.get('withLeadAndCallAttempt') === 'true') {
+      const all = await getAppointmentsWithLeadAndCallAttempt(teamId);
+      const appointment = all.find(a => a.id === params.id);
+      if (!appointment) throw new Error('Not found');
+      return NextResponse.json(appointment);
+    }
+    if (searchParams.get('withLead') === 'true') {
+      const all = await getAppointmentsWithLead(teamId);
+      const appointment = all.find(a => a.id === params.id);
+      if (!appointment) throw new Error('Not found');
+      return NextResponse.json(appointment);
+    }
+    if (searchParams.get('withCallAttempt') === 'true') {
+      const all = await getAppointmentsWithCallAttempt(teamId);
+      const appointment = all.find(a => a.id === params.id);
+      if (!appointment) throw new Error('Not found');
+      return NextResponse.json(appointment);
+    }
     const appointment = await getAppointmentById(params.id, teamId);
     return NextResponse.json(appointment);
   } catch (err) {

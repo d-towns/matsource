@@ -1,40 +1,15 @@
 import { Suspense } from "react"
 import { DataTable } from "@/components/ui/data-table"
 import { columns } from "@/components/appointments/appointments-columns"
-import { createSupabaseSSRClient } from "@/lib/supabase/ssr"
-import { Appointment } from "@/lib/models/appointments"
+import { useAppointmentsWithLead } from "@/hooks/useAppointments"
+import { AppointmentWithLead } from "@/lib/models/appointment-shared"
 import { CalendarIcon, XCircleIcon, CheckCircleIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
-
-// Fetch appointments with lead information
-async function getAppointmentsWithLeadInfo() {
-  const supabase = await createSupabaseSSRClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  
-  // Get all appointments with lead information
-  const { data: appointments, error } = await supabase
-    .from('appointments')
-    .select(`
-      *,
-      lead:lead_id (
-        id,
-        name,
-        phone,
-        email
-      )
-    `)
-    .eq('user_id', user.id)
-    .order('scheduled_time', { ascending: true })
-  
-  if (error) {
-    console.error('Error fetching appointments:', error)
-    return []
-  }
-  
-  return appointments as Appointment[]
-}
+import { getAppointmentsWithLead } from "@/lib/services/AppointmentService"
+import { cookies } from "next/headers"
+import { createSupabaseSSRClient } from "@/lib/supabase/ssr"
 
 // Fetch appointment metrics
 async function getAppointmentMetrics() {
@@ -84,65 +59,27 @@ async function getAppointmentMetrics() {
   }
 }
 
-async function AppointmentsContent() {
-  const appointments = await getAppointmentsWithLeadInfo()
-  const metrics = await getAppointmentMetrics()
-  
+function AppointmentsContent({ appointments }: { appointments: AppointmentWithLead[] }) {
+  // Metrics fetching can be refactored to a hook if needed
+  // const metrics = useAppointmentMetrics()
+
   return (
-    <>
-      <div className="grid gap-4 md:grid-cols-4 mb-6">
-        <div className="rounded-lg border bg-card text-card-foreground shadow p-6">
-          <div className="flex items-center gap-2">
-            <CalendarIcon className="h-4 w-4 text-muted-foreground" />
-            <h3 className="text-sm font-medium">Total Appointments</h3>
-          </div>
-          <div className="mt-3">
-            <p className="text-2xl font-bold">{metrics.totalAppointments}</p>
-          </div>
-        </div>
-        <div className="rounded-lg border bg-card text-card-foreground shadow p-6">
-          <div className="flex items-center gap-2">
-            <CalendarIcon className="h-4 w-4 text-muted-foreground" />
-            <h3 className="text-sm font-medium">Upcoming</h3>
-          </div>
-          <div className="mt-3">
-            <p className="text-2xl font-bold">{metrics.upcomingAppointments}</p>
-          </div>
-        </div>
-        <div className="rounded-lg border bg-card text-card-foreground shadow p-6">
-          <div className="flex items-center gap-2">
-            <CheckCircleIcon className="h-4 w-4 text-muted-foreground" />
-            <h3 className="text-sm font-medium">Completed</h3>
-          </div>
-          <div className="mt-3">
-            <p className="text-2xl font-bold">{metrics.completedAppointments}</p>
-          </div>
-        </div>
-        <div className="rounded-lg border bg-card text-card-foreground shadow p-6">
-          <div className="flex items-center gap-2">
-            <XCircleIcon className="h-4 w-4 text-muted-foreground" />
-            <h3 className="text-sm font-medium">Cancelled/No-show</h3>
-          </div>
-          <div className="mt-3">
-            <p className="text-2xl font-bold">{metrics.missedAppointments}</p>
-          </div>
-        </div>
+    <div className="rounded-lg border">
+      <div className="flex items-center justify-between p-4">
+        <h2 className="text-xl font-semibold">Appointments</h2>
+        <Link href="/workspaces/appointments/new">
+          <Button>Schedule Appointment</Button>
+        </Link>
       </div>
-      
-      <div className="rounded-lg border">
-        <div className="flex items-center justify-between p-4">
-          <h2 className="text-xl font-semibold">Appointments</h2>
-          <Link href="/workspaces/appointments/new">
-            <Button>Schedule Appointment</Button>
-          </Link>
-        </div>
-        <DataTable columns={columns} data={appointments} />
-      </div>
-    </>
+      <DataTable columns={columns} data={appointments as AppointmentWithLead[]} />
+    </div>
   )
 }
 
-export default function AppointmentsPage() {
+export default async function AppointmentsPage() {
+  const cookieStore = await cookies()
+  const teamId = cookieStore.get('activeTeam')?.value;
+  const appointments = await getAppointmentsWithLead(teamId)
   return (
     <div className="container mx-auto py-4">
       <div className="mb-6">
@@ -156,7 +93,7 @@ export default function AppointmentsPage() {
       </div>
       
       <Suspense fallback={<LoadingSpinner text="Loading appointments data..." fullPage />}>
-        <AppointmentsContent />
+        <AppointmentsContent appointments={appointments} />
       </Suspense>
     </div>
   )

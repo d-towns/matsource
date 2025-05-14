@@ -14,7 +14,7 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { formatDistanceToNow, parseISO } from "date-fns"
-import { LeadWithCallCount } from "@/lib/models/leads"
+import { LeadWithCallCount } from "@/lib/models/lead-callAttempt-shared"
 import React from "react"
 
 // Helper function to render status badge
@@ -32,7 +32,7 @@ function getStatusBadge(status: string) {
       class: "bg-purple-100 text-purple-800 border-purple-200", 
       icon: <Clock className="h-3 w-3 mr-1" /> 
     },
-    appointment_scheduled: { 
+    appointment_set: { 
       class: "bg-green-100 text-green-800 border-green-200", 
       icon: <CalendarIcon className="h-3 w-3 mr-1" /> 
     },
