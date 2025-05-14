@@ -5,6 +5,9 @@ import { SignUpForm } from "@/components/auth/SignUpForm"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import Link from "next/link"
 import { useState } from "react"
+
+const environment = process.env.NEXT_PUBLIC_NODE_ENV;
+
 export default function SignInPage() {
   const [mode, setMode] = useState("signin")
 
@@ -31,7 +34,8 @@ export default function SignInPage() {
 
           {mode === "signin" ? <SignInForm /> : <SignUpForm />}
 
-          {/* <p className="px-8 text-center text-sm text-gray-400">
+          { environment === "development" && (
+          <p className="px-8 text-center text-sm text-gray-400">
             {mode === "signin" ? (
               <>
                 Don&apos;t have an account?{" "}
@@ -53,7 +57,8 @@ export default function SignInPage() {
                 </button>
               </>
             )} 
-          </p> */}
+          </p>
+          )}
         </div>
       </div>
     </div>
