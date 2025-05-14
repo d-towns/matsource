@@ -9,6 +9,7 @@ import { GlobeIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { createClient } from '@/lib/supabase/client';
 import { useUser } from '@/hooks/use-user';
+import { useTeam } from '@/context/team-context';
 
 interface Domain {
   id: string;
@@ -26,6 +27,7 @@ export function DomainManager({ initialDomains }: DomainManagerProps) {
   const [newDomain, setNewDomain] = useState('');
   const [addingDomain, setAddingDomain] = useState(false);
   const supabase = createClient();
+  const { activeTeam } = useTeam();
 
   // Add a new domain
   const handleAddDomain = async () => {
@@ -47,7 +49,7 @@ export function DomainManager({ initialDomains }: DomainManagerProps) {
       // Add domain to database
       const { data, error } = await supabase
         .from('domains')
-        .insert({ domain: newDomain, user_id: user.id })
+        .insert({ domain: newDomain, team_id: activeTeam?.id })
         .select()
         .single();
       

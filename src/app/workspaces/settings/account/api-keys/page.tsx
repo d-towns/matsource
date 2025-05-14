@@ -6,10 +6,10 @@ import { IntegrationGuide } from "./components/integration-guide";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Suspense } from "react";
 import { ApiKey } from "./components/api-key-manager";
+import { createSupabaseSSRClient } from "@/lib/supabase/ssr";
 
 async function getApiKeys() {
-  const supabase = await createClient();
-  
+  const supabase = await createSupabaseSSRClient();
   // Check if user is authenticated
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) {

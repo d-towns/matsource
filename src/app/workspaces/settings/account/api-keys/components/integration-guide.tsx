@@ -19,9 +19,9 @@ export function IntegrationGuide({ userId }: IntegrationGuideProps) {
         <div className="space-y-4">
           <h3 className="font-medium text-lg">Step 1: Generate a Token</h3>
           <pre className="bg-muted p-4 rounded-md overflow-x-auto text-sm">
-{`curl -X POST https://widget.matsource.com/api/generate-token \\
-  -H "Content-Type: application/json" \\
-  -H "X-API-Key: YOUR_API_KEY" \\
+{`curl -X POST https://matbot.com/api/generate-token \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: YOUR_API_KEY" \
   -d '{
     "userId": "${userId || 'your-user-id'}",
     "domains": ["yourdomain.com", "*.yourdomain.com"],
@@ -31,16 +31,10 @@ export function IntegrationGuide({ userId }: IntegrationGuideProps) {
 
           <h3 className="font-medium text-lg mt-6">Step 2: Embed the Widget</h3>
           <p className="text-sm text-muted-foreground mb-4">
-            Add this iframe to your website, replacing YOUR_TOKEN with the token you received in step 1.
+            Add this script tag to your website, replacing <code>YOUR_FORM_ID</code> with the form ID you received in step 1.
           </p>
           <pre className="bg-muted p-4 rounded-md overflow-x-auto text-sm">
-{`<iframe
-  src="https://widget.matsource.com/widget?token=YOUR_TOKEN"
-  width="100%"
-  height="450"
-  style="border: none; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);"
-  allow="microphone"
-></iframe>`}
+{`<script src="https://matbot.com/loader.js" data-form-id="YOUR_FORM_ID"></script>`}
           </pre>
         </div>
       </CardContent>
