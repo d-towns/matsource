@@ -49,7 +49,7 @@ export function DomainManager({ initialDomains }: DomainManagerProps) {
       // Add domain to database
       const { data, error } = await supabase
         .from('domains')
-        .insert({ domain: newDomain, team_id: activeTeam?.id })
+        .insert({ domain: newDomain, team_id: activeTeam?.id, user_id: user.id })
         .select()
         .single();
       
