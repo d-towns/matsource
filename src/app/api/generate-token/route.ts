@@ -1,13 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-
-// Initialize Supabase client for API calls to widget service
-const widgetServiceUrl = process.env.NEXT_PUBLIC_NODE_ENV === 'development' ? process.env.NEXT_PUBLIC_DEV_WIDGET_SERVICE_URL! : process.env.WIDGET_SERVICE_URL || 'http://localhost:3002';
-
-
-const supabaseUrl = process.env.NEXT_PUBLIC_NODE_ENV === 'development' ? process.env.NEXT_PUBLIC_DEV_SUPABASE_URL! : process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.NEXT_PUBLIC_NODE_ENV === 'development' ? process.env.NEXT_PUBLIC_DEV_SUPABASE_SERVICE_ROLE_KEY! : process.env.NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY!;
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
 
 export async function POST(req: NextRequest) {
   try {
@@ -21,7 +13,7 @@ export async function POST(req: NextRequest) {
         { status: 401 }
       );
     }
-
+    const supabase = await createSupabaseSSRClient();
     // Fetch the API key from the database
     const { data: apiKeyData, error: apiKeyError } = await supabase
       .from('api_keys')
