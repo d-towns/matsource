@@ -31,7 +31,7 @@ export default function SignInPage() {
 
           {mode === "signin" ? <SignInForm /> : <SignUpForm />}
 
-          <p className="px-8 text-center text-sm text-gray-400">
+          {/* <p className="px-8 text-center text-sm text-gray-400">
             {mode === "signin" ? (
               <>
                 Don&apos;t have an account?{" "}
@@ -53,7 +53,7 @@ export default function SignInPage() {
                 </button>
               </>
             )} 
-          </p>
+          </p> */}
         </div>
       </div>
     </div>
