@@ -82,9 +82,9 @@ export async function POST(req: NextRequest) {
     for (const domain of domains) {
       await supabase.from('form_domains').insert({ form_id: formId, domain });
     }
-
+    const baseUrl = process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASE_URL : 'http://localhost:3000';
     // Return the loader.js embed code
-    const embedCode = `<script src=\"https://matbot.com/loader.js\" data-form-id=\"${formId}\"></script>`;
+    const embedCode = `<script src=\"${baseUrl}/loader.js\" data-form-id=\"${formId}\"></script>`;
 
     // update the form with the embed code
     const { error: updateError } = await supabase
