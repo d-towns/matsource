@@ -9,17 +9,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { CopyIcon, CheckIcon, GlobeIcon } from 'lucide-react';
+import { AgentTypeEnum } from '@/lib/models/agent';
+import { Agent } from '@/lib/models/agent';
 
 interface Domain {
   id: string;
   domain: string;
 }
 
-interface Agent {
-  id: string;
-  name: string;
-  type: 'voice' | 'browser';
-}
 
 interface ApiKey {
   id: string;
@@ -162,7 +159,7 @@ export function EmbedCodeGenerator({ domains, agents, apiKeys }: EmbedCodeGenera
               </SelectTrigger>
               <SelectContent>
                 {agents
-                  .filter(agent => agent.type === 'voice')
+                  .filter(agent => agent.type === AgentTypeEnum.Values.inbound_voice)
                   .map(agent => (
                     <SelectItem key={agent.id} value={agent.id}>
                       {agent.name}

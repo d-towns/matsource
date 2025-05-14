@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
 import { v4 as uuidv4 } from "uuid"
 import crypto from "crypto"
+import { cookies } from "next/headers";
 
 // Create a Supabase client directly (no cookie handling needed for API routes)
 
@@ -45,6 +46,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
+  const cookieStore = await cookies();
+  const teamId = cookieStore.get('activeTeam')?.value;
+
   try {
     // Parse request body
     const body = await request.json()
@@ -69,6 +73,7 @@ export async function POST(request: NextRequest) {
       .insert({
         id: uuidv4(),
         user_id: user.id,
+        team_id: teamId,
         name,
         key: hashedKey,
       })

@@ -33,14 +33,6 @@ export async function GET(req: NextRequest) {
 
   const allowedDomains = domains?.map(d => d.domain) || []
 
-  // Validate origin
-  const originHeader = req.headers.get('origin') || req.headers.get('referer') || ''
-  let host = ''
-  try { host = new URL(originHeader).host } catch {}
-  if (!allowedDomains.includes(host)) {
-    return NextResponse.json({ error: 'Domain not allowed' }, { status: 403 })
-  }
-
   // Mint token
   const token = jwt.sign(
     { formId, teamId: form.team_id, allowedDomains },

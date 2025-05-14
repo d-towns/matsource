@@ -3,15 +3,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { EmbedCodeGenerator } from './components/embed-code-generator';
 import { DomainManager } from './components/domain-manager';
 import { ExistingEmbedsDisplay } from './components/existing-embeds-display';
+import { cookies } from 'next/headers';
 
 
 export default async function EmbedPage() {
   const supabase = await createSupabaseSSRClient();
-  
+  const cookieStore = await cookies();
+  const teamId = cookieStore.get('activeTeam')?.value;
   // Fetch all necessary data in parallel
   const [domainResult, agentResult, apiKeyResult, formResult] = await Promise.all([
     supabase.from('domains').select('*'),
-    supabase.from('agents').select('id, name, type'),
+    supabase.from('agents').select('*').eq('team_id', teamId),
     supabase.from('api_keys').select('id, name'),
     supabase.from('forms').select('*')
   ]);
@@ -26,12 +28,12 @@ export default async function EmbedPage() {
     });
     // Handle errors appropriately
   }
-  
+  console.log(agentResult)
   const domains = domainResult.data || [];
   const agents = agentResult.data || [];
   const apiKeys = apiKeyResult.data || [];
   const formData = formResult.data || [];
-  
+  console.log(agents)
   // Fetch form domains for each form
   const formsWithDomainsPromises = formData.map(async (form) => {
     const { data: domainData, error: domainError } = await supabase
