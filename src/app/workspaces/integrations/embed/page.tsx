@@ -3,7 +3,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { EmbedCodeGenerator } from './components/embed-code-generator';
 import { DomainManager } from './components/domain-manager';
 import { ExistingEmbedsDisplay } from './components/existing-embeds-display';
-import { getAgents } from '@/lib/services/AgentService';
 import { cookies } from 'next/headers';
 
 

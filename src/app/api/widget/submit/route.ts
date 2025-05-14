@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
   try {
     payload = jwt.verify(token, process.env.WIDGET_JWT_SECRET!)
   } catch (e) {
-    return NextResponse.json({ error: 'Invalid or expired token' }, { status: 401 })
+    return NextResponse.json({ error: 'Invalid or expired token: ' + e }, { status: 401 })
   }
 
   // Validate allowed domain
