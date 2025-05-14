@@ -2,10 +2,28 @@ import { NextRequest, NextResponse } from 'next/server'
 import jwt from 'jsonwebtoken'
 import { getSupabaseAdminClient } from '@/lib/supabase/admin'
 
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    },
+  });
+}
+
 export async function GET(req: NextRequest) {
   const formId = req.nextUrl.searchParams.get('formId')
   if (!formId) {
-    return NextResponse.json({ error: 'Missing formId' }, { status: 400 })
+    return NextResponse.json({ error: 'Missing formId' }, {
+      status: 400,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
+    })
   }
 
   const supabase = getSupabaseAdminClient()
@@ -17,12 +35,26 @@ export async function GET(req: NextRequest) {
     .single()
 
   if (formErr || !form || !form.is_active) {
-    return NextResponse.json({ error: 'Form not found or inactive' }, { status: 404 })
+    return NextResponse.json({ error: 'Form not found or inactive' }, {
+      status: 404,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
+    })
   }
 
   // Check expiration
   if (form.expires_at && new Date(form.expires_at) < new Date()) {
-    return NextResponse.json({ error: 'Form expired' }, { status: 410 })
+    return NextResponse.json({ error: 'Form expired' }, {
+      status: 410,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
+    })
   }
 
   // Fetch allowed domains
@@ -53,7 +85,7 @@ export async function GET(req: NextRequest) {
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     },
   })
 } 
