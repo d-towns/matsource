@@ -93,7 +93,7 @@ export async function signInWithGoogle(redirectTo?: string) {
 
 } 
  
-export async function getUserTeams(userId: string): Promise<Team | null> {
+export async function getUserTeams(): Promise<Team | null> {
   // Create server-side Supabase client with cookie forwarding
   const supabase = await createSupabaseSSRClient();
 

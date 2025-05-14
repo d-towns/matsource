@@ -181,7 +181,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   useEffect(() => {
     if(user) {  
       console.log("user", user);
-      getUserTeams(user.id).then((teams) => {
+      getUserTeams().then((teams) => {
         console.log("teams", teams);
         setTeam({
           name: teams.name,

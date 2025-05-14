@@ -1,10 +1,7 @@
 import { Suspense } from "react"
-import { createSupabaseSSRClient } from "@/lib/supabase/ssr"
 import { notFound } from "next/navigation"
 import { DataTable } from "@/components/ui/data-table"
 import { columns } from "@/components/calls/calls-columns"
-import { CallAttemptWithLead } from "@/lib/models/lead-callAttempt-shared"
-import { Lead } from "@/lib/models/lead"
 import { 
   PhoneIcon, 
   MailIcon, 

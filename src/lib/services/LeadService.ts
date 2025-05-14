@@ -95,5 +95,5 @@ export async function getLeadsWithCallCount(teamId: string): Promise<LeadWithCal
   // Use a custom SQL query for aggregation
   const { data, error } = await supabase.rpc('leads_with_call_count', { team_id: teamId });
   if (error) throw error;
-  return (data || []).map((d: any) => LeadWithCallCountSchema.parse(d));
+  return (data || []).map((d: LeadWithCallCount) => LeadWithCallCountSchema.parse(d));
 } 

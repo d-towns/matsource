@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import jwt from 'jsonwebtoken'
-import { LeadService } from '@/lib/services/LeadService'
+import { createLead } from '@/lib/services/LeadService'
 
 interface WidgetLeadPayload {
   allowedDomains: string[];
@@ -33,9 +33,10 @@ export async function POST(req: NextRequest) {
   const { name, phone, email, source, notes } = body
 
   try {
-    const lead = await LeadService.createLead(
-      { name, phone, email, source, notes },
-      payload.teamId
+    const lead = await createLead(
+      null,
+      payload.teamId,
+      { name, phone, email, source, notes }
     )
     return NextResponse.json({ success: true, lead })
   } catch (err: unknown) {

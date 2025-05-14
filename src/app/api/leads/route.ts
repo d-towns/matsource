@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { getLeads, createLead, getLeadWithCallAttempts, getLeadsWithCallCount } from '@/lib/services/LeadService';
+import { getLeads, createLead, getLeadsWithCallCount } from '@/lib/services/LeadService';
 import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
 import { cookies } from 'next/headers';
 
@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
     const { name, phone, email, source, notes } = parsed;
     const lead = await createLead(session.user.id, teamId, { name, phone, email, source, notes });
     return NextResponse.json(lead, { status: 201 });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('Error creating lead:', err);
     if (err instanceof z.ZodError) {
       return NextResponse.json({ error: err.errors }, { status: 400 });

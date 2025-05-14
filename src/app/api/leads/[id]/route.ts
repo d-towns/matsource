@@ -17,7 +17,7 @@ const UpdateLeadSchema = z.object({
 // GET /api/leads/[id]
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const supabase = await createSupabaseSSRClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -32,10 +32,12 @@ export async function GET(
       if (!teamId) {
         return NextResponse.json({ error: 'No active team selected' }, { status: 400 });
       }
-      const lead = await getLeadWithCallAttempts(params.id, await teamId);
+      const id = (await params).id;
+      const lead = await getLeadWithCallAttempts(id, await teamId);
       return NextResponse.json(lead);
     } else {
-      const lead = await getLeadById(params.id, user.id);
+      const id = (await params).id;
+      const lead = await getLeadById(id, user.id);
       return NextResponse.json(lead);
     }
   } catch (err) {
@@ -47,7 +49,7 @@ export async function GET(
 // PATCH /api/leads/[id]
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const supabase = await createSupabaseSSRClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -56,9 +58,10 @@ export async function PATCH(
   }
   try {
     const updates = UpdateLeadSchema.parse(await req.json());
-    const lead = await updateLeadById(params.id, user.id, updates);
+    const id = (await params).id;
+    const lead = await updateLeadById(id, user.id, updates);
     return NextResponse.json(lead);
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('Error updating lead:', err);
     if (err instanceof z.ZodError) {
       return NextResponse.json({ error: err.errors }, { status: 400 });
@@ -70,7 +73,7 @@ export async function PATCH(
 // DELETE /api/leads/[id]
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const supabase = await createSupabaseSSRClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -78,7 +81,8 @@ export async function DELETE(
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
   try {
-    await deleteLeadById(params.id, user.id);
+    const id = (await params).id;
+    await deleteLeadById(id, user.id);
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error('Error deleting lead:', err);

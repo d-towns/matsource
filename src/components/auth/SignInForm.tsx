@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { signIn, signInWithGoogle } from "@/lib/services/auth-actions";
+import { signIn } from "@/lib/services/auth-actions";
 import { useForm } from "react-hook-form";
 import SignInWithGoogleButton from "./GoogleSignIn/SignInWithGoogleButton";
 
@@ -25,16 +24,12 @@ function SubmitButton({ isLoading }: { isLoading: boolean }) {
 
 export function SignInForm() {
   const { register, handleSubmit, formState: { errors } } = useForm<SignInFormData>();
-  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   async function onSubmit(data: SignInFormData) {
-    setIsLoading(true);
     const formData = new FormData();
     formData.append('email', data.email);
     formData.append('password', data.password);
     await signIn(formData);
-    setIsLoading(false);
   }
 
   return (
@@ -67,7 +62,7 @@ export function SignInForm() {
             />
             {errors.password && <span className="text-red-500">Password is required</span>}
           </div>
-          <SubmitButton isLoading={isLoading} />
+          <SubmitButton isLoading={false} />
         </div>
       </form>
 

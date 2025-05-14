@@ -1,6 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as api from '@/lib/api/callApi';
-import { CallAttempt } from '@/lib/models/callAttempt';
 
 // Hook to fetch all call attempts
 export function useCalls() {

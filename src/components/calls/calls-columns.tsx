@@ -15,7 +15,6 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { formatDistanceToNow, parseISO, format } from "date-fns"
-import { CallAttempt } from "@/lib/models/callAttempt"
 import React from "react"
 import { CallAttemptWithLead } from "@/lib/models/lead-callAttempt-shared"
 

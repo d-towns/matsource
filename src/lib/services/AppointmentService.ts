@@ -18,7 +18,7 @@ export async function getAppointments(teamId: string): Promise<Appointment[]> {
     .eq('team_id', teamId)
     .order('scheduled_time', { ascending: true });
   if (error) throw error;
-  return (data || []).map((d: any) => AppointmentSchema.parse(d));
+  return (data || []).map((d: Appointment) => AppointmentSchema.parse(d));
 }
 
 // Fetch a single appointment by ID
@@ -132,7 +132,7 @@ export async function getAppointmentsWithLead(teamId: string): Promise<Appointme
     .eq('team_id', teamId)
     .order('scheduled_time', { ascending: true });
   if (error) throw error;
-  return (data || []).map((d: any) => AppointmentWithLeadSchema.parse(d));
+  return (data || []).map((d: AppointmentWithLead) => AppointmentWithLeadSchema.parse(d));
 }
 
 // Fetch all appointments with joined call attempt info
@@ -144,7 +144,7 @@ export async function getAppointmentsWithCallAttempt(teamId: string): Promise<Ap
     .eq('team_id', teamId)
     .order('scheduled_time', { ascending: true });
   if (error) throw error;
-  return (data || []).map((d: any) => AppointmentWithCallAttemptSchema.parse(d));
+  return (data || []).map((d: AppointmentWithCallAttempt) => AppointmentWithCallAttemptSchema.parse(d));
 }
 
 // Fetch all appointments with both joined lead and call attempt info
@@ -156,7 +156,7 @@ export async function getAppointmentsWithLeadAndCallAttempt(teamId: string): Pro
     .eq('team_id', teamId)
     .order('scheduled_time', { ascending: true });
   if (error) throw error;
-  return (data || []).map((d: any) => AppointmentWithLeadAndCallAttemptSchema.parse(d));
+  return (data || []).map((d: AppointmentWithLeadAndCallAttempt) => AppointmentWithLeadAndCallAttemptSchema.parse(d));
 }
 
 // Fetch appointments for a specific lead
@@ -174,3 +174,49 @@ export async function getAppointmentsForLead(
   if (error) throw error;
   return data.map(d => AppointmentSchema.parse(d));
 } 
+// Fetch appointment metrics
+export async function getAppointmentMetrics(teamId: string) {
+  const supabase = await createSupabaseSSRClient()
+  
+  // Get total appointments count
+  const { count: totalAppointments, error: totalError } = await supabase
+    .from('appointments')
+    .select('*', { count: 'exact', head: true })
+    .eq('team_id', teamId)
+  
+  // Get upcoming appointments count (scheduled or confirmed, and in the future)
+  const now = new Date().toISOString()
+  const { count: upcomingAppointments, error: upcomingError } = await supabase
+    .from('appointments')
+    .select('*', { count: 'exact', head: true })
+    .eq('team_id', teamId)
+    .in('status', ['scheduled', 'confirmed'])
+    .gt('scheduled_time', now)
+  
+  // Get completed appointments count
+  const { count: completedAppointments, error: completedError } = await supabase
+    .from('appointments')
+    .select('*', { count: 'exact', head: true })
+    .eq('team_id', teamId)
+    .eq('status', 'completed')
+  
+  // Get cancelled/no-show appointments count
+  const { count: missedAppointments, error: missedError } = await supabase
+    .from('appointments')
+    .select('*', { count: 'exact', head: true })
+    .eq('team_id', teamId)
+    .in('status', ['cancelled', 'no_show'])
+  
+  if (totalError || upcomingError || completedError || missedError) {
+    console.error('Error fetching appointment metrics:', {
+      totalError, upcomingError, completedError, missedError
+    })
+  }
+  
+  return {
+    totalAppointments: totalAppointments || 0,
+    upcomingAppointments: upcomingAppointments || 0,
+    completedAppointments: completedAppointments || 0,
+    missedAppointments: missedAppointments || 0
+  }
+}

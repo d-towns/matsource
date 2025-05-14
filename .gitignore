@@ -49,4 +49,6 @@ node_modules/
 /playwright/.cache/
 
 # Supabase
-supabase/
+supabase/*
+/blueagent_openapi_spec.json
+/public/audio

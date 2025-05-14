@@ -10,7 +10,7 @@ export async function getAgents(teamId: string): Promise<Agent[]> {
     .eq('team_id', teamId)
     .order('created_at', { ascending: false });
   if (error) throw error;
-  return (data || []).map((d: any) => AgentSchema.parse(d));
+  return (data || []).map((d: Agent) => AgentSchema.parse(d));
 }
 
 // Fetch a single agent by ID

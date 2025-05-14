@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
     const { lead_id, twilio_call_sid, end_time, duration, recording_url, transcript, result, notes, status, to_number } = parsed;
     const call = await createCall(user.id, teamId, { lead_id, twilio_call_sid, end_time, duration, recording_url, transcript, result, notes, status, to_number });
     return NextResponse.json(call, { status: 201 });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('Error creating call attempt:', err);
     if (err instanceof z.ZodError) {
       return NextResponse.json({ error: err.errors }, { status: 400 });

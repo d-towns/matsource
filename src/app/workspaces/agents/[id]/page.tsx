@@ -1,5 +1,3 @@
-import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
-import { notFound, redirect } from 'next/navigation';
 import { AgentEditForm } from './components/agent-edit-form';
 import { cookies } from 'next/headers';
 import { getAgentById } from '@/lib/services/AgentService';

@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
       call_attempt_id: parsed.call_attempt_id,
     });
     return NextResponse.json(appointment, { status: 201 });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('Error creating appointment:', err);
     if (err instanceof z.ZodError) {
       return NextResponse.json({ error: err.errors }, { status: 400 });

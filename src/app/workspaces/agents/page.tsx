@@ -5,7 +5,6 @@ import { AgentActions } from './components/agent-actions';
 import { CreateAgentCard } from './components/create-agent-card';
 import Link from 'next/link';
 import { Agent } from '@/lib/models/agent';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { getAgents } from '@/lib/services/AgentService';
 import { cookies } from 'next/headers';
 
@@ -18,10 +17,9 @@ export default async function AgentsPage() {
   }
 
   let agents: Agent[] = [];
-  let isLoading = false;
   try {
     agents = await getAgents(teamId);
-  } catch (error) {
+  } catch {
     // Optionally, handle error state here
     return <div className="container py-10">Failed to load agents.</div>;
   }

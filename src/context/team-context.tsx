@@ -31,7 +31,7 @@ export const TeamProvider = ({ children, userId }: { children: ReactNode, userId
       } else if (userId) {
         console.log('userId', userId)
         // Fetch all teams for the user and set the first as active
-        getUserTeams(userId).then(teams => {
+        getUserTeams().then(teams => {
           console.log('teams', teams)
           if (teams) {
             setActiveTeamState(Team.parse(teams))

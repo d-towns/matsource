@@ -1,26 +1,14 @@
 import { Suspense } from "react"
-import { createSupabaseSSRClient } from "@/lib/supabase/ssr"
-import { notFound } from "next/navigation"
-import { AppointmentWithLead } from "@/lib/models/appointment-shared"
-import { 
-  PhoneIcon, 
-  MailIcon, 
-  CalendarIcon, 
-  ClockIcon,
-  ArrowLeftIcon,
-  UserIcon,
-  CheckCircleIcon,
-  XCircleIcon
-} from "lucide-react"
+import { CalendarIcon, PhoneIcon, MailIcon, ClockIcon, ArrowLeftIcon, UserIcon, CheckCircleIcon, XCircleIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { format, parseISO, formatDistanceToNow } from "date-fns"
 import Link from "next/link"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
-import { useAppointment } from "@/hooks/useAppointments"
 import { cookies } from "next/headers"
-import { getAppointmentById, getAppointmentByIdWithLead } from "@/lib/services/AppointmentService"
+import { getAppointmentByIdWithLead } from "@/lib/services/AppointmentService"
+import { notFound } from "next/navigation"
 
 // Status badge configuration
 const statusConfig: Record<string, { class: string, icon: React.ReactNode }> = {

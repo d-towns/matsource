@@ -21,7 +21,7 @@ const UpdateCallSchema = z.object({
 // GET /api/calls/[id]
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const supabase = await createSupabaseSSRClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -35,13 +35,14 @@ export async function GET(
   try {
     const { searchParams } = new URL(req.url);
     const withLead = searchParams.get('withLead') === 'true';
+    const id = (await params).id;
     if (withLead) {
       const calls = await getCallsWithLeadInfo(teamId);
-      const call = calls.find(c => c.id === params.id);
+      const call = calls.find(c => c.id === id);
       if (!call) return NextResponse.json({ error: 'Not found' }, { status: 404 });
       return NextResponse.json(call);
     } else {
-      const call = await getCallById(params.id, teamId);
+      const call = await getCallById(id, teamId);
       return NextResponse.json(call);
     }
   } catch (err) {
@@ -53,7 +54,7 @@ export async function GET(
 // PATCH /api/calls/[id]
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const supabase = await createSupabaseSSRClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -62,9 +63,10 @@ export async function PATCH(
   }
   try {
     const updates = UpdateCallSchema.parse(await req.json());
-    const call = await updateCall(params.id, user.id, updates);
+    const id = (await params).id;
+    const call = await updateCall(id, user.id, updates);
     return NextResponse.json(call);
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('Error updating call attempt:', err);
     if (err instanceof z.ZodError) {
       return NextResponse.json({ error: err.errors }, { status: 400 });
@@ -76,7 +78,7 @@ export async function PATCH(
 // DELETE /api/calls/[id]
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const supabase = await createSupabaseSSRClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -84,7 +86,8 @@ export async function DELETE(
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
   try {
-    await deleteCall(params.id, user.id);
+    const id = (await params).id;
+    await deleteCall(id, user.id);
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error('Error deleting call attempt:', err);

@@ -6,15 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Edit, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { createClient } from '@/lib/supabase/client';
-
-interface Agent {
-  id: string;
-  name: string;
-  type: string;
-  description?: string;
-  script?: string;
-  is_active: boolean;
-}
+import { Agent } from '@/lib/models/agent';
 
 interface AgentActionsProps {
   agent: Agent;

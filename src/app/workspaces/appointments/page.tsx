@@ -1,64 +1,14 @@
 import { Suspense } from "react"
 import { DataTable } from "@/components/ui/data-table"
 import { columns } from "@/components/appointments/appointments-columns"
-import { useAppointmentsWithLead } from "@/hooks/useAppointments"
 import { AppointmentWithLead } from "@/lib/models/appointment-shared"
-import { CalendarIcon, XCircleIcon, CheckCircleIcon } from "lucide-react"
+import { CalendarIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { getAppointmentsWithLead } from "@/lib/services/AppointmentService"
 import { cookies } from "next/headers"
-import { createSupabaseSSRClient } from "@/lib/supabase/ssr"
-
-// Fetch appointment metrics
-async function getAppointmentMetrics() {
-  const supabase = await createSupabaseSSRClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  
-  // Get total appointments count
-  const { count: totalAppointments, error: totalError } = await supabase
-    .from('appointments')
-    .select('*', { count: 'exact', head: true })
-    .eq('user_id', user.id)
-  
-  // Get upcoming appointments count (scheduled or confirmed, and in the future)
-  const now = new Date().toISOString()
-  const { count: upcomingAppointments, error: upcomingError } = await supabase
-    .from('appointments')
-    .select('*', { count: 'exact', head: true })
-    .eq('user_id', user.id)
-    .in('status', ['scheduled', 'confirmed'])
-    .gt('scheduled_time', now)
-  
-  // Get completed appointments count
-  const { count: completedAppointments, error: completedError } = await supabase
-    .from('appointments')
-    .select('*', { count: 'exact', head: true })
-    .eq('user_id', user.id)
-    .eq('status', 'completed')
-  
-  // Get cancelled/no-show appointments count
-  const { count: missedAppointments, error: missedError } = await supabase
-    .from('appointments')
-    .select('*', { count: 'exact', head: true })
-    .eq('user_id', user.id)
-    .in('status', ['cancelled', 'no_show'])
-  
-  if (totalError || upcomingError || completedError || missedError) {
-    console.error('Error fetching appointment metrics:', {
-      totalError, upcomingError, completedError, missedError
-    })
-  }
-  
-  return {
-    totalAppointments: totalAppointments || 0,
-    upcomingAppointments: upcomingAppointments || 0,
-    completedAppointments: completedAppointments || 0,
-    missedAppointments: missedAppointments || 0
-  }
-}
-
+// import { getAppointmentMetrics } from "@/lib/services/AppointmentService"
 function AppointmentsContent({ appointments }: { appointments: AppointmentWithLead[] }) {
   // Metrics fetching can be refactored to a hook if needed
   // const metrics = useAppointmentMetrics()

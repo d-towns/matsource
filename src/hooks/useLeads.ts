@@ -1,6 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as api from '@/lib/api/leadApi';
-import { Lead } from '@/lib/models/lead';
 
 // Hook to fetch leads
 export function useLeads() {

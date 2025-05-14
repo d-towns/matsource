@@ -4,11 +4,8 @@ import { DataTable } from '@/components/ui/data-table';
 import { columns } from '@/components/calls/calls-columns';
 import { getCallById, getCallsForLead } from '@/lib/services/CallAttemptService';
 import { getLeadById } from '@/lib/services/LeadService';
-import { CallAttempt } from '@/lib/models/callAttempt';
-import { Lead } from '@/lib/models/lead';
 import {
   PhoneIcon,
-  MailIcon,
   CalendarIcon,
   ClockIcon,
   PhoneCallIcon,
@@ -20,7 +17,6 @@ import { Badge } from '@/components/ui/badge';
 import { format, parseISO, formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
 import React from 'react';
-import { LoadingSpinner } from '@/components/ui/loading-spinner';
 import { cookies } from 'next/headers';
 
 // Render status badge
@@ -40,7 +36,7 @@ function getStatusBadge(status?: string) {
   return <Badge variant="outline" className={badge.class}>{badge.icon} {status?.replace('_', ' ')}</Badge>;
 }
 
-export default async function CallPage({ params }: { params: { id: string } }) {
+export default async function CallPage({ params }: { params: Promise<{ id: string }> }) {
   const supabase = await createSupabaseSSRClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) notFound();
@@ -49,7 +45,8 @@ export default async function CallPage({ params }: { params: { id: string } }) {
   const teamId = cookieStore.get('activeTeam')?.value;
   if (!teamId) notFound();
 
-  const call = await getCallById(params.id, teamId);
+  const id = (await params).id;
+  const call = await getCallById(id, teamId);
   if (!call) notFound();
 
   const lead = await getLeadById(call.lead_id, teamId);
