@@ -9,7 +9,7 @@ const oauth2Client = new google.auth.OAuth2(
   // The redirect URI is not strictly needed for refreshing tokens, 
   // but it's good practice to include it if the client is used for other auth flows.
   // For server-side refresh, it might not be used.
-  `${process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASE_URL : 'http://localhost:3000'}/api/integrations/google/callback`
+  `${process.env.NEXT_PUBLIC_NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASE_URL : 'http://localhost:3000'}/api/integrations/google/callback`
 );
 
 interface RefreshTokenResponse {

@@ -74,7 +74,7 @@ export async function signOut() {
  */
 export async function signInWithGoogle(redirectTo?: string) {
   const supabase = await createSupabaseSSRClient();
-  const baseUrl = process.env.NODE_ENV === 'production'
+  const baseUrl = process.env.NEXT_PUBLIC_NODE_ENV === 'production'
     ? process.env.NEXT_PUBLIC_BASE_URL
     : 'http://localhost:3000';
   const {data: oAuthResponse, error: oAuthError} = await supabase.auth.signInWithOAuth({
