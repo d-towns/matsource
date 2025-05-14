@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
+// Initialize Supabase client for API calls to widget service
+const widgetServiceUrl = process.env.NEXT_PUBLIC_NODE_ENV === 'development' ? process.env.NEXT_PUBLIC_DEV_WIDGET_SERVICE_URL! : process.env.WIDGET_SERVICE_URL || 'http://localhost:3002';
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,7 +15,7 @@ export async function POST(req: NextRequest) {
         { status: 401 }
       );
     }
-    const supabase = await createSupabaseSSRClient();
+    const supabase = await createSupabaseSSRClient()
     // Fetch the API key from the database
     const { data: apiKeyData, error: apiKeyError } = await supabase
       .from('api_keys')
