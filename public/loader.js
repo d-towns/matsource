@@ -29,9 +29,9 @@
   // Expose formId globally for widget.js
   window.__MATBOT_WIDGET_FORM_ID__ = formId;
 
-  // Dynamically load the widget.js script
+  // Dynamically load the widget.js script from blueagent.co unless overridden
   var widgetScript = document.createElement('script');
-  widgetScript.src = (script.getAttribute('data-widget-src') || '/widget.js');
+  widgetScript.src = script.getAttribute('data-widget-src') || 'https://blueagent.co/widget.js';
   widgetScript.async = true;
   widgetScript.onload = function() {
     // Optionally, notify that widget.js loaded

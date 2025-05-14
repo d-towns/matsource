@@ -25,8 +25,8 @@
   // Render loading state
   root.innerHTML = '<div id="matbot-widget-loading" style="text-align:center; color:#888;">Loading MatBot Widget...</div>';
 
-  // Fetch JWT and config from /api/widget/init
-  fetch('/api/widget/init?formId=' + encodeURIComponent(formId))
+  // Fetch JWT and config from blueagent.co
+  fetch('https://blueagent.co/api/widget/init?formId=' + encodeURIComponent(formId))
     .then(function(res) { return res.json(); })
     .then(function(data) {
       if (data.error) {
@@ -101,7 +101,7 @@
       if (email) payload.email = email;
       if (notes) payload.notes = notes;
       // Submit
-      fetch('/api/widget/submit', {
+      fetch('https://blueagent.co/api/widget/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
