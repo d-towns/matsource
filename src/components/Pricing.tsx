@@ -154,7 +154,7 @@ export function Pricing() {
           viewport={{ once: true }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
         >
-          {pricingPlans.map((plan, idx) => (
+          {pricingPlans.map((plan) => (
             <PlanCard key={plan.name} plan={plan} isBestValue={plan.name === 'Growth'} />
           ))}
         </motion.div>
