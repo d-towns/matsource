@@ -1,4 +1,4 @@
-// MatBot Dynamic Widget Loader
+// BlueAgent Dynamic Widget Loader
 (function() {
   // Find the current script tag
   var script = document.currentScript || (function() {
@@ -9,29 +9,27 @@
   // Get formId from data attribute
   var formId = script.getAttribute('data-form-id');
   if (!formId) {
-    console.error('[MatBot Widget] Missing data-form-id attribute on loader script.');
+    console.error('[BlueAgent Widget] Missing data-form-id attribute on loader script.');
     return;
   }
 
-  // Prevent duplicate widget root
-  if (document.getElementById('matbot-widget-root')) {
-    return;
-  }
-
-  // Create widget root container
-  var root = document.createElement('div');
-  root.id = 'matbot-widget-root';
-  root.style.all = 'unset';
-  root.style.position = 'relative';
-  // Insert the widget root right after the script tag
-  if (script.parentNode) {
-    script.parentNode.insertBefore(root, script.nextSibling);
-  } else {
-    document.body.appendChild(root);
+  // Use blueagent-form-root as the root id
+  var root = document.getElementById('blueagent-form-root');
+  if (!root) {
+    // Create the root if it doesn't exist
+    root = document.createElement('div');
+    root.id = 'blueagent-form-root';
+    root.style.all = 'unset';
+    root.style.position = 'relative';
+    if (script.parentNode) {
+      script.parentNode.insertBefore(root, script.nextSibling);
+    } else {
+      document.body.appendChild(root);
+    }
   }
 
   // Expose formId globally for widget.js
-  window.__MATBOT_WIDGET_FORM_ID__ = formId;
+  window.__BLUEAGENT_WIDGET_FORM_ID__ = formId;
 
   // Dynamically load the widget.js script from blueagent.co unless overridden
   var widgetScript = document.createElement('script');
@@ -41,7 +39,7 @@
     // Optionally, notify that widget.js loaded
   };
   widgetScript.onerror = function() {
-    console.error('[MatBot Widget] Failed to load widget.js');
+    console.error('[BlueAgent Widget] Failed to load widget.js');
   };
   document.body.appendChild(widgetScript);
 })(); 

@@ -83,8 +83,8 @@ export async function POST(req: NextRequest) {
       await supabase.from('form_domains').insert({ form_id: formId, domain });
     }
     const baseUrl = process.env.NEXT_PUBLIC_NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASE_URL : 'http://localhost:3000';
-    // Return the loader.js embed code
-    const embedCode = `<script src=\"${baseUrl}/loader.js\" data-form-id=\"${formId}\"></script>`;
+    // Return the loader.js embed code with the root div
+    const embedCode = `<div id=\"blueagent-form-root\"></div>\n<script src=\"${baseUrl}/loader.js\" data-form-id=\"${formId}\"></script>`;
 
     // update the form with the embed code
     const { error: updateError } = await supabase

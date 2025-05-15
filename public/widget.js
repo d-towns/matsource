@@ -1,14 +1,14 @@
-// MatBot Widget UI (Dynamic Loader + JWT + Submission)
+// BlueAgent Widget UI (Dynamic Loader + JWT + Submission)
 (function() {
-  var root = document.getElementById('matbot-widget-root');
+  var root = document.getElementById('blueagent-form-root');
   if (!root) {
-    console.error('[MatBot Widget] #matbot-widget-root not found.');
+    console.error('[BlueAgent Widget] #blueagent-form-root not found.');
     return;
   }
 
-  var formId = window.__MATBOT_WIDGET_FORM_ID__;
+  var formId = window.__BLUEAGENT_WIDGET_FORM_ID__;
   if (!formId) {
-    root.innerHTML = '<div style="color: red; font-family: sans-serif;">[MatBot Widget] No form ID provided.</div>';
+    root.innerHTML = '<div style="color: red; font-family: sans-serif;">[BlueAgent Widget] No form ID provided.</div>';
     return;
   }
 
@@ -23,62 +23,62 @@
   root.style.border = '1px solid #e5e7eb';
 
   // Render loading state
-  root.innerHTML = '<div id="matbot-widget-loading" style="text-align:center; color:#888;">Loading MatBot Widget...</div>';
+  root.innerHTML = '<div id="blueagent-widget-loading" style="text-align:center; color:#888;">Loading BlueAgent Widget...</div>';
 
   // Fetch JWT and config from blueagent.co
   fetch('https://blueagent.co/api/widget/init?formId=' + encodeURIComponent(formId))
     .then(function(res) { return res.json(); })
     .then(function(data) {
       if (data.error) {
-        root.innerHTML = '<div style="color: red; font-family: sans-serif;">[MatBot Widget] ' + data.error + '</div>';
+        root.innerHTML = '<div style="color: red; font-family: sans-serif;">[BlueAgent Widget] ' + data.error + '</div>';
         return;
       }
       // Store JWT and config for later use
-      window.__MATBOT_WIDGET_JWT__ = data.token;
-      window.__MATBOT_WIDGET_CONFIG__ = data.formConfig;
+      window.__BLUEAGENT_WIDGET_JWT__ = data.token;
+      window.__BLUEAGENT_WIDGET_CONFIG__ = data.formConfig;
       // Render the form (UI only, no submission yet)
       renderForm();
     })
     .catch(function(err) {
-      root.innerHTML = '<div style="color: red; font-family: sans-serif;">[MatBot Widget] Failed to load widget. Please try again later.</div>';
+      root.innerHTML = '<div style="color: red; font-family: sans-serif;">[BlueAgent Widget] Failed to load widget. Please try again later.</div>';
     });
 
   function renderForm() {
     root.innerHTML = `
-      <form id="matbot-widget-form">
+      <form id="blueagent-widget-form">
         <h2 style="font-size:1.25rem; font-weight:600; margin-bottom:1rem;">Request a Call</h2>
         <div style="margin-bottom:1rem;">
-          <label for="matbot-widget-name" style="display:block; font-weight:500;">Full Name <span style="color:#ef4444;">*</span></label>
-          <input id="matbot-widget-name" name="name" type="text" required style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:6px;">
+          <label for="blueagent-widget-name" style="display:block; font-weight:500;">Full Name <span style="color:#ef4444;">*</span></label>
+          <input id="blueagent-widget-name" name="name" type="text" required style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:6px;">
         </div>
         <div style="margin-bottom:1rem;">
-          <label for="matbot-widget-phone" style="display:block; font-weight:500;">Phone Number <span style="color:#ef4444;">*</span></label>
-          <input id="matbot-widget-phone" name="phone" type="tel" required style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:6px;">
+          <label for="blueagent-widget-phone" style="display:block; font-weight:500;">Phone Number <span style="color:#ef4444;">*</span></label>
+          <input id="blueagent-widget-phone" name="phone" type="tel" required style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:6px;">
         </div>
         <div style="margin-bottom:1rem;">
-          <label for="matbot-widget-email" style="display:block; font-weight:500;">Email</label>
-          <input id="matbot-widget-email" name="email" type="email" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:6px;">
+          <label for="blueagent-widget-email" style="display:block; font-weight:500;">Email</label>
+          <input id="blueagent-widget-email" name="email" type="email" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:6px;">
         </div>
         <div style="margin-bottom:1rem;">
-          <label for="matbot-widget-notes" style="display:block; font-weight:500;">Notes</label>
-          <textarea id="matbot-widget-notes" name="notes" rows="2" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:6px;"></textarea>
+          <label for="blueagent-widget-notes" style="display:block; font-weight:500;">Notes</label>
+          <textarea id="blueagent-widget-notes" name="notes" rows="2" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:6px;"></textarea>
         </div>
-        <button type="submit" id="matbot-widget-submit" style="width:100%;background:#3b82f6;color:#fff;font-weight:600;padding:10px 0;border:none;border-radius:6px;cursor:pointer;">Request Call</button>
-        <div id="matbot-widget-error" style="color:#ef4444;margin-top:0.5rem;display:none;"></div>
-        <div style="margin-top:1rem;text-align:center;font-size:0.9rem;color:#888;">Powered by <a href="https://matbot.com" target="_blank" rel="noopener" style="color:#3b82f6;font-weight:500;">MatBot</a></div>
+        <button type="submit" id="blueagent-widget-submit" style="width:100%;background:#3b82f6;color:#fff;font-weight:600;padding:10px 0;border:none;border-radius:6px;cursor:pointer;">Request Call</button>
+        <div id="blueagent-widget-error" style="color:#ef4444;margin-top:0.5rem;display:none;"></div>
+        <div style="margin-top:1rem;text-align:center;font-size:0.9rem;color:#888;">Powered by <a href="https://blueagent.co" target="_blank" rel="noopener" style="color:#3b82f6;font-weight:500;">BlueAgent</a></div>
       </form>
     `;
-    var form = document.getElementById('matbot-widget-form');
-    var submitBtn = document.getElementById('matbot-widget-submit');
-    var errorDiv = document.getElementById('matbot-widget-error');
+    var form = document.getElementById('blueagent-widget-form');
+    var submitBtn = document.getElementById('blueagent-widget-submit');
+    var errorDiv = document.getElementById('blueagent-widget-error');
     form.addEventListener('submit', function(e) {
       e.preventDefault();
       errorDiv.style.display = 'none';
       // Validate required fields
-      var name = document.getElementById('matbot-widget-name').value.trim();
-      var phone = document.getElementById('matbot-widget-phone').value.trim();
-      var email = document.getElementById('matbot-widget-email').value.trim();
-      var notes = document.getElementById('matbot-widget-notes').value.trim();
+      var name = document.getElementById('blueagent-widget-name').value.trim();
+      var phone = document.getElementById('blueagent-widget-phone').value.trim();
+      var email = document.getElementById('blueagent-widget-email').value.trim();
+      var notes = document.getElementById('blueagent-widget-notes').value.trim();
       if (!name) {
         showError('Please enter your name');
         return;
@@ -105,7 +105,7 @@
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + window.__MATBOT_WIDGET_JWT__,
+          'Authorization': 'Bearer ' + window.__BLUEAGENT_WIDGET_JWT__,
         },
         body: JSON.stringify(payload)
       })
