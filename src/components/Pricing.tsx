@@ -5,29 +5,134 @@ import { motion } from "framer-motion";
 import { BookDemoButton } from "./BookDemoButton";
 import Link from "next/link";
 
+// Pricing plans config
+const pricingPlans = [
+  {
+    name: "Starter",
+    price: "$249 / mo",
+    minutes_included: "1 000 pooled",
+    concurrent_calls: "Up to 5",
+    perfect_for: "Solo & 1-truck shops",
+    features: [
+      "24 / 7 Voice-AI receptionist",
+      "Google & Outlook calendar booking",
+      "ServiceTitan / Jobber sync",
+      "300-min free trial",
+      "Overage: $0.09 / min"
+    ],
+    cta: "Get Started"
+  },
+  {
+    name: "Growth",
+    price: "$579 / mo",
+    minutes_included: "3 500 pooled",
+    concurrent_calls: "Up to 5 (add more @ $7/line)",
+    perfect_for: "5-15 tech teams",
+    features: [
+      "Everything in Starter",
+      "SMS / email follow-ups",
+      "Call analytics dashboard",
+      "Cost-Saver voice toggle (-$0.03 / min)",
+      "Overage: $0.09 / min"
+    ],
+    cta: "Start Free Trial"
+  },
+  {
+    name: "Scale",
+    price: "$1 199 / mo",
+    minutes_included: "10 000 pooled",
+    concurrent_calls: "Up to 8 (add more @ $7/line)",
+    perfect_for: "Multi-truck ops",
+    features: [
+      "Everything in Growth",
+      "Multi-location routing",
+      "Spanish voice included",
+      "Priority support SLA",
+      "Overage: $0.09 / min"
+    ],
+    cta: "Start Free Trial"
+  },
+  {
+    name: "Enterprise",
+    price: "Custom",
+    minutes_included: "Unlimited*",
+    concurrent_calls: "Unlimited",
+    perfect_for: "Franchises & partners",
+    features: [
+      "Outcome-based pricing ($12 / booked job after first 100)",
+      "Smart-Quote & parts-procurement AI",
+      "Dedicated account manager",
+      "Custom SIP trunk / BYO numbers",
+      "Volume minute discounts & on-prem options"
+    ],
+    cta: "Contact Sales"
+  }
+];
+
+// PlanCard subcomponent
+function PlanCard({ plan, isBestValue = false }: { plan: typeof pricingPlans[number], isBestValue?: boolean }) {
+  return (
+    <motion.div
+      variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}
+      className={`flex flex-col bg-white rounded-3xl shadow-lg overflow-visible border font-sans relative items-center justify-center transition-all duration-300
+        ${isBestValue ? 'border-4 border-primary shadow-xl scale-105 z-10' : 'border-gray-100'}
+      `}
+      aria-label={isBestValue ? 'Best Value Plan' : undefined}
+    >
+      {/* Best Value Badge */}
+      {isBestValue && (
+        <div className="absolute -top-5 left-1/2 -translate-x-1/2 z-30">
+          <span className="inline-block bg-primary text-white text-xs font-bold px-4 py-1 rounded-full shadow-lg ring-4 ring-primary/20 pointer-events-none">Best Value</span>
+        </div>
+      )}
+      <div className="p-8 flex flex-col flex-1 items-center text-center">
+        <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
+        {/* Large Price */}
+        <div className="text-4xl md:text-5xl font-extrabold text-primary mb-2">{plan.price}</div>
+        {/* Perfect For - larger and more distinct */}
+        <div className="mb-4 text-base md:text-lg text-gray-700 font-semibold">{plan.perfect_for}</div>
+        <div className="mb-2 text-gray-700 text-lg font-semibold">{plan.minutes_included} <span className="text-xs font-normal text-gray-400">min included</span></div>
+        <div className="mb-4 text-gray-700 text-base">{plan.concurrent_calls} <span className="text-xs font-normal text-gray-400">concurrent</span></div>
+        <ul className="mb-6 space-y-2 text-left w-full max-w-xs mx-auto">
+          {plan.features.map((feature, i) => (
+            <li key={i} className="flex items-center text-gray-600 text-sm">
+              <span className="w-2 h-2 bg-primary rounded-full mr-3"></span>
+              {feature}
+            </li>
+          ))}
+        </ul>
+        <div className="mt-auto w-full">
+          {plan.cta === 'Contact Sales' ? (
+            <Link href="/contact">
+              <button className="w-full bg-primary text-white font-bold py-3 rounded-xl hover:bg-primary/90 transition">{plan.cta}</button>
+            </Link>
+          ) : (
+            <Link href="/get-started">
+              <button className="w-full bg-black text-white font-bold py-3 rounded-xl hover:bg-gray-900 transition flex items-center justify-center">
+                {plan.cta}
+                <Rocket className="w-4 h-4 ml-2" />
+              </button>
+            </Link>
+          )}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 export function Pricing() {
   const container = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2
+        staggerChildren: 0.15
       }
     }
   };
 
-  const item = {
-    hidden: { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0 }
-  };
-
-  const featureItem = {
-    hidden: { opacity: 0, x: -10 },
-    show: { opacity: 1, x: 0 }
-  };
-
   return (
-    <section className="py-12 md:py-20 overflow-hidden">
+    <section className="py-12 md:py-20 overflow-hidden font-sans">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -41,205 +146,17 @@ export function Pricing() {
           </h2>
         </motion.div>
 
+        {/* Plan Cards Grid */}
         <motion.div
           variants={container}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
         >
-          {/* Inbound Voice Agents Card */}
-          <motion.div
-            variants={item}
-            className="bg-white rounded-3xl shadow-lg overflow-hidden"
-          >
-            <div className="p-4 md:p-6">
-              <div className="bg-gray-100 rounded-xl p-8">
-              <div className="flex flex-col md:flex-row justify-between items-left mb-6 gap-4">
-                <h3 className="text-2xl font-bold text-gray-900">Inbound Voice Agents</h3>
-                <span className="bg-green-100 w-fit text-green-800 text-sm font-medium px-4 py-2 rounded-full">Receive Calls</span>
-              </div>
-
-              <h4 className="text-2xl md:text-3xl font-bold mb-2 text-gray-900">Your automated digital receptionist. Available 24/7.</h4>
-
-              <div className="mt-10 mb-10">
-                <div className="flex items-baseline">
-                  <h3 className="text-2xl md:text-3xl font-bold text-black">Starting From $4,000</h3>
-                  <span className="ml-2 text-gray-500">setup fee</span>
-                </div>
-              </div>
-              <Link href="/solutions/inbound-voice-agents">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="flex items-center bg-black text-white rounded-full px-8 py-4 font-medium"
-                >
-                  <Rocket className="w-5 h-5 mr-2" />
-                  Get Started
-                </motion.button>
-              </Link>
-              </div>
-              <div className="mt-4 md:mt-10">
-                {/* Mobile view - single column */}
-                <motion.ul className="space-y-4 md:hidden">
-                  {[
-                    "Advanced Automations",
-                    "Weekly Development Calls", 
-                    "Human Like Quality",
-                    "Rigorous Testing",
-                    "24/7 Priority Support",
-                    "Latest AI Models"
-                  ].map((feature, index) => (
-                    <motion.li
-                      key={feature}
-                      variants={featureItem}
-                      transition={{ delay: 0.1 * index }}
-                      className="flex items-center text-gray-400"
-                    >
-                      <span className="w-2 h-2 bg-gray-500 rounded-full mr-4"></span>
-                      {feature}
-                    </motion.li>
-                  ))}
-                </motion.ul>
-
-                {/* Desktop view - two columns */}
-                <div className="hidden md:flex gap-8 my-4">
-                  <motion.ul className="space-y-4 flex-1">
-                    {[
-                      "Advanced Automations",
-                      "Weekly Development Calls",
-                      "Human Like Quality"
-                    ].map((feature, index) => (
-                      <motion.li
-                        key={feature}
-                        variants={featureItem}
-                        transition={{ delay: 0.1 * index }}
-                        className="flex items-center text-gray-400"
-                      >
-                        <span className="w-2 h-2 bg-gray-500 rounded-full mr-4"></span>
-                        {feature}
-                      </motion.li>
-                    ))}
-                  </motion.ul>
-                  <motion.ul className="space-y-4 flex-1">
-                    {[
-                      "Rigorous Testing",
-                      "24/7 Priority Support",
-                      "Latest AI Models"
-                    ].map((feature, index) => (
-                      <motion.li
-                        key={feature}
-                        variants={featureItem}
-                        transition={{ delay: 0.1 * (index + 3) }}
-                        className="flex items-center text-gray-400"
-                      >
-                        <span className="w-2 h-2 bg-gray-500 rounded-full mr-4"></span>
-                        {feature}
-                      </motion.li>
-                    ))}
-                  </motion.ul>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Outbound Voice Agents Card */}
-          <motion.div
-            variants={item}
-            className="bg-gray-900 rounded-3xl shadow-lg overflow-hidden"
-          >
-            <div className="p-4 md:p-6">
-              <div className="bg-gray-800 rounded-xl p-8">
-                <div className="flex flex-col md:flex-row justify-between items-left mb-6 gap-4">
-                  <h3 className="text-2xl font-bold text-white">Outbound Voice Agents</h3>
-                  <span className="bg-blue-500 w-fit text-white text-sm font-medium px-4 py-2 rounded-full">Send Calls</span>
-                </div>
-
-                <h4 className="text-2xl md:text-3xl font-bold mb-2 text-white">
-                  <span className="text-gray-400">Fully automate</span> reminders, follow-ups & more.
-                </h4>
-
-                <div className="mt-10 mb-10">
-                  <div className="flex items-baseline">
-                    <h3 className="text-3xl font-bold text-white">Starting From $4,000</h3>
-                    <span className="ml-2 text-gray-400">setup fee</span>
-                  </div>
-                </div>
-                <Link href="/solutions/outbound-voice-agents">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="flex items-center bg-white text-black rounded-full px-8 py-4 font-medium"
-                  >
-                    <Rocket className="w-5 h-5 mr-2" />
-                    Get Started
-                  </motion.button>
-                </Link>
-              </div>
-
-              <div className="mt-4 md:mt-10">
-                {/* Mobile view - single column */}
-                <motion.ul className="space-y-4 md:hidden">
-                  {[
-                    "Advanced Automations",
-                    "Weekly Development Calls", 
-                    "Human Like Quality",
-                    "Rigorous Testing",
-                    "24/7 Priority Support",
-                    "Latest AI Models"
-                  ].map((feature, index) => (
-                    <motion.li
-                      key={feature}
-                      variants={featureItem}
-                      transition={{ delay: 0.1 * index }}
-                      className="flex items-center text-gray-400"
-                    >
-                      <span className="w-2 h-2 bg-gray-500 rounded-full mr-4"></span>
-                      {feature}
-                    </motion.li>
-                  ))}
-                </motion.ul>
-
-                {/* Desktop view - two columns */}
-                <div className="hidden md:flex gap-8 my-4">
-                  <motion.ul className="space-y-4 flex-1">
-                    {[
-                      "Advanced Automations",
-                      "Weekly Development Calls",
-                      "Human Like Quality"
-                    ].map((feature, index) => (
-                      <motion.li
-                        key={feature}
-                        variants={featureItem}
-                        transition={{ delay: 0.1 * index }}
-                        className="flex items-center text-gray-400"
-                      >
-                        <span className="w-2 h-2 bg-gray-500 rounded-full mr-4"></span>
-                        {feature}
-                      </motion.li>
-                    ))}
-                  </motion.ul>
-                  <motion.ul className="space-y-4 flex-1">
-                    {[
-                      "Rigorous Testing",
-                      "24/7 Priority Support",
-                      "Latest AI Models"
-                    ].map((feature, index) => (
-                      <motion.li
-                        key={feature}
-                        variants={featureItem}
-                        transition={{ delay: 0.1 * (index + 3) }}
-                        className="flex items-center text-gray-400"
-                      >
-                        <span className="w-2 h-2 bg-gray-500 rounded-full mr-4"></span>
-                        {feature}
-                      </motion.li>
-                    ))}
-                  </motion.ul>
-                </div>
-              </div>
-            </div>
-          </motion.div>
+          {pricingPlans.map((plan, idx) => (
+            <PlanCard key={plan.name} plan={plan} isBestValue={plan.name === 'Growth'} />
+          ))}
         </motion.div>
 
         {/* Discovery Call CTA */}

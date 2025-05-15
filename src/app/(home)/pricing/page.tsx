@@ -4,6 +4,7 @@ import { CheckCircle } from "lucide-react";
 import { FAQ } from "@/components/FAQ";
 import CalendarSection from "@/components/ui/CalendarSection";
 import { FeatureHero } from "@/components/feature-page/FeatureHero";
+import PricingFootnote from "@/components/PricingFootnote";
 
 export const metadata: Metadata = {
   title: "Pricing | Matsource",
@@ -37,6 +38,7 @@ export default function PricingPage() {
       <main>
         {/* Pricing Component */}
         <Pricing />
+        <PricingFootnote />
 
         {/* Why Choose Us */}
         <section className="py-16 bg-gray-50">
