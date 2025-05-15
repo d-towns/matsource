@@ -85,7 +85,7 @@ export async function POST(req: NextRequest) {
 
   // Insert lead into Supabase
   const supabase = getSupabaseAdminClient()
-  const { error: insertErr } = await supabase.from('leads').insert({
+  const { data: lead, error: insertErr } = await supabase.from('leads').insert({
     name: data.name,
     phone: data.phone,
     email: data.email || '',
@@ -94,9 +94,9 @@ export async function POST(req: NextRequest) {
     team_id: payload.teamId,
     source: 'widget',
     status: 'new',
-  })
+  }).select()
 
-  const leadData = LeadSchema.parse(data)
+  const leadData = LeadSchema.parse(lead[0])
 
   if (insertErr) {
     return NextResponse.json({ error: '[BlueAgent Widget] Failed to save lead' }, { status: 500, headers: { 'Access-Control-Allow-Origin': allowedOrigin } })
