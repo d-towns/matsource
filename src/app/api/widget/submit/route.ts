@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
     phone: data.phone,
     email: data.email || '',
     notes: data.notes || '',
-    form_id: payload.formId,
+    // form_id: payload.formId,
     team_id: payload.teamId,
     source: 'widget',
     status: 'new',
