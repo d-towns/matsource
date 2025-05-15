@@ -2,11 +2,40 @@ import { NextRequest, NextResponse } from 'next/server'
 import jwt from 'jsonwebtoken'
 import { getSupabaseAdminClient } from '@/lib/supabase/admin'
 
-export async function OPTIONS() {
+async function getAllowedOrigin(req: NextRequest, formId: string): Promise<string | null> {
+  const originHeader = req.headers.get('origin') || req.headers.get('referer') || '';
+  let originHost = '';
+  try { originHost = new URL(originHeader).host; } catch {}
+  if (!originHost) return null;
+
+  const supabase = getSupabaseAdminClient();
+  const { data: domains } = await supabase
+    .from('form_domains')
+    .select('domain')
+    .eq('form_id', formId);
+
+  if (!domains) return null;
+
+  for (const { domain } of domains) {
+    if (domain.startsWith('*.')) {
+      const base = domain.slice(2);
+      if (originHost === base || originHost.endsWith('.' + base)) return originHeader;
+    } else if (originHost === domain) {
+      return originHeader;
+    }
+  }
+  return null;
+}
+
+export async function OPTIONS(req: NextRequest) {
+  const formId = req.nextUrl.searchParams.get('formId');
+  if (!formId) return new NextResponse(null, { status: 400 });
+  const allowedOrigin = await getAllowedOrigin(req, formId);
+  if (!allowedOrigin) return new NextResponse(null, { status: 403 });
   return new NextResponse(null, {
     status: 204,
     headers: {
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': allowedOrigin,
       'Access-Control-Allow-Methods': 'GET, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     },
@@ -17,14 +46,11 @@ export async function GET(req: NextRequest) {
   try {
     const formId = req.nextUrl.searchParams.get('formId')
     if (!formId) {
-      return NextResponse.json({ error: 'Missing formId' }, {
-        status: 400,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-        },
-      })
+      return NextResponse.json({ error: '[BlueAgent Widget] Missing formId' }, { status: 400 })
+    }
+    const allowedOrigin = await getAllowedOrigin(req, formId);
+    if (!allowedOrigin) {
+      return NextResponse.json({ error: '[BlueAgent Widget] Origin not allowed' }, { status: 403 });
     }
 
     const supabase = getSupabaseAdminClient()
@@ -36,26 +62,12 @@ export async function GET(req: NextRequest) {
       .single()
 
     if (formErr || !form || !form.is_active) {
-      return NextResponse.json({ error: 'Form not found or inactive' }, {
-        status: 404,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-        },
-      })
+      return NextResponse.json({ error: '[BlueAgent Widget] Form not found or inactive' }, { status: 404, headers: { 'Access-Control-Allow-Origin': allowedOrigin } })
     }
 
     // Check expiration
     if (form.expires_at && new Date(form.expires_at) < new Date()) {
-      return NextResponse.json({ error: 'Form expired' }, {
-        status: 410,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-        },
-      })
+      return NextResponse.json({ error: '[BlueAgent Widget] Form expired' }, { status: 410, headers: { 'Access-Control-Allow-Origin': allowedOrigin } })
     }
 
     // Fetch allowed domains
@@ -84,7 +96,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ token, formConfig }, {
       status: 200,
       headers: {
-        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Origin': allowedOrigin,
         'Access-Control-Allow-Methods': 'GET, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
       },
@@ -92,7 +104,7 @@ export async function GET(req: NextRequest) {
   } catch (err) {
     console.error('Error in /api/widget/init:', err);
     return NextResponse.json(
-      { error: 'Internal Server Error' },
+      { error: '[BlueAgent Widget] Internal Server Error' },
       {
         status: 500,
         headers: {
