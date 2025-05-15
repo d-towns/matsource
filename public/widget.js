@@ -101,7 +101,7 @@
       if (email) payload.email = email;
       if (notes) payload.notes = notes;
       // Submit
-      fetch('https://blueagent.co/api/widget/submit', {
+      fetch('https://blueagent.co/api/widget/submit?formId=' + encodeURIComponent(formId), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

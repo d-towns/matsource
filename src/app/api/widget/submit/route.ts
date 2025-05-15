@@ -36,16 +36,8 @@ async function getAllowedOriginForFormId(req: NextRequest, formId: string): Prom
 }
 
 export async function OPTIONS(req: NextRequest) {
-  // Try to get formId from JWT in Authorization header
-  const authHeader = req.headers.get('authorization');
-  let formId = null;
-  if (authHeader && authHeader.startsWith('Bearer ')) {
-    const token = authHeader.replace('Bearer ', '');
-    try {
-      const payload = jwt.decode(token);
-      formId = payload?.formId;
-    } catch {}
-  }
+  // Get formId from query params for CORS check
+  const formId = req.nextUrl.searchParams.get('formId');
   if (!formId) return new NextResponse(null, { status: 400 });
   const allowedOrigin = await getAllowedOriginForFormId(req, formId);
   if (!allowedOrigin) return new NextResponse(null, { status: 403 });
