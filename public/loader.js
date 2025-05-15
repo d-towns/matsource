@@ -23,8 +23,12 @@
   root.id = 'matbot-widget-root';
   root.style.all = 'unset';
   root.style.position = 'relative';
-  // Optionally, allow host to control placement with a placeholder div
-  document.body.appendChild(root);
+  // Insert the widget root right after the script tag
+  if (script.parentNode) {
+    script.parentNode.insertBefore(root, script.nextSibling);
+  } else {
+    document.body.appendChild(root);
+  }
 
   // Expose formId globally for widget.js
   window.__MATBOT_WIDGET_FORM_ID__ = formId;
