@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
 
   // Insert lead into Supabase
   const supabase = getSupabaseAdminClient()
-  const {data: lead, error: insertErr } = await supabase.from('leads').insert({
+  const { error: insertErr } = await supabase.from('leads').insert({
     name: data.name,
     phone: data.phone,
     email: data.email || '',
