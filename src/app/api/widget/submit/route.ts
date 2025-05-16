@@ -107,16 +107,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: '[BlueAgent Widget] Failed to get form agent id' }, { status: 500, headers: { 'Access-Control-Allow-Origin': allowedOrigin } })
   }
 
-  const {data: phone_number, error: phone_number_err} = await supabase.from('agents').select('phone_number(*)').eq('id', form_agent_id).single()
+  const {data: agent, error: phone_number_err} = await supabase.from('agents').select('id, phone_numbers(*)').eq('id', form_agent_id).single()
   if (phone_number_err) {
     return NextResponse.json({ error: '[BlueAgent Widget] Failed to get agent phone number' }, { status: 500, headers: { 'Access-Control-Allow-Origin': allowedOrigin } })
   }
+  console.log('agent and its phone number from form', agent)
 
   const response = await fetch(`${process.env.VOICE_AGENT_SERVICE_URL}/create-outbound-call`, {
     method: 'POST',
     body: JSON.stringify({
         to_number: leadData.phone,
-        from_number: phone_number.phone_number,
+        from_number: agent.phone_numbers[0].phone_number,
         team_id: payload.teamId,
         form_id: payload.formId,
         lead_id: leadData.id,
