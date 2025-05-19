@@ -106,8 +106,8 @@ export async function POST(req: NextRequest) {
   if (form_agent_id_err) {
     return NextResponse.json({ error: '[BlueAgent Widget] Failed to get form agent id' }, { status: 500, headers: { 'Access-Control-Allow-Origin': allowedOrigin } })
   }
-
-  const {data: agent, error: phone_number_err} = await supabase.from('agents').select('id, phone_numbers(*)').eq('id', form_agent_id).single()
+  console.log('form_agent_id', form_agent_id)
+  const {data: agent, error: phone_number_err} = await supabase.from('agents').select('id, phone_numbers(*)').eq('id', form_agent_id.agent_id).single()
   if (phone_number_err) {
     console.log('phone_number_err', phone_number_err)
     return NextResponse.json({ error: '[BlueAgent Widget] Failed to get agent phone number' }, { status: 500, headers: { 'Access-Control-Allow-Origin': allowedOrigin } })
