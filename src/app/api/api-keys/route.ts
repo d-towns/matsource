@@ -1,29 +1,26 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
-import { v4 as uuidv4 } from "uuid"
-import crypto from "crypto"
-import { cookies } from "next/headers";
-
-// Create a Supabase client directly (no cookie handling needed for API routes)
+import { ApiKeyService } from '@/lib/services/ApiKeyService';
 
 /**
- * GET /api/api-keys
- * List all API keys for the authenticated user
+ * GET /api/api-keys?teamId=...
+ * List all API keys for the given team
  */
-export async function GET() {
-  // Check authentication via session cookie
+export async function GET(request: NextRequest) {
   const supabase = await createSupabaseSSRClient();
   const { data: { user } } = await supabase.auth.getUser()
-  
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
-
-  // Get all API keys for the current user (excluding the actual keys which are hashed)
+  const teamId = request.nextUrl.searchParams.get('teamId');
+  if (!teamId) {
+    return NextResponse.json({ error: "teamId is required" }, { status: 400 });
+  }
+  // Get all API keys for the current team (excluding the actual keys which are hashed)
   const { data: keys, error } = await supabase
     .from("api_keys")
     .select("id, name, created_at, last_used_at")
-    .eq("user_id", user.id)
+    .eq("team_id", teamId)
     .order("created_at", { ascending: false })
 
   if (error) {
@@ -36,61 +33,28 @@ export async function GET() {
 
 /**
  * POST /api/api-keys
- * Create a new API key for the authenticated user
+ * Create a new API key for the given team
+ * Body: { teamId, name }
  */
 export async function POST(request: NextRequest) {
-  // Check authentication via session cookie
   const supabase = await createSupabaseSSRClient();
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
-
-  const cookieStore = await cookies();
-  const teamId = cookieStore.get('activeTeam')?.value;
-
+  const body = await request.json();
+  const { teamId, name } = body;
+  if (!teamId) {
+    return NextResponse.json({ error: "teamId is required" }, { status: 400 });
+  }
+  if (!name || typeof name !== "string") {
+    return NextResponse.json({ error: "Name is required" }, { status: 400 })
+  }
   try {
-    // Parse request body
-    const body = await request.json()
-    const { name } = body
-
-    if (!name || typeof name !== "string") {
-      return NextResponse.json({ error: "Name is required" }, { status: 400 })
-    }
-
-    // Generate API key
-    const apiKey = `mk_${crypto.randomBytes(24).toString("hex")}`
-    
-    // Hash the API key for storage (we only want to store a hash, not the actual key)
-    const hashedKey = crypto
-      .createHash("sha256")
-      .update(apiKey)
-      .digest("hex")
-
-    // Create a new API key record
-    const { data: key, error } = await supabase
-      .from("api_keys")
-      .insert({
-        id: uuidv4(),
-        user_id: user.id,
-        team_id: teamId,
-        name,
-        key: hashedKey,
-      })
-      .select("id, name")
-      .single()
-
-    if (error) {
-      console.error("Error creating API key:", error)
-      return NextResponse.json({ error: "Failed to create API key" }, { status: 500 })
-    }
-
+    // Use the ApiKeyService to create the key
+    const result = await ApiKeyService.createApiKey(name, user.id, teamId);
     // Return the API key (this is the only time the API key will be visible to the user)
-    return NextResponse.json({
-      id: key.id,
-      name: key.name,
-      key: apiKey,
-    })
+    return NextResponse.json(result)
   } catch (error) {
     console.error("Error creating API key:", error)
     return NextResponse.json({ error: "Failed to create API key" }, { status: 500 })

@@ -8,6 +8,7 @@ export const Team = z.object({
     logo: z.any().optional(),
     plan: z.string().optional(),
     role: z.string().optional(),
+    partner_id: z.string().uuid().nullable().optional(),
 })
 
 export type Team = z.infer<typeof Team>

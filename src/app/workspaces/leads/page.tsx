@@ -1,39 +1,50 @@
 'use client'
-import React from 'react'
+import React, { Suspense } from 'react'
 import { useLeads } from '@/hooks/useLeads'
 import { DataTable } from '@/components/ui/data-table'
 import { columns } from '@/components/leads/leads-columns'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import { UsersIcon } from 'lucide-react'
 import { Lead } from '@/lib/models/lead'
+import { useTeam } from '@/context/team-context'
+
+function LeadsTable({ teamId }: { teamId: string }) {
+  const { data: leads, error } = useLeads(teamId)
+  if (error) return <p className="text-destructive font-sans">Error loading leads: {error.message}</p>
+  return <DataTable columns={columns} data={(leads || []) as Lead[]} />
+}
+
+function LeadsSkeleton() {
+  return (
+    <div className="h-40 w-full bg-muted rounded animate-pulse my-8" />
+  )
+}
 
 export default function LeadsPage() {
-  const { data: leads, isLoading, error } = useLeads()
-
-  if (isLoading) return <LoadingSpinner text="Loading leads..." fullPage />
-  if (error) return <p>Error loading leads: {error.message}</p>
-
+  const { activeTeam } = useTeam()
+  if (!activeTeam?.id) {
+    return <div className="text-muted-foreground font-sans">No team selected.</div>
+  }
   return (
-    <div className="container mx-auto py-4">
+    <div className="container mx-auto py-4 font-sans">
       <div className="mb-6">
         <h1 className="text-2xl font-bold flex items-center">
           <UsersIcon className="mr-2 h-6 w-6" />
           Leads Management
         </h1>
-        <p className="text-muted-foreground mt-1">
+        <p className="text-muted-foreground mt-1 font-normal">
           View and manage all your leads and track their progress
         </p>
       </div>
-      
       <div className="flex justify-end mb-4">
         <Link href="/workspaces/leads/new">
           <Button>Add Lead</Button>
         </Link>
       </div>
-
-      <DataTable columns={columns} data={(leads || []) as Lead[]} />
+      <Suspense fallback={<LeadsSkeleton />}>
+        <LeadsTable teamId={activeTeam.id} />
+      </Suspense>
     </div>
   )
 } 

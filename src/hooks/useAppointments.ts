@@ -7,69 +7,74 @@ import {
 } from '@/lib/models/appointment-shared';
 
 // Hook to fetch all appointments
-export function useAppointments() {
+export function useAppointments(teamId?: string) {
   return useQuery({
-    queryKey: ['appointments'],
-    queryFn: api.fetchAppointments,
+    queryKey: ['appointments', teamId],
+    queryFn: () => api.fetchAppointments(teamId!),
+    enabled: !!teamId,
   });
 }
 
 // Hook to fetch all appointments with joined lead
-export function useAppointmentsWithLead() {
+export function useAppointmentsWithLead(teamId?: string) {
   return useQuery<AppointmentWithLead[]>({
-    queryKey: ['appointments', 'withLead'],
-    queryFn: api.fetchAppointmentsWithLead,
+    queryKey: ['appointments', 'withLead', teamId],
+    queryFn: () => api.fetchAppointmentsWithLead(teamId!),
+    enabled: !!teamId,
   });
 }
 
 // Hook to fetch all appointments with joined call attempt
-export function useAppointmentsWithCallAttempt() {
+export function useAppointmentsWithCallAttempt(teamId?: string) {
   return useQuery<AppointmentWithCallAttempt[]>({
-    queryKey: ['appointments', 'withCallAttempt'],
-    queryFn: api.fetchAppointmentsWithCallAttempt,
+    queryKey: ['appointments', 'withCallAttempt', teamId],
+    queryFn: () => api.fetchAppointmentsWithCallAttempt(teamId!),
+    enabled: !!teamId,
   });
 }
 
 // Hook to fetch all appointments with joined lead and call attempt
-export function useAppointmentsWithLeadAndCallAttempt() {
+export function useAppointmentsWithLeadAndCallAttempt(teamId?: string) {
   return useQuery<AppointmentWithLeadAndCallAttempt[]>({
-    queryKey: ['appointments', 'withLeadAndCallAttempt'],
-    queryFn: api.fetchAppointmentsWithLeadAndCallAttempt,
+    queryKey: ['appointments', 'withLeadAndCallAttempt', teamId],
+    queryFn: () => api.fetchAppointmentsWithLeadAndCallAttempt(teamId!),
+    enabled: !!teamId,
   });
 }
 
 // Hook to add a new appointment
-export function useAddAppointment() {
+export function useAddAppointment(teamId?: string) {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: api.addAppointment,
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['appointments'] }),
+    mutationFn: (input: Parameters<typeof api.addAppointment>[0]) => api.addAppointment(input, teamId!),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['appointments', teamId] }),
   });
 }
 
 // Hook to fetch a single appointment
-export function useAppointment(id: string) {
+export function useAppointment(id: string, teamId?: string) {
   return useQuery({
-    queryKey: ['appointment', id],
-    queryFn: () => api.fetchAppointment(id),
+    queryKey: ['appointment', id, teamId],
+    queryFn: () => api.fetchAppointment(id, teamId!),
+    enabled: !!id && !!teamId,
   });
 }
 
 // Hook to update an appointment
-export function useUpdateAppointment() {
+export function useUpdateAppointment(teamId?: string) {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: ({ id, updates }: { id: string; updates: Parameters<typeof api.updateAppointmentApi>[1] }) =>
-      api.updateAppointmentApi(id, updates),
-    onSuccess: (_, { id }) => qc.invalidateQueries({ queryKey: ['appointment', id] }),
+      api.updateAppointmentApi(id, updates, teamId!),
+    onSuccess: (_, { id }) => qc.invalidateQueries({ queryKey: ['appointment', id, teamId] }),
   });
 }
 
 // Hook to delete an appointment
-export function useDeleteAppointment() {
+export function useDeleteAppointment(teamId?: string) {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => api.deleteAppointmentApi(id),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['appointments'] }),
+    mutationFn: (id: string) => api.deleteAppointmentApi(id, teamId!),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['appointments', teamId] }),
   });
-} 
+}

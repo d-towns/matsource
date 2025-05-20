@@ -6,30 +6,16 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { CopyIcon } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useForms } from '@/hooks/useForms';
+import { useAgents } from '@/hooks/useAgents';
+import { useTeam } from '@/context/team-context';
+import { Form } from '@/lib/services/FormsService';
+import { Suspense } from 'react';
 
-interface Agent {
-  id: string;
-  name: string;
-  type: 'voice' | 'browser';
-}
-
-interface Form {
-  id: string;
-  name: string;
-  agent_id: string;
-  api_key_id: string;
-  created_at: string;
-  embed_code: string;
-  domains: string[];
-}
-
-interface ExistingEmbedsDisplayProps {
-  forms: Form[];
-  agents: Agent[];
-}
-
-export function ExistingEmbedsDisplay({ forms, agents }: ExistingEmbedsDisplayProps) {
+function ExistingEmbedsDisplayContent({ teamId }: { teamId: string }) {
   const { toast } = useToast();
+  const { data: forms, isLoading: isFormsLoading, isError: isFormsError } = useForms(teamId);
+  const { data: agents, isLoading: isAgentsLoading, isError: isAgentsError } = useAgents();
 
   // Copy embed code to clipboard
   const copyToClipboard = (text: string) => {
@@ -41,7 +27,7 @@ export function ExistingEmbedsDisplay({ forms, agents }: ExistingEmbedsDisplayPr
         });
       })
       .catch(err => {
-        console.error('Error copying to clipboard:', err);
+        console.error('Failed to copy to clipboard:', err);
         toast({
           variant: 'destructive',
           title: 'Failed to copy',
@@ -51,17 +37,26 @@ export function ExistingEmbedsDisplay({ forms, agents }: ExistingEmbedsDisplayPr
   };
 
   const handleGenerateNewEmbed = () => {
-    // Find and click the generate tab
     (document.querySelector('[data-state="inactive"][value="generate"]') as HTMLElement)?.click();
   };
 
+  if (isFormsLoading || isAgentsLoading) {
+    return <ExistingEmbedsDisplaySkeleton />;
+  }
+  if (isFormsError || isAgentsError) {
+    return <div className="text-destructive">Failed to load embed data.</div>;
+  }
+console.log('forms', forms)
+  // Type assertion to allow form.domains
+  const formsWithDomains = forms as (Form & { domains: string[] })[];
+
   return (
     <div className="grid gap-6">
-      {forms.length === 0 ? (
+      {(!formsWithDomains || formsWithDomains.length === 0) ? (
         <Card>
           <CardContent className="flex flex-col items-center justify-center p-6">
             <p className="text-muted-foreground mb-4">No embed codes generated yet</p>
-            <Button 
+            <Button
               variant="outline"
               onClick={handleGenerateNewEmbed}
             >
@@ -70,9 +65,8 @@ export function ExistingEmbedsDisplay({ forms, agents }: ExistingEmbedsDisplayPr
           </CardContent>
         </Card>
       ) : (
-        forms.map(form => {
-          const agent = agents.find(a => a.id === form.agent_id);
-          
+        formsWithDomains.map(form => {
+          const agent = agents?.find(a => a.id === form.agent_id);
           return (
             <Card key={form.id}>
               <CardHeader>
@@ -86,12 +80,11 @@ export function ExistingEmbedsDisplay({ forms, agents }: ExistingEmbedsDisplayPr
                   <Label className="text-sm font-medium">Agent</Label>
                   <p>{agent?.name || 'Unknown Agent'}</p>
                 </div>
-                
                 <div>
                   <Label className="text-sm font-medium">Allowed Domains</Label>
                   <div className="flex flex-wrap gap-2 mt-1">
                     {form.domains.map((domain, i) => (
-                      <div 
+                      <div
                         key={i}
                         className="bg-muted text-muted-foreground text-sm px-2 py-1 rounded-md"
                       >
@@ -100,11 +93,10 @@ export function ExistingEmbedsDisplay({ forms, agents }: ExistingEmbedsDisplayPr
                     ))}
                   </div>
                 </div>
-                
                 <div>
                   <Label className="text-sm font-medium">Embed Code</Label>
                   <div className="relative mt-1">
-                    <Textarea 
+                    <Textarea
                       value={form.embed_code}
                       readOnly
                       rows={3}
@@ -126,5 +118,35 @@ export function ExistingEmbedsDisplay({ forms, agents }: ExistingEmbedsDisplayPr
         })
       )}
     </div>
+  );
+}
+
+function ExistingEmbedsDisplaySkeleton() {
+  return (
+    <div className="grid gap-6">
+      {[...Array(2)].map((_, i) => (
+        <Card key={i}>
+          <CardHeader>
+            <div className="h-6 w-1/2 bg-muted rounded animate-pulse mb-2" />
+            <div className="h-4 w-1/4 bg-muted rounded animate-pulse" />
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="h-4 w-1/3 bg-muted rounded animate-pulse" />
+            <div className="h-4 w-1/2 bg-muted rounded animate-pulse" />
+            <div className="h-10 w-full bg-muted rounded animate-pulse" />
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+export function ExistingEmbedsDisplay() {
+  const { activeTeam } = useTeam();
+  if (!activeTeam?.id) return <div className="text-muted-foreground">No team selected.</div>;
+  return (
+    <Suspense fallback={<ExistingEmbedsDisplaySkeleton />}>
+      <ExistingEmbedsDisplayContent teamId={activeTeam.id} />
+    </Suspense>
   );
 } 

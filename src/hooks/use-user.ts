@@ -7,6 +7,7 @@ import { User } from '@supabase/supabase-js'
 export function useUser() {
   const supabase = createClient()
   const [user, setUser] = useState<User | null>(null)
+  const [partnerId, setPartnerId] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -32,7 +33,13 @@ export function useUser() {
       mounted = false
       subscription.unsubscribe()
     }
-  }, [supabase])
+  }, [])
 
-  return { user, isLoading }
+  useEffect(() => {
+    if (user) {
+      supabase.from('users').select('partner_id').eq('id', user.id)
+        .then(({ data }) => setPartnerId(data?.[0]?.partner_id ?? null))
+    }
+  }, [user])
+  return { user, isLoading, partnerId }
 } 

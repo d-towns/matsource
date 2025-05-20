@@ -1,7 +1,8 @@
 "use client"
 
 import * as React from "react"
-import { ChevronsUpDown, Plus, PlusSquare } from "lucide-react"
+import { ChevronsUpDown, Plus, PlusSquare, StarIcon } from "lucide-react"
+import Link from "next/link"
 
 import {
   DropdownMenu,
@@ -20,22 +21,22 @@ import {
 } from "@/components/ui/sidebar"
 import { useTeam } from "@/context/team-context"
 import { Suspense } from "react"
+import { Team } from "@/lib/models/team"
+import { useUser } from "@/hooks/use-user"
 
 export function TeamSwitcher({
   teams,
+  activeTeam,
 }: {
-  teams: {
-    name: string
-    logo: React.ElementType
-    plan: string
-  }[]
+  teams: Team[]
+  activeTeam: Team
 }) {
   const { isMobile } = useSidebar()
-  const { activeTeam, setActiveTeam } = useTeam() || { activeTeam: teams[0], setActiveTeam: () => {} }
-
+  const { setActiveTeam } = useTeam()
+  const {partnerId} = useUser()
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      {activeTeam && (
+      {activeTeam && teams && (
     <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
@@ -72,19 +73,25 @@ export function TeamSwitcher({
                 className="gap-2 p-2"
               >
                 <div className="flex size-6 items-center justify-center rounded-sm border">
-                  <team.logo className="size-4 shrink-0" />
+                  <StarIcon className="size-4" />
                 </div>
                 {team.name}
                 <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
               </DropdownMenuItem>
             ))}
+            {partnerId && (
+              <>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="gap-2 p-2">
-              <div className="flex size-6 items-center justify-center rounded-md border bg-background">
-                <Plus className="size-4" />
-              </div>
-              <div className="font-medium text-muted-foreground">Add team</div>
+            <DropdownMenuItem className="gap-2 p-2" asChild>
+              <Link href="/team/create" className="flex items-center gap-2 w-full">
+                <div className="flex size-6 items-center justify-center rounded-md border bg-background">
+                  <Plus className="size-4" />
+                </div>
+                <div className="font-medium text-muted-foreground">Add team</div>
+              </Link>
             </DropdownMenuItem>
+            </>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

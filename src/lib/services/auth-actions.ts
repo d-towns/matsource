@@ -4,6 +4,7 @@ import { createSupabaseSSRClient } from '@/lib/supabase/ssr'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { Team } from '../models/team'
+import { z } from 'zod'
 
 export async function signIn(formData: FormData) {
   const supabase = await createSupabaseSSRClient()
@@ -93,7 +94,7 @@ export async function signInWithGoogle(redirectTo?: string) {
 
 } 
  
-export async function getUserTeams(): Promise<Team | null> {
+export async function getUserTeams(): Promise<Team[]> {
   // Create server-side Supabase client with cookie forwarding
   const supabase = await createSupabaseSSRClient();
 
@@ -101,27 +102,24 @@ export async function getUserTeams(): Promise<Team | null> {
   const { data: { session }, error: authError } = await supabase.auth.getSession();
   if (authError || !session) {
     console.error('Auth error fetching user in getUserTeams:', authError);
-    return null;
+    return [];
   }
 
-  // Call the database function to get the team for this user under RLS
+  // Call the database function to get the teams for this user under RLS
   const { data: teamData, error: rpcError } = await supabase
-    .from('teams')
-    .select(`*, user_teams(role, users(id))`) // Now includes 'role'
-    .eq('user_teams.user_id', session.user.id)
-
+    .rpc('get_user_teams') 
   if (rpcError || !teamData) {
     console.error('RPC error in getUserTeams:', rpcError);
-    return null;
+    return [];
   }
 
   console.log('teamData', teamData)
-
-  // Parse and return the team record
+  const teamArraySchema = z.array(Team);
+  // Parse and return the team records
   try {
-    return Team.parse(teamData[0] as unknown);
+    return teamArraySchema.parse(teamData);
   } catch (e) {
     console.error('Team parsing error in getUserTeams:', e);
-    return null;
+    return [];
   }
 }

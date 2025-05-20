@@ -2,19 +2,22 @@ import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
 import { Agent, AgentSchema } from '@/lib/models/agent';
 
 // Fetch all agents for a team
-export async function getAgents(teamId: string): Promise<Agent[]> {
-  const supabase = await createSupabaseSSRClient();
-  const { data, error } = await supabase
+
+
+export const AgentService = {
+    getAgents: async (teamId: string): Promise<Agent[]> => {
+        const supabase = await createSupabaseSSRClient();
+        const { data, error } = await supabase
     .from('agents')
     .select('*')
     .eq('team_id', teamId)
     .order('created_at', { ascending: false });
   if (error) throw error;
   return (data || []).map((d: Agent) => AgentSchema.parse(d));
-}
+},
 
 // Fetch a single agent by ID
-export async function getAgentById(id: string, teamId: string): Promise<Agent> {
+getAgentById: async (id: string, teamId: string): Promise<Agent> => {
   const supabase = await createSupabaseSSRClient();
   const { data, error } = await supabase
     .from('agents')
@@ -24,14 +27,14 @@ export async function getAgentById(id: string, teamId: string): Promise<Agent> {
     .single();
   if (error) throw error;
   return AgentSchema.parse(data);
-}
+},
 
 // Create a new agent
-export async function createAgent(
+createAgent: async (
   userId: string,
   teamId: string,
   input: Omit<Partial<Agent>, 'id' | 'created_at' | 'updated_at' | 'team_id'> & { name: string; type: 'inbound_voice' | 'outbound_voice' | 'browser' }
-): Promise<Agent> {
+): Promise<Agent> => {
   const supabase = await createSupabaseSSRClient();
   const payload = {
     user_id: userId,
@@ -44,14 +47,14 @@ export async function createAgent(
     .single();
   if (error) throw error;
   return AgentSchema.parse(data);
-}
+},
 
 // Update an existing agent
-export async function updateAgent(
+updateAgent: async (
   id: string,
   teamId: string,
   updates: Partial<Omit<Agent, 'id' | 'created_at' | 'updated_at' | 'team_id'>>
-): Promise<Agent> {
+): Promise<Agent> => {
   const supabase = await createSupabaseSSRClient();
   const { data, error } = await supabase
     .from('agents')
@@ -61,10 +64,10 @@ export async function updateAgent(
     .single();
   if (error) throw error;
   return AgentSchema.parse(data);
-}
+},
 
 // Delete an agent by ID
-export async function deleteAgent(id: string, teamId: string): Promise<void> {
+deleteAgent: async (id: string, teamId: string): Promise<void> => {
   const supabase = await createSupabaseSSRClient();
   const { error } = await supabase
     .from('agents')
@@ -73,3 +76,5 @@ export async function deleteAgent(id: string, teamId: string): Promise<void> {
     .eq('team_id', teamId);
   if (error) throw error;
 } 
+
+}

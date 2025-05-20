@@ -3,7 +3,6 @@ import { z } from 'zod';
 import { getCallById, updateCall, deleteCall, getCallsWithLeadInfo } from '@/lib/services/CallAttemptService';
 import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
 import { CallAttemptStatusEnum, CallResultEnum } from '@/lib/models/callAttempt';
-import { cookies } from 'next/headers';
 
 // Schema for updating a call attempt
 const UpdateCallSchema = z.object({
@@ -16,26 +15,24 @@ const UpdateCallSchema = z.object({
   notes: z.string().optional(),
   status: CallAttemptStatusEnum.optional(),
   to_number: z.string().optional(),
+  teamId: z.string(),
 });
 
 // GET /api/calls/[id]
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const supabase = await createSupabaseSSRClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-  const teamId = (await cookies()).get('activeTeam')?.value;
+  const { searchParams } = new URL(req.url);
+  const teamId = searchParams.get('teamId');
   if (!teamId) {
-    return NextResponse.json({ error: 'No active team selected' }, { status: 400 });
+    return NextResponse.json({ error: 'teamId is required' }, { status: 400 });
   }
   try {
-    const { searchParams } = new URL(req.url);
     const withLead = searchParams.get('withLead') === 'true';
-    const id = (await params).id;
+    const id = (await params).id
     if (withLead) {
       const calls = await getCallsWithLeadInfo(teamId);
       const call = calls.find(c => c.id === id);
@@ -52,19 +49,26 @@ export async function GET(
 }
 
 // PATCH /api/calls/[id]
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const supabase = await createSupabaseSSRClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+  let parsed;
   try {
-    const updates = UpdateCallSchema.parse(await req.json());
-    const id = (await params).id;
-    const call = await updateCall(id, user.id, updates);
+    parsed = UpdateCallSchema.parse(await req.json());
+  } catch (err) {
+    console.error('Error parsing call attempt:', err);
+    return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+  }
+  const { teamId, ...updates } = parsed;
+  if (!teamId) {
+    return NextResponse.json({ error: 'teamId is required' }, { status: 400 });
+  }
+  try {
+    const id = (await params).id
+    const call = await updateCall(id, user.id, { ...updates, teamId });
     return NextResponse.json(call);
   } catch (err: unknown) {
     console.error('Error updating call attempt:', err);
@@ -76,18 +80,25 @@ export async function PATCH(
 }
 
 // DELETE /api/calls/[id]
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const supabase = await createSupabaseSSRClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+  let teamId;
   try {
-    const id = (await params).id;
-    await deleteCall(id, user.id);
+    const body = await req.json();
+    teamId = body.teamId;
+  } catch {
+    return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+  }
+  if (!teamId) {
+    return NextResponse.json({ error: 'teamId is required' }, { status: 400 });
+  }
+  try {
+    const id = (await params).id
+    await deleteCall(id, teamId);
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error('Error deleting call attempt:', err);

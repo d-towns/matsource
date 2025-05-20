@@ -1,55 +1,46 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createClient } from "@supabase/supabase-js"
-
-// Create a Supabase client directly
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
+import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
+import { ApiKeyService } from '@/lib/services/ApiKeyService';
 
 /**
  * DELETE /api/api-keys/:id
- * Revoke an API key by ID
+ * Body: { teamId }
+ * Revoke an API key by ID for the given team
  */
 export async function DELETE(request: NextRequest) {
-  // Check authentication via session cookie
-  const { data: { session } } = await supabase.auth.getSession()
-  if (!session) {
+  const supabase = await createSupabaseSSRClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
-
   const { searchParams } = new URL(request.url);
   const id = searchParams.get('id');
-
+  const body = await request.json();
+  const { teamId } = body;
   if (!id) {
     return NextResponse.json({ error: "API key ID is required" }, { status: 400 })
   }
-
+  if (!teamId) {
+    return NextResponse.json({ error: "teamId is required" }, { status: 400 });
+  }
   // First, verify that the API key belongs to the current user
   const { data: keyData, error: keyError } = await supabase
     .from("api_keys")
-    .select("user_id")
+    .select("user_id, team_id")
     .eq("id", id)
     .single()
-
   if (keyError || !keyData) {
     return NextResponse.json({ error: "API key not found" }, { status: 404 })
   }
-
-  if (keyData.user_id !== session.user.id) {
+  if (keyData.user_id !== user.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 })
   }
-
-  // Delete the API key
-  const { error } = await supabase
-    .from("api_keys")
-    .delete()
-    .eq("id", id)
-
-  if (error) {
+  // Use the ApiKeyService to delete the key
+  try {
+    await ApiKeyService.deleteApiKey(id, teamId);
+    return NextResponse.json({ success: true })
+  } catch (error) {
     console.error("Error deleting API key:", error)
     return NextResponse.json({ error: "Failed to delete API key" }, { status: 500 })
   }
-
-  return NextResponse.json({ success: true })
 } 

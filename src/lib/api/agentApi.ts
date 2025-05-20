@@ -1,55 +1,56 @@
 import { Agent } from '@/lib/models/agent';
 
-function checkStatus(res: Response) {
-  if (!res.ok) throw new Error(res.statusText);
-  return res;
-}
 
 // Fetch all agents
-export async function fetchAgents(): Promise<Agent[]> {
-  const res = await fetch('/api/agents');
-  checkStatus(res);
-  return res.json();
+export async function fetchAgents(teamId: string): Promise<Agent[]> {
+  const res = await fetch(`/api/agents?teamId=${encodeURIComponent(teamId)}`);
+  if (!res.ok) throw new Error('Failed to fetch agents');
+  const { agents } = await res.json();
+  return agents;
 }
 
 // Fetch a single agent
-export async function fetchAgent(id: string): Promise<Agent> {
-  const res = await fetch(`/api/agents/${id}`);
-  checkStatus(res);
-  return res.json();
+export async function fetchAgent(id: string, teamId: string): Promise<Agent> {
+  const res = await fetch(`/api/agents/${id}?teamId=${encodeURIComponent(teamId)}`);
+  if (!res.ok) throw new Error('Failed to fetch agent');
+  return await res.json();
 }
 
 // Create a new agent
 export async function addAgent(
-  input: Omit<Partial<Agent>, 'id' | 'created_at' | 'updated_at' | 'team_id'> & { name: string; type: 'inbound_voice' | 'outbound_voice' | 'browser' }
+  input: Omit<Partial<Agent>, 'id' | 'created_at' | 'updated_at' | 'team_id'> & { name: string; type: 'inbound_voice' | 'outbound_voice' | 'browser' },
+  teamId: string
 ): Promise<Agent> {
   const res = await fetch('/api/agents', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(input),
+    body: JSON.stringify({ ...input, teamId }),
   });
-  checkStatus(res);
-  return res.json();
+  if (!res.ok) throw new Error('Failed to create agent');
+  return await res.json();
 }
 
 // Update an agent
 export async function updateAgentApi(
   id: string,
-  updates: Partial<Omit<Agent, 'id' | 'created_at' | 'updated_at' | 'team_id'>>
+  updates: Partial<Omit<Agent, 'id' | 'created_at' | 'updated_at' | 'team_id'>>,
+  teamId: string
 ): Promise<Agent> {
-  const res = await fetch(`/api/agents/${id}`, {
+  const res = await fetch('/api/agents', {
     method: 'PATCH',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(updates),
+    body: JSON.stringify({ id, updates, teamId }),
   });
-  checkStatus(res);
-  return res.json();
+  if (!res.ok) throw new Error('Failed to update agent');
+  return await res.json();
 }
 
 // Delete an agent
-export async function deleteAgentApi(id: string): Promise<void> {
-  const res = await fetch(`/api/agents/${id}`, {
+export async function deleteAgentApi(id: string, teamId: string): Promise<void> {
+  const res = await fetch('/api/agents', {
     method: 'DELETE',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id, teamId }),
   });
-  checkStatus(res);
+  if (!res.ok) throw new Error('Failed to delete agent');
 } 

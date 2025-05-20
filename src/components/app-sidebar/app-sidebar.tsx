@@ -4,7 +4,6 @@ import * as React from "react"
 import {
   BookOpen,
   Frame,
-  GalleryVerticalEnd,
   Map,
   PieChart,
   NotebookPen,
@@ -15,11 +14,9 @@ import {
   PhoneCallIcon,
   BotIcon,
   CalendarIcon,
-  LucideProps
 } from "lucide-react"
 
-import { getUserTeams } from "./actions"
-
+import { useTeam } from "@/context/team-context"
 import { NavMain } from "@/components/nav-main"
 // import { NavProjects } from "@/components/nav-projects"
 import { NavUser } from "@/components/nav-user"
@@ -31,8 +28,6 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
-import { useUser } from "@/hooks/use-user"
-import { useEffect } from "react"
 // import { Team } from "@/lib/models/team"
 
 // This is sample data.
@@ -172,32 +167,27 @@ const navMenuItems = {
     },
   ],
 }
-
+// const testTeams : = [
+//   {
+//     id: '3528eebc-664c-4ec9-b2c2-993ae8a544e4',
+//     name: 'BrightWire Electric Co.',
+//     description: 'Expert electrical services including wiring, lighting installation, and circuit breaker repair.',
+//     role: 'member'
+//   },
+//   {
+//     id: '74677f77-2d1a-4384-8c3f-93cdaadcdf6e',
+//     name: 'Paul ',
+//     description: 'asddddd',
+//     role: 'owner'
+//   }
+// ] 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-
-  const { user } = useUser();
-  const [team, setTeam] = React.useState<{name: string, logo: React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>, plan: string} | null>(null);
-
-  useEffect(() => {
-    if(user) {  
-      console.log("user", user);
-      getUserTeams().then((teams) => {
-        console.log("teams", teams);
-        setTeam({
-          name: teams.name,
-          logo: GalleryVerticalEnd,
-          plan: "Free",
-        });
-      })
-    }
-  }, [user]);
-
+  const { teams, activeTeam } = useTeam();
+  
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        {team && (
-          <TeamSwitcher teams={[team]} />
-        )}
+          <TeamSwitcher teams={teams} activeTeam={activeTeam} />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={navMenuItems.navMain} />

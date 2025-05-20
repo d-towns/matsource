@@ -2,44 +2,46 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as api from '@/lib/api/leadApi';
 
 // Hook to fetch leads
-export function useLeads() {
+export function useLeads(teamId?: string) {
   return useQuery({
-    queryKey: ['leads'],
-    queryFn: api.fetchLeads,
+    queryKey: ['leads', teamId],
+    queryFn: () => api.fetchLeads(teamId!),
+    enabled: !!teamId,
   });
 }
 
 // Hook to add a new lead
-export function useAddLead() {
+export function useAddLead(teamId?: string) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: api.addLead,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['leads'] }),
+    mutationFn: (input: Parameters<typeof api.addLead>[0]) => api.addLead(input, teamId!),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['leads', teamId] }),
   });
 }
 
 // Hook to fetch a single lead
-export function useLead(id: string) {
+export function useLead(id: string, teamId?: string) {
   return useQuery({
-    queryKey: ['lead', id],
-    queryFn: () => api.fetchLead(id),
+    queryKey: ['lead', id, teamId],
+    queryFn: () => api.fetchLead(id, teamId!),
+    enabled: !!id && !!teamId,
   });
 }
 
 // Hook to update a lead
-export function useUpdateLead() {
+export function useUpdateLead(teamId?: string) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, updates }: { id: string; updates: Parameters<typeof api.updateLead>[1] }) => api.updateLead(id, updates),
-    onSuccess: (_, { id }) => queryClient.invalidateQueries({ queryKey: ['lead', id] }),
+    mutationFn: ({ id, updates }: { id: string; updates: Parameters<typeof api.updateLead>[1] }) => api.updateLead(id, updates, teamId!),
+    onSuccess: (_, { id }) => queryClient.invalidateQueries({ queryKey: ['lead', id, teamId] }),
   });
 }
 
 // Hook to delete a lead
-export function useDeleteLead() {
+export function useDeleteLead(teamId?: string) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => api.deleteLead(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['leads'] }),
+    mutationFn: (id: string) => api.deleteLead(id, teamId!),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['leads', teamId] }),
   });
-} 
+}

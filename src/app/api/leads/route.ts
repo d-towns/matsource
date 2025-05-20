@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { getLeads, createLead, getLeadsWithCallCount } from '@/lib/services/LeadService';
 import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
-import { cookies } from 'next/headers';
 
 // Schema for creating a lead
 const CreateLeadSchema = z.object({
@@ -11,6 +10,7 @@ const CreateLeadSchema = z.object({
   email: z.string().optional(),
   source: z.string().optional(),
   notes: z.string().optional(),
+  teamId: z.string(),
 });
 
 // GET /api/leads - list all leads for the authenticated user
@@ -22,19 +22,17 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const teamId = (await cookies()).get('activeTeam')?.value;
+  const { searchParams } = new URL(req.url);
+  const teamId = searchParams.get('teamId');
   if (!teamId) {
-    return NextResponse.json({ error: 'No active team selected' }, { status: 400 });
+    return NextResponse.json({ error: 'teamId is required' }, { status: 400 });
   }
 
   try {
-    const { searchParams } = new URL(req.url);
     const withCallCount = searchParams.get('withCallCount') === 'true';
     if (withCallCount) {
-      // Implement getLeadsWithCallCount in LeadService if needed
       const leads = await getLeadsWithCallCount(teamId);
       return NextResponse.json(leads);
-      // return NextResponse.json([]); // Placeholder
     }
     // Default: get all leads
     const leads = await getLeads(teamId);
@@ -53,14 +51,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const teamId = (await cookies()).get('activeTeam')?.value;
+  let parsed;
+  try {
+    parsed = CreateLeadSchema.parse(await req.json());
+  } catch (err) {
+    console.error('Error parsing lead:', err);
+    return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+  }
+  const { name, phone, email, source, notes, teamId } = parsed;
   if (!teamId) {
-    return NextResponse.json({ error: 'No active team selected' }, { status: 400 });
+    return NextResponse.json({ error: 'teamId is required' }, { status: 400 });
   }
 
   try {
-    const parsed = CreateLeadSchema.parse(await req.json());
-    const { name, phone, email, source, notes } = parsed;
     const lead = await createLead(session.user.id, teamId, { name, phone, email, source, notes });
     return NextResponse.json(lead, { status: 201 });
   } catch (err: unknown) {

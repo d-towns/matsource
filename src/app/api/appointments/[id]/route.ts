@@ -10,7 +10,6 @@ import {
 } from '@/lib/services/AppointmentService';
 import { AppointmentStatusEnum } from '@/lib/models/appointment';
 import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
-import { cookies } from 'next/headers';
 
 const UpdateAppointmentSchema = z.object({
   lead_id: z.string().uuid().optional(),
@@ -23,7 +22,7 @@ const UpdateAppointmentSchema = z.object({
   user_id: z.string().uuid().optional(),
   event_id: z.string().optional(),
   meeting_type: z.string().optional(),
-  team_id: z.string().uuid().optional(),
+  teamId: z.string(),
   address: z.string().optional(),
 });
 
@@ -34,14 +33,13 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-  const id = (await params).id;
-  const teamId = (await cookies()).get('activeTeam')?.value;
+  const { searchParams } = new URL(req.url);
+  const teamId = searchParams.get('teamId');
   if (!teamId) {
-    return NextResponse.json({ error: 'No active team selected' }, { status: 400 });
+    return NextResponse.json({ error: 'teamId is required' }, { status: 400 });
   }
-
   try {
-    const { searchParams } = new URL(req.url);
+    const id = (await params).id
     if (searchParams.get('withLeadAndCallAttempt') === 'true') {
       const all = await getAppointmentsWithLeadAndCallAttempt(teamId);
       const appointment = all.find(a => a.id === id);
@@ -75,16 +73,20 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-
-  const teamId = (await cookies()).get('activeTeam')?.value;
-  if (!teamId) {
-    return NextResponse.json({ error: 'No active team selected' }, { status: 400 });
-  }
-
+  let parsed;
   try {
-    const parsed = UpdateAppointmentSchema.parse(await req.json());
-    const id = (await params).id;
-    const appointment = await updateAppointment(id, teamId, parsed);
+    parsed = UpdateAppointmentSchema.parse(await req.json());
+  } catch (err) {
+    console.error('Error parsing appointment:', err);
+    return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+  }
+  const { teamId, ...updates } = parsed;
+  if (!teamId) {
+    return NextResponse.json({ error: 'teamId is required' }, { status: 400 });
+  }
+  try {
+    const id = (await params).id
+    const appointment = await updateAppointment(id, teamId, updates);
     return NextResponse.json(appointment);
   } catch (err: unknown) {
     console.error('Error updating appointment:', err);
@@ -102,14 +104,18 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
-
-  const teamId = (await cookies()).get('activeTeam')?.value;
-  if (!teamId) {
-    return NextResponse.json({ error: 'No active team selected' }, { status: 400 });
-  }
-
+  let teamId;
   try {
-    const id = (await params).id;
+    const body = await req.json();
+    teamId = body.teamId;
+  } catch {
+    return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+  }
+  if (!teamId) {
+    return NextResponse.json({ error: 'teamId is required' }, { status: 400 });
+  }
+  try {
+    const id = (await params).id
     await deleteAppointment(id, teamId);
     return NextResponse.json({ success: true });
   } catch (err) {

@@ -1,49 +1,68 @@
 "use client"
 
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react'
-import { getUserTeams } from '@/components/app-sidebar/actions'
+import { getUserTeams } from '@/lib/services/auth-actions'
 import { Team } from '@/lib/models/team'
+import { useUser } from '@/hooks/use-user'
 
 
 interface TeamContextType {
   activeTeam: Team | null
   setActiveTeam: (team: Team) => void
+  teams: Team[] | null
 }
 
 const TeamContext = createContext<TeamContextType | undefined>(undefined)
 
-export const TeamProvider = ({ children, userId }: { children: ReactNode, userId?: string }) => {
+export const TeamProvider = ({ children}: { children: ReactNode,}) => {
   const [activeTeam, setActiveTeamState] = useState<Team | null>(null)
+  const [teams, setTeams] = useState<Team[] | null>(null)
+  const {user} = useUser()
 
   // On mount, load from localStorage or fetch from server if not present
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('activeTeam')
-      console.log('stored', stored)
-      if (stored) {
-        try {
-          const parsed = JSON.parse(stored)
-          console.log('parsed', parsed)
-          setActiveTeamState(Team.parse(parsed))
-        } catch {
-          setActiveTeamState(null)
-        }
-      } else if (userId) {
-        console.log('userId', userId)
-        // Fetch all teams for the user and set the first as active
-        getUserTeams().then(teams => {
-          console.log('teams', teams)
-          if (teams) {
-            setActiveTeamState(Team.parse(teams))
-          } else {
-            setActiveTeamState(null)
-          }
-        })
-      } else {
+  const loadActiveTeamFromStorage = () => {
+    const stored = localStorage.getItem('activeTeam')
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored)
+        setActiveTeamState(Team.parse(parsed))
+        return true
+      } catch {
         setActiveTeamState(null)
+        return false
       }
     }
-  }, [userId])
+    return false
+  }
+
+  const loadTeamsFromServer = async () => {
+
+    const teams = await getUserTeams()
+    console.log('teams', teams)
+    if (teams) {
+      setTeams(teams)      
+    } else {
+      setActiveTeamState(null)
+    }
+  }
+
+  useEffect(() => {
+    // if we do not have an active team, then get all teams and set the first as active
+    // if we have an active team, then load the teams from the server and do not set the active team
+    console.log('running useEffect')
+    if (typeof window !== 'undefined') {
+      const hasStoredTeam = loadActiveTeamFromStorage()
+      console.log('hasStoredTeam', hasStoredTeam)
+      console.log('teams', teams)
+      if(!teams || teams.length === 0) {
+
+        loadTeamsFromServer()
+        if (teams && teams.length > 0 && !hasStoredTeam) {
+          setActiveTeamState(Team.parse(teams[0]))
+        }
+      }
+    }
+  }, [user])
 
   // Whenever activeTeam changes, persist to localStorage and set cookie
   useEffect(() => {
@@ -51,6 +70,7 @@ export const TeamProvider = ({ children, userId }: { children: ReactNode, userId
       localStorage.setItem('activeTeam', JSON.stringify(activeTeam))
       // Set cookie for server access
       document.cookie = `activeTeam=${activeTeam.id}; path=/; SameSite=Lax`;
+      loadTeamsFromServer()
     }
   }, [activeTeam])
 
@@ -61,7 +81,7 @@ export const TeamProvider = ({ children, userId }: { children: ReactNode, userId
   }
 
   return (
-    <TeamContext.Provider value={{ activeTeam, setActiveTeam }}>
+    <TeamContext.Provider value={{ activeTeam, setActiveTeam, teams }}>
       {children}
     </TeamContext.Provider>
   )

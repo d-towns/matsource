@@ -1,26 +1,27 @@
+'use client';
+
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AgentActions } from './components/agent-actions';
-import { CreateAgentCard } from './components/create-agent-card';
 import Link from 'next/link';
-import { Agent } from '@/lib/models/agent';
-import { getAgents } from '@/lib/services/AgentService';
-import { cookies } from 'next/headers';
+import { Button } from '@/components/ui/button';
+import { useTeam } from '@/context/team-context';
+import { useAgents } from '@/hooks/useAgents';
 
-export default async function AgentsPage() {
-  const cookieStore = await cookies();
-  const teamId = cookieStore.get('activeTeam')?.value;
+export default function AgentsPage() {
+  const { activeTeam } = useTeam();
+  const teamId = activeTeam?.id;
+  const { data: agents = [], isLoading, isError } = useAgents(teamId);
+
   if (!teamId) {
-    // Optionally, you could redirect or show an error here
     return <div className="container py-10">No team selected.</div>;
   }
 
-  let agents: Agent[] = [];
-  try {
-    agents = await getAgents(teamId);
-  } catch {
-    // Optionally, handle error state here
+  if (isLoading) {
+    return <div className="container py-10">Loading agents...</div>;
+  }
+  if (isError) {
     return <div className="container py-10">Failed to load agents.</div>;
   }
 
@@ -30,29 +31,43 @@ export default async function AgentsPage() {
         <h1 className="text-3xl font-bold">Agents</h1>
       </div>
       <Tabs defaultValue="all" className="w-full">
-        <TabsList className="mb-4">
-          <TabsTrigger value="all">All Agents</TabsTrigger>
-          <TabsTrigger value="inbound_voice">Inbound Voice Agents</TabsTrigger>
-          <TabsTrigger value="outbound_voice">Outbound Voice Agents</TabsTrigger>
-          <TabsTrigger value="browser">Browser Agents</TabsTrigger>
-        </TabsList>
+        <div className="flex justify-between items-center mb-4">
+          <TabsList>
+            <TabsTrigger value="all">All Agents</TabsTrigger>
+            <TabsTrigger value="inbound_voice">Inbound Voice Agents</TabsTrigger>
+            <TabsTrigger value="outbound_voice">Outbound Voice Agents</TabsTrigger>
+            <TabsTrigger value="browser">Browser Agents</TabsTrigger>
+          </TabsList>
+          <Link href="/workspaces/agents/new">
+            <Button>Create New Agent</Button>
+          </Link>
+        </div>
         {/* Tab content for all agents */}
         <TabsContent value="all">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <CreateAgentCard type="inbound_voice" />
-            <CreateAgentCard type="outbound_voice" />
-            <CreateAgentCard type="browser" />
             {agents.length === 0 ? (
               <p>No agents found. Create your first agent!</p>
             ) : (
-              agents.map((agent: Agent) => (
+              agents.map((agent) => (
                 <Card key={agent.id}>
                   <Link href={`/workspaces/agents/${agent.id}`}>
                     <CardHeader>
                       <div className="flex justify-between items-start">
                         <CardTitle>{agent.name}</CardTitle>
-                        <Badge variant={agent.type === 'outbound_voice' ? 'default' : agent.type === 'inbound_voice' ? 'secondary' : 'secondary'}>
-                          {agent.type === 'outbound_voice' ? 'Outbound Voice' : agent.type === 'inbound_voice' ? 'Inbound Voice' : 'Browser'}
+                        <Badge
+                          variant={
+                            agent.type === 'outbound_voice'
+                              ? 'default'
+                              : agent.type === 'inbound_voice'
+                              ? 'secondary'
+                              : 'secondary'
+                          }
+                        >
+                          {agent.type === 'outbound_voice'
+                            ? 'Outbound Voice'
+                            : agent.type === 'inbound_voice'
+                            ? 'Inbound Voice'
+                            : 'Browser'}
                         </Badge>
                       </div>
                       <CardDescription>
@@ -61,11 +76,9 @@ export default async function AgentsPage() {
                     </CardHeader>
                     <CardContent>
                       <p className="text-sm text-muted-foreground">
-                        {agent.script ? (
-                          `${agent.script.substring(0, 100)}...`
-                        ) : (
-                          'No script defined yet'
-                        )}
+                        {agent.script
+                          ? `${agent.script.substring(0, 100)}...`
+                          : 'No script defined yet'}
                       </p>
                     </CardContent>
                     <CardFooter className="flex justify-between">
@@ -81,8 +94,8 @@ export default async function AgentsPage() {
         <TabsContent value="inbound_voice">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {agents
-              .filter((agent: Agent) => agent.type === 'inbound_voice')
-              .map((agent: Agent) => (
+              .filter((agent) => agent.type === 'inbound_voice')
+              .map((agent) => (
                 <Card key={agent.id}>
                   <CardHeader>
                     <div className="flex justify-between items-start">
@@ -95,11 +108,9 @@ export default async function AgentsPage() {
                   </CardHeader>
                   <CardContent>
                     <p className="text-sm text-muted-foreground">
-                      {agent.script ? (
-                        `${agent.script.substring(0, 100)}...`
-                      ) : (
-                        'No script defined yet'
-                      )}
+                      {agent.script
+                        ? `${agent.script.substring(0, 100)}...`
+                        : 'No script defined yet'}
                     </p>
                   </CardContent>
                   <CardFooter className="flex justify-between">
@@ -108,16 +119,14 @@ export default async function AgentsPage() {
                 </Card>
               ))
             }
-            <CreateAgentCard type="inbound_voice" />
           </div>
         </TabsContent>
         {/* Tab content for outbound voice agents */}
         <TabsContent value="outbound_voice">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <CreateAgentCard type="outbound_voice" />
             {agents
-              .filter((agent: Agent) => agent.type === 'outbound_voice')
-              .map((agent: Agent) => (
+              .filter((agent) => agent.type === 'outbound_voice')
+              .map((agent) => (
                 <Card key={agent.id}>
                   <CardHeader>
                     <div className="flex justify-between items-start">
@@ -130,11 +139,9 @@ export default async function AgentsPage() {
                   </CardHeader>
                   <CardContent>
                     <p className="text-sm text-muted-foreground">
-                      {agent.script ? (
-                        `${agent.script.substring(0, 100)}...`
-                      ) : (
-                        'No script defined yet'
-                      )}
+                      {agent.script
+                        ? `${agent.script.substring(0, 100)}...`
+                        : 'No script defined yet'}
                     </p>
                   </CardContent>
                   <CardFooter className="flex justify-between">
@@ -148,10 +155,9 @@ export default async function AgentsPage() {
         {/* Tab content for browser agents */}
         <TabsContent value="browser">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <CreateAgentCard type="browser" />
             {agents
-              .filter((agent: Agent) => agent.type === 'browser')
-              .map((agent: Agent) => (
+              .filter((agent) => agent.type === 'browser')
+              .map((agent) => (
                 <Card key={agent.id}>
                   <CardHeader>
                     <div className="flex justify-between items-start">
@@ -164,11 +170,9 @@ export default async function AgentsPage() {
                   </CardHeader>
                   <CardContent>
                     <p className="text-sm text-muted-foreground">
-                      {agent.script ? (
-                        `${agent.script.substring(0, 100)}...`
-                      ) : (
-                        'No script defined yet'
-                      )}
+                      {agent.script
+                        ? `${agent.script.substring(0, 100)}...`
+                        : 'No script defined yet'}
                     </p>
                   </CardContent>
                   <CardFooter className="flex justify-between">

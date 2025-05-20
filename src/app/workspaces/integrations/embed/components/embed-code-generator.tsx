@@ -1,36 +1,25 @@
 'use client';
 
-import { useState } from 'react';
+import { useDomains } from '@/hooks/useDomains';
+import { useApiKeys } from '@/hooks/useApiKeys';
+import { useAgents } from '@/hooks/useAgents';
+import { useTeam } from '@/context/team-context';
+import { useToast } from '@/hooks/use-toast';
+import { useState, Suspense } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/hooks/use-toast';
 import { CopyIcon, CheckIcon, GlobeIcon } from 'lucide-react';
 import { AgentTypeEnum } from '@/lib/models/agent';
-import { Agent } from '@/lib/models/agent';
 
-interface Domain {
-  id: string;
-  domain: string;
-}
-
-
-interface ApiKey {
-  id: string;
-  name: string;
-}
-
-interface EmbedCodeGeneratorProps {
-  domains: Domain[];
-  agents: Agent[];
-  apiKeys: ApiKey[];
-}
-
-export function EmbedCodeGenerator({ domains, agents, apiKeys }: EmbedCodeGeneratorProps) {
+function EmbedCodeGeneratorContent({ teamId }: { teamId: string }) {
   const { toast } = useToast();
+  const { data: domains, isLoading: isDomainsLoading, isError: isDomainsError } = useDomains(teamId);
+  const { data: apiKeys, isLoading: isApiKeysLoading, isError: isApiKeysError } = useApiKeys(teamId);
+  const { data: agents, isLoading: isAgentsLoading, isError: isAgentsError } = useAgents();
   const [generating, setGenerating] = useState(false);
   const [formName, setFormName] = useState('');
   const [selectedDomains, setSelectedDomains] = useState<string[]>([]);
@@ -58,29 +47,19 @@ export function EmbedCodeGenerator({ domains, agents, apiKeys }: EmbedCodeGenera
       });
       return;
     }
-    
     try {
       setGenerating(true);
-      
-      // Get the API key for the token generation request
-      const apiKey = apiKeys.find(key => key.id === selectedApiKey);
-      
-      if (!apiKey) {
-        throw new Error('Selected API key not found');
-      }
-      
-      // Get domains
+      const apiKey = apiKeys?.find(key => key.id === selectedApiKey);
+      if (!apiKey) throw new Error('Selected API key not found');
       const domainValues = selectedDomains.map(id => {
-        const domain = domains.find(d => d.id === id);
+        const domain = domains?.find(d => d.id === id);
         return domain ? domain.domain : '';
       }).filter(Boolean);
-      
-      // Call your API endpoint to generate a token and embed code
       const response = await fetch('/api/generate-token', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-api-key': apiKey.id // In a real implementation, you'd use the actual API key value
+          'x-api-key': apiKey.id
         },
         body: JSON.stringify({
           formName,
@@ -88,20 +67,10 @@ export function EmbedCodeGenerator({ domains, agents, apiKeys }: EmbedCodeGenera
           domains: domainValues
         })
       });
-      
-      if (!response.ok) {
-        throw new Error('Failed to generate token');
-      }
-      
+      if (!response.ok) throw new Error('Failed to generate token');
       const data = await response.json();
-      
-      // Set the generated embed code
       setEmbedCode(data.embedCode);
-      
-      toast({
-        title: 'Embed code generated',
-        description: 'Your embed code has been generated successfully.'
-      });
+      toast({ title: 'Embed code generated', description: 'Your embed code has been generated successfully.' });
     } catch (error) {
       console.error('Error generating embed code:', error);
       toast({
@@ -121,8 +90,7 @@ export function EmbedCodeGenerator({ domains, agents, apiKeys }: EmbedCodeGenera
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
       })
-      .catch(err => {
-        console.error('Error copying to clipboard:', err);
+      .catch(() => {
         toast({
           variant: 'destructive',
           title: 'Failed to copy',
@@ -130,6 +98,13 @@ export function EmbedCodeGenerator({ domains, agents, apiKeys }: EmbedCodeGenera
         });
       });
   };
+
+  if (isDomainsLoading || isApiKeysLoading || isAgentsLoading) {
+    return <EmbedCodeGeneratorSkeleton />;
+  }
+  if (isDomainsError || isApiKeysError || isAgentsError) {
+    return <div className="text-destructive">Failed to load integration data.</div>;
+  }
 
   return (
     <div className="grid gap-6">
@@ -143,14 +118,13 @@ export function EmbedCodeGenerator({ domains, agents, apiKeys }: EmbedCodeGenera
         <CardContent className="space-y-4">
           <div>
             <Label htmlFor="form-name">Form Name</Label>
-            <Input 
+            <Input
               id="form-name"
               value={formName}
               onChange={(e) => setFormName(e.target.value)}
               placeholder="Contact Form"
             />
           </div>
-          
           <div>
             <Label htmlFor="agent">Select Agent</Label>
             <Select value={selectedAgent} onValueChange={setSelectedAgent}>
@@ -158,17 +132,14 @@ export function EmbedCodeGenerator({ domains, agents, apiKeys }: EmbedCodeGenera
                 <SelectValue placeholder="Select an agent" />
               </SelectTrigger>
               <SelectContent>
-                {agents
-                  .filter(agent => agent.type === AgentTypeEnum.Values.inbound_voice)
-                  .map(agent => (
-                    <SelectItem key={agent.id} value={agent.id}>
-                      {agent.name}
-                    </SelectItem>
-                  ))}
+                {agents?.filter(agent => agent.type === AgentTypeEnum.Values.inbound_voice).map(agent => (
+                  <SelectItem key={agent.id} value={agent.id}>
+                    {agent.name}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>
-          
           <div>
             <Label htmlFor="api-key">API Key</Label>
             <Select value={selectedApiKey} onValueChange={setSelectedApiKey}>
@@ -176,7 +147,7 @@ export function EmbedCodeGenerator({ domains, agents, apiKeys }: EmbedCodeGenera
                 <SelectValue placeholder="Select an API key" />
               </SelectTrigger>
               <SelectContent>
-                {apiKeys.map(key => (
+                {apiKeys?.map(key => (
                   <SelectItem key={key.id} value={key.id}>
                     {key.name}
                   </SelectItem>
@@ -184,11 +155,10 @@ export function EmbedCodeGenerator({ domains, agents, apiKeys }: EmbedCodeGenera
               </SelectContent>
             </Select>
           </div>
-          
           <div>
             <Label>Allowed Domains</Label>
             <div className="grid grid-cols-2 gap-2 mt-2">
-              {domains.map(domain => (
+              {domains?.map(domain => (
                 <Button
                   key={domain.id}
                   type="button"
@@ -204,8 +174,8 @@ export function EmbedCodeGenerator({ domains, agents, apiKeys }: EmbedCodeGenera
           </div>
         </CardContent>
         <CardFooter>
-          <Button 
-            className="w-full" 
+          <Button
+            className="w-full"
             onClick={handleGenerateEmbed}
             disabled={generating}
           >
@@ -213,7 +183,6 @@ export function EmbedCodeGenerator({ domains, agents, apiKeys }: EmbedCodeGenera
           </Button>
         </CardFooter>
       </Card>
-      
       {embedCode && (
         <Card>
           <CardHeader>
@@ -224,7 +193,7 @@ export function EmbedCodeGenerator({ domains, agents, apiKeys }: EmbedCodeGenera
           </CardHeader>
           <CardContent>
             <div className="relative">
-              <Textarea 
+              <Textarea
                 value={embedCode}
                 readOnly
                 rows={5}
@@ -243,5 +212,39 @@ export function EmbedCodeGenerator({ domains, agents, apiKeys }: EmbedCodeGenera
         </Card>
       )}
     </div>
+  );
+}
+
+function EmbedCodeGeneratorSkeleton() {
+  return (
+    <div className="grid gap-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Generate Embed Code</CardTitle>
+          <CardDescription>
+            Create an embed code to integrate your agent into your website
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="h-10 bg-muted rounded w-full animate-pulse" />
+          <div className="h-10 bg-muted rounded w-full animate-pulse" />
+          <div className="h-10 bg-muted rounded w-full animate-pulse" />
+          <div className="h-10 bg-muted rounded w-full animate-pulse" />
+        </CardContent>
+        <CardFooter>
+          <div className="h-10 bg-muted rounded w-full animate-pulse" />
+        </CardFooter>
+      </Card>
+    </div>
+  );
+}
+
+export function EmbedCodeGenerator() {
+  const { activeTeam } = useTeam();
+  if (!activeTeam?.id) return <div className="text-muted-foreground">No team selected.</div>;
+  return (
+    <Suspense fallback={<EmbedCodeGeneratorSkeleton />}>
+      <EmbedCodeGeneratorContent teamId={activeTeam.id} />
+    </Suspense>
   );
 } 

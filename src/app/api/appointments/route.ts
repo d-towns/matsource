@@ -9,7 +9,6 @@ import {
 } from '@/lib/services/AppointmentService';
 import { AppointmentStatusEnum } from '@/lib/models/appointment';
 import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
-import { cookies } from 'next/headers';
 
 const CreateAppointmentSchema = z.object({
   lead_id: z.string().uuid(),
@@ -22,7 +21,7 @@ const CreateAppointmentSchema = z.object({
   user_id: z.string().uuid().optional(),
   event_id: z.string().optional(),
   meeting_type: z.string().optional(),
-  team_id: z.string().uuid().optional(),
+  teamId: z.string(),
   address: z.string().optional(),
 });
 
@@ -35,13 +34,13 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const teamId = (await cookies()).get('activeTeam')?.value;
+  const { searchParams } = new URL(req.url);
+  const teamId = searchParams.get('teamId');
   if (!teamId) {
-    return NextResponse.json({ error: 'No active team selected' }, { status: 400 });
+    return NextResponse.json({ error: 'teamId is required' }, { status: 400 });
   }
 
   try {
-    const { searchParams } = new URL(req.url);
     if (searchParams.get('withLeadAndCallAttempt') === 'true') {
       const appointments = await getAppointmentsWithLeadAndCallAttempt(teamId);
       return NextResponse.json(appointments);
@@ -70,16 +69,22 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const teamId = (await cookies()).get('activeTeam')?.value;
+  let parsed;
+  try {
+    parsed = CreateAppointmentSchema.parse(await req.json());
+  } catch (err) {
+    console.error('Error parsing appointment:', err);
+    return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+  }
+  const { teamId, ...rest } = parsed;
   if (!teamId) {
-    return NextResponse.json({ error: 'No active team selected' }, { status: 400 });
+    return NextResponse.json({ error: 'teamId is required' }, { status: 400 });
   }
 
   try {
-    const parsed = CreateAppointmentSchema.parse(await req.json());
     // Ensure status is a valid enum value
     const appointment = await createAppointment(session.user.id, teamId, {
-      ...parsed,
+      ...rest,
       status: parsed.status ?? 'scheduled',
       lead_id: parsed.lead_id,
       call_attempt_id: parsed.call_attempt_id,

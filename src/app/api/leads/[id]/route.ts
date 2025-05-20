@@ -12,32 +12,29 @@ const UpdateLeadSchema = z.object({
   source: z.string().optional(),
   notes: z.string().optional(),
   status: LeadStatusEnum.optional(),
+  teamId: z.string(),
 });
 
 // GET /api/leads/[id]
-export async function GET(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const supabase = await createSupabaseSSRClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+  const { searchParams } = new URL(req.url);
+  const teamId = searchParams.get('teamId');
+  if (!teamId) {
+    return NextResponse.json({ error: 'teamId is required' }, { status: 400 });
+  }
   try {
-    const { searchParams } = new URL(req.url);
+    const id = (await params).id
     const withCalls = searchParams.get('withCalls') === 'true';
     if (withCalls) {
-      const teamId = (await import('next/headers')).cookies().then(c => c.get('activeTeam')?.value);
-      if (!teamId) {
-        return NextResponse.json({ error: 'No active team selected' }, { status: 400 });
-      }
-      const id = (await params).id;
-      const lead = await getLeadWithCallAttempts(id, await teamId);
+      const lead = await getLeadWithCallAttempts(id, teamId);
       return NextResponse.json(lead);
     } else {
-      const id = (await params).id;
-      const lead = await getLeadById(id, user.id);
+      const lead = await getLeadById(id, teamId);
       return NextResponse.json(lead);
     }
   } catch (err) {
@@ -47,19 +44,26 @@ export async function GET(
 }
 
 // PATCH /api/leads/[id]
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const supabase = await createSupabaseSSRClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+  let parsed;
   try {
-    const updates = UpdateLeadSchema.parse(await req.json());
-    const id = (await params).id;
-    const lead = await updateLeadById(id, user.id, updates);
+    parsed = UpdateLeadSchema.parse(await req.json());
+  } catch (err) {
+    console.error('Error parsing lead:', err);
+    return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+  }
+  const { teamId, ...updates } = parsed;
+  if (!teamId) {
+    return NextResponse.json({ error: 'teamId is required' }, { status: 400 });
+  }
+  try {
+    const id = (await params).id
+    const lead = await updateLeadById(id, teamId, updates);
     return NextResponse.json(lead);
   } catch (err: unknown) {
     console.error('Error updating lead:', err);
@@ -71,18 +75,25 @@ export async function PATCH(
 }
 
 // DELETE /api/leads/[id]
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const supabase = await createSupabaseSSRClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+  let teamId;
   try {
-    const id = (await params).id;
-    await deleteLeadById(id, user.id);
+    const body = await req.json();
+    teamId = body.teamId;
+  } catch {
+    return NextResponse.json({ error: 'Invalid request body' }, { status: 400 });
+  }
+  if (!teamId) {
+    return NextResponse.json({ error: 'teamId is required' }, { status: 400 });
+  }
+  try {
+    const id = (await params).id
+    await deleteLeadById(id, teamId);
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error('Error deleting lead:', err);

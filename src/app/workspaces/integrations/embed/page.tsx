@@ -1,53 +1,10 @@
-import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { EmbedCodeGenerator } from './components/embed-code-generator';
 import { DomainManager } from './components/domain-manager';
 import { ExistingEmbedsDisplay } from './components/existing-embeds-display';
-import { cookies } from 'next/headers';
 
 
 export default async function EmbedPage() {
-  const supabase = await createSupabaseSSRClient();
-  const cookieStore = await cookies();
-  const teamId = cookieStore.get('activeTeam')?.value;
-  // Fetch all necessary data in parallel
-  const [domainResult, agentResult, apiKeyResult, formResult] = await Promise.all([
-    supabase.from('domains').select('*'),
-    supabase.from('agents').select('*').eq('team_id', teamId),
-    supabase.from('api_keys').select('id, name'),
-    supabase.from('forms').select('*')
-  ]);
-  
-  // Handle any errors
-  if (domainResult.error || agentResult.error || apiKeyResult.error || formResult.error) {
-    console.error('Error fetching data:', {
-      domainError: domainResult.error,
-      agentError: agentResult.error,
-      apiKeyError: apiKeyResult.error,
-      formError: formResult.error
-    });
-    // Handle errors appropriately
-  }
-  console.log(agentResult)
-  const domains = domainResult.data || [];
-  const agents = agentResult.data || [];
-  const apiKeys = apiKeyResult.data || [];
-  const formData = formResult.data || [];
-  console.log(agents)
-  // Fetch form domains for each form
-  const formsWithDomainsPromises = formData.map(async (form) => {
-    const { data: domainData, error: domainError } = await supabase
-      .from('form_domains')
-      .select('domain')
-      .eq('form_id', form.id);
-    
-    return {
-      ...form,
-      domains: domainError ? [] : domainData?.map(d => d.domain) || []
-    };
-  });
-  
-  const forms = await Promise.all(formsWithDomainsPromises);
   
   return (
     <div className="container py-10">
@@ -65,20 +22,17 @@ export default async function EmbedPage() {
         {/* Generate Embed Tab */}
         <TabsContent value="generate">
           <EmbedCodeGenerator 
-            domains={domains} 
-            agents={agents} 
-            apiKeys={apiKeys} 
           />
         </TabsContent>
         
         {/* Manage Domains Tab */}
         <TabsContent value="domains">
-          <DomainManager initialDomains={domains} />
+          <DomainManager />
         </TabsContent>
         
         {/* Existing Embeds Tab */}
         <TabsContent value="existing">
-          <ExistingEmbedsDisplay forms={forms} agents={agents} />
+          <ExistingEmbedsDisplay />
         </TabsContent>
       </Tabs>
     </div>
