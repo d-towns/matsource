@@ -119,15 +119,15 @@ export async function POST(req: NextRequest) {
 
   const response = await fetch(`${process.env.VOICE_AGENT_SERVICE_URL}/create-outbound-call`, {
     method: 'POST',
-    body: JSON.stringify({
+    body: new URLSearchParams({
         to_number: leadData.phone,
         from_number: phone_number_record.phone_number,
         team_id: payload.teamId,
         form_id: payload.formId,
         lead_id: leadData.id,
-    }),
+    }).toString(),
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/x-www-form-urlencoded',
       'X-API-KEY': process.env.VOICE_SERVICE_API_KEY!,
     },
   })
