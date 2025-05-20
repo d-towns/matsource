@@ -2,23 +2,26 @@ import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
 import { IntegrationState } from '@/lib/models/integrations';
 import { refreshGoogleAccessToken } from '@/lib/google/refresh_token';
 // GoogleCalendarToken and Integration interfaces are imported but not directly used in this file
-
+import { cookies } from 'next/headers';
 export async function getGoogleCalendarIntegrationState(userId: string): Promise<IntegrationState> {
   try {
     const supabase = await createSupabaseSSRClient();
 
     // 1. Get team_id for the current user
-    const { data: userData, error: userFetchError } = await supabase
-      .from('users')
-      .select('team_id')
-      .eq('id', userId)
-      .single();
+    // const { data: userData, error: userFetchError } = await supabase
+    //   .from('users')
+    //   .select('team_id')
+    //   .eq('id', userId)
+    //   .single();
 
-    if (userFetchError || !userData?.team_id) {
-      console.error('Failed to fetch team_id for user:', userId, userFetchError);
-      return { isConnected: false, error: 'Could not determine user\'s team.' };
-    }
-    const teamId = userData.team_id;
+    // if (userFetchError || !userData?.team_id) {
+    //   console.error('Failed to fetch team_id for user:', userId, userFetchError);
+    //   return { isConnected: false, error: 'Could not determine user\'s team.' };
+    // }
+    // const teamId = userData.team_id;
+
+    const cookieStore = await cookies()
+    const teamId = cookieStore.get('activeTeam')?.value
 
     // 2. Fetch token information for the team
     const { data: tokenInfo, error: dbError } = await supabase
@@ -114,20 +117,23 @@ export async function storeGoogleCalendarTokens(
   try {
     const supabase = await createSupabaseSSRClient();
 
-    const { data: userData, error: userError } = await supabase
-      .from('users')
-      .select('team_id')
-      .eq('id', userId)
-      .single();
+    // const { data: userData, error: userError } = await supabase
+    //   .from('users')
+    //   .select('team_id')
+    //   .eq('id', userId)
+    //   .single();
 
-    if (userError || !userData) {
-      console.error('Error getting user team_id for storing tokens:', userError);
-      return false;
-    }
+    // if (userError || !userData) {
+    //   console.error('Error getting user team_id for storing tokens:', userError);
+    //   return false;
+    // }
+
+    const cookieStore = await cookies()
+    const teamId = cookieStore.get('activeTeam')?.value
 
     const tokenData = {
       user_id: userId,
-      team_id: userData.team_id,
+      team_id: teamId,
       access_token: tokens.access_token,
       refresh_token: tokens.refresh_token,
       expiry_date: tokens.expiry_date,
