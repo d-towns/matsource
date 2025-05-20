@@ -128,7 +128,7 @@ export async function POST(req: NextRequest) {
     }),
     headers: {
       'Content-Type': 'application/json',
-      'X-API-Key': process.env.VOICE_SERVICE_API_KEY!,
+      'X-API-KEY': process.env.VOICE_SERVICE_API_KEY!,
     },
   })
   console.log('outbound call initiated', response)
