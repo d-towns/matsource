@@ -10,7 +10,7 @@ const pricingPlans = [
   {
     name: "Starter",
     price: "$249 / mo",
-    minutes_included: "1 000 pooled",
+    minutes_included: "1,000 pooled",
     concurrent_calls: "Up to 5",
     perfect_for: "Solo & 1-truck shops",
     features: [
@@ -25,7 +25,7 @@ const pricingPlans = [
   {
     name: "Growth",
     price: "$579 / mo",
-    minutes_included: "3 500 pooled",
+    minutes_included: "3,500 pooled",
     concurrent_calls: "Up to 5 (add more @ $7/line)",
     perfect_for: "5-15 tech teams",
     features: [
@@ -39,8 +39,8 @@ const pricingPlans = [
   },
   {
     name: "Scale",
-    price: "$1 199 / mo",
-    minutes_included: "10 000 pooled",
+    price: "$1,199 / mo",
+    minutes_included: "10,000 pooled",
     concurrent_calls: "Up to 8 (add more @ $7/line)",
     perfect_for: "Multi-truck ops",
     features: [

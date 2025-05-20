@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import jwt from 'jsonwebtoken'
 import { LeadSchema } from '@/lib/models/lead'
 import { getSupabaseAdminClient } from '@/lib/supabase/admin'
+import { PhoneNumber } from '@/lib/models/phone_number'
 
 const WidgetLeadSchema = LeadSchema.pick({
   name: true,
@@ -113,12 +114,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: '[BlueAgent Widget] Failed to get agent phone number' }, { status: 500, headers: { 'Access-Control-Allow-Origin': allowedOrigin } })
   }
   console.log('agent and its phone number from form', agent)
+  const phone_number_record = agent.phone_numbers as PhoneNumber
+  console.log('phone_number_record', phone_number_record)
 
   const response = await fetch(`${process.env.VOICE_AGENT_SERVICE_URL}/create-outbound-call`, {
     method: 'POST',
     body: JSON.stringify({
         to_number: leadData.phone,
-        from_number: agent.phone_numbers[0].phone_number,
+        from_number: phone_number_record.phone_number,
         team_id: payload.teamId,
         form_id: payload.formId,
         lead_id: leadData.id,
