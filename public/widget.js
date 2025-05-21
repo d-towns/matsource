@@ -14,7 +14,6 @@
 
   // Basic styles for the widget container
   root.style.fontFamily = 'system-ui, -apple-system, sans-serif';
-  root.style.maxWidth = '400px';
   root.style.margin = '24px auto';
   root.style.boxShadow = '0 2px 12px rgba(0,0,0,0.08)';
   root.style.borderRadius = '12px';
@@ -131,7 +130,7 @@
     }
     function showSuccess() {
       root.innerHTML = `
-        <div style="text-align:center;padding:2rem 0;">
+        <div style="text-align:center;padding:2rem 0;display:flex;flex-direction:column;align-items:center;">
           <svg width="48" height="48" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" style="margin-bottom:1rem;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
           <h2 style="font-size:1.25rem;font-weight:600;">Thank You!</h2>
           <p>Your request has been received. Our team will contact you soon.</p>
