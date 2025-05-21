@@ -24,6 +24,16 @@ export default function Footer() {
                 Contact
               </Link>
             </nav>
+            <div className="flex flex-col text-sm md:text-base font-sans">
+              <h3 className="font-semibold">Customer Support</h3>
+              <p><span className="font-medium">Phone:</span> <a href="tel:+18103394953" className="hover:text-primary transition-colors">+1 810 339 4953</a></p>
+              <address className="not-italic">
+                6272 Saginaw Road<br/>
+                #1014<br/>
+                Grand Blanc, Michigan 48439<br/>
+                United States
+              </address>
+            </div>
           </div>
           <div className="mt-4 md:mt-6 text-center text-xs md:text-sm text-gray-500">
             © {new Date().getFullYear()} BlueAgent. All rights reserved.
