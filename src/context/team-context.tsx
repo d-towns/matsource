@@ -47,19 +47,17 @@ export const TeamProvider = ({ children}: { children: ReactNode,}) => {
   }
 
   useEffect(() => {
-    // if we do not have an active team, then get all teams and set the first as active
-    // if we have an active team, then load the teams from the server and do not set the active team
-    console.log('running useEffect')
     if (typeof window !== 'undefined') {
       const hasStoredTeam = loadActiveTeamFromStorage()
-      console.log('hasStoredTeam', hasStoredTeam)
-      console.log('teams', teams)
-      if(!teams || teams.length === 0) {
-
+      
+      // If we have a stored team, just load teams from server
+      if (hasStoredTeam) {
         loadTeamsFromServer()
-        if (teams && teams.length > 0 && !hasStoredTeam) {
-          setActiveTeamState(Team.parse(teams[0]))
-        }
+      } 
+      // If no stored team, load teams and set first as active
+      loadTeamsFromServer()
+      if (teams && teams.length > 0) {
+        setActiveTeamState(Team.parse(teams[0]))
       }
     }
   }, [user])

@@ -1,74 +1,85 @@
-import { ReactNode } from "react"
-import { Metadata } from "next"
-import { BadgeCheck, Key, CreditCard, Bell } from "lucide-react"
-import Link from "next/link"
-import { cn } from "@/lib/utils"
+'use client'
 
-export const metadata: Metadata = {
-  title: "Settings | MatBot",
-  description: "Manage your MatBot account settings",
-}
+import { ReactNode, useEffect, useState } from "react"
+import { usePathname, useRouter } from "next/navigation"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 interface SettingsLayoutProps {
   children: ReactNode
 }
 
 export default function SettingsLayout({ children }: SettingsLayoutProps) {
+  const pathname = usePathname()
+  const router = useRouter()
+  const [activeTab, setActiveTab] = useState('account')
+
+  // Determine active tab based on current path
+  useEffect(() => {
+    if (pathname.includes('/billing')) {
+      setActiveTab('billing')
+    } else if (pathname.includes('/api-keys')) {
+      setActiveTab('api-keys')
+    } else if (pathname.includes('/notifications')) {
+      setActiveTab('notifications')
+    } else {
+      setActiveTab('account')
+    }
+  }, [pathname])
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value)
+    
+    // Navigate to the appropriate route
+    switch (value) {
+      case 'account':
+        router.push('/workspaces/settings/account')
+        break
+      case 'api-keys':
+        router.push('/workspaces/settings/account/api-keys')
+        break
+      case 'billing':
+        router.push('/workspaces/settings/billing')
+        break
+      case 'notifications':
+        router.push('/workspaces/settings/notifications')
+        break
+    }
+  }
+
   return (
-    <div className="container py-8">
-      <div className="grid gap-8 md:grid-cols-[240px_1fr]">
-        <aside className="border-r pr-6">
-          <h2 className="font-semibold mb-4">Settings</h2>
-          <nav className="space-y-1">
-            <SettingsNavItem
-              href="/workspaces/settings/account"
-              icon={BadgeCheck}
-              label="Account"
-            />
-            <SettingsNavItem
-              href="/workspaces/settings/account/api-keys"
-              icon={Key}
-              label="API Keys"
-              className="pl-8"
-            />
-            <SettingsNavItem 
-              href="/workspaces/settings/billing" 
-              icon={CreditCard} 
-              label="Billing" 
-            />
-            <SettingsNavItem 
-              href="/workspaces/settings/notifications" 
-              icon={Bell} 
-              label="Notifications" 
-            />
-          </nav>
-        </aside>
-        <main className="flex-1">
-          {children}
-        </main>
+    <div className="container py-10 font-sans">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold font-sans">Settings</h1>
       </div>
+      
+      <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+        <TabsList className="mb-4">
+          <TabsTrigger value="account" className="font-sans">Account</TabsTrigger>
+          <TabsTrigger value="api-keys" className="font-sans">API Keys</TabsTrigger>
+          <TabsTrigger value="billing" className="font-sans">Billing</TabsTrigger>
+          <TabsTrigger value="notifications" className="font-sans">Notifications</TabsTrigger>
+        </TabsList>
+        
+        {/* Account Tab */}
+        <TabsContent value="account">
+          {activeTab === 'account' && children}
+        </TabsContent>
+        
+        {/* API Keys Tab */}
+        <TabsContent value="api-keys">
+          {activeTab === 'api-keys' && children}
+        </TabsContent>
+        
+        {/* Billing Tab */}
+        <TabsContent value="billing">
+          {activeTab === 'billing' && children}
+        </TabsContent>
+        
+        {/* Notifications Tab */}
+        <TabsContent value="notifications">
+          {activeTab === 'notifications' && children}
+        </TabsContent>
+      </Tabs>
     </div>
-  )
-}
-
-interface SettingsNavItemProps {
-  href: string
-  icon: React.ComponentType<{ className?: string }>
-  label: string
-  className?: string
-}
-
-function SettingsNavItem({ href, icon: Icon, label, className }: SettingsNavItemProps) {
-  return (
-    <Link 
-      href={href} 
-      className={cn(
-        "flex items-center gap-2 py-2 text-sm font-medium text-muted-foreground hover:text-foreground",
-        className
-      )}
-    >
-      <Icon className="h-4 w-4" />
-      <span>{label}</span>
-    </Link>
   )
 } 

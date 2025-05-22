@@ -1,6 +1,7 @@
 'use server'
 
 import { createSupabaseSSRClient } from '@/lib/supabase/ssr'
+import { getSupabaseAdminClient } from '@/lib/supabase/admin'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { Team } from '../models/team'
@@ -16,11 +17,41 @@ export async function signIn(formData: FormData) {
     password: formData.get('password') as string,
   }
 
-  const { error } = await supabase.auth.signInWithPassword(data)
+  const { data: authData, error } = await supabase.auth.signInWithPassword(data)
 
   if (error) {
     console.log(error)
     redirect('/error')
+  }
+
+  // Check if user needs to complete onboarding
+  if (authData.user) {
+    try {
+      const adminSupabase = getSupabaseAdminClient()
+      
+      // Get user's team and onboarding status via user_teams table
+      const { data: userTeamData } = await adminSupabase
+        .from('user_teams')
+        .select(`
+          team_id,
+          teams!inner(onboarding_step)
+        `)
+        .eq('user_id', authData.user.id)
+        .single();
+
+      // If user has no team or team hasn't completed onboarding, redirect to onboarding
+      if (!userTeamData?.team_id || (userTeamData.teams as any)?.onboarding_step !== 'completed') {
+        revalidatePath('/', 'layout')
+        redirect('/onboarding?step=plan_selection')
+        return
+      }
+    } catch (error) {
+      console.error('Error checking onboarding status:', error)
+      // If we can't check, assume they need onboarding
+      revalidatePath('/', 'layout')
+      redirect('/onboarding?step=plan_selection')
+      return
+    }
   }
 
   revalidatePath('/', 'layout')
@@ -44,15 +75,53 @@ export async function signUp(formData: FormData) {
     },
   }
 
-  const { error } = await supabase.auth.signUp(data)
+  const { data: authData, error } = await supabase.auth.signUp(data)
 
   if (error) {
     console.log(error)
     redirect('/error')
   }
 
+  // If user was created successfully, create a team for them
+  if (authData.user) {
+    try {
+      const adminSupabase = getSupabaseAdminClient()
+      
+      // Create new team
+      const { data: team, error: teamError } = await adminSupabase
+        .from('teams')
+        .insert({
+          name: `${full_name}'s Team`,
+          description: 'New team',
+          onboarding_step: 'plan_selection'
+        })
+        .select()
+        .single();
+
+      if (teamError) {
+        console.error('Team creation error during signup:', teamError);
+      } else {
+        // Create user_teams record to associate user with team
+        const { error: userTeamError } = await adminSupabase
+          .from('user_teams')
+          .insert({
+            user_id: authData.user.id,
+            team_id: team.id,
+            role: 'owner'
+          });
+
+        if (userTeamError) {
+          console.error('User team assignment error during signup:', userTeamError);
+        }
+      }
+    } catch (error) {
+      console.error('Error creating team during signup:', error);
+      // Continue to onboarding even if team creation fails
+    }
+  }
+
   revalidatePath('/', 'layout')
-  redirect('/')
+  redirect('/onboarding?step=plan_selection')
 }
 
 export async function signOut() {
@@ -63,6 +132,11 @@ export async function signOut() {
   if (error) {
     console.log(error)
     redirect('/error')
+  }
+
+  // Clear localStorage items on sign out
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem('activeTeam')
   }
 
   revalidatePath('/', 'layout')
@@ -81,7 +155,7 @@ export async function signInWithGoogle(redirectTo?: string) {
   const {data: oAuthResponse, error: oAuthError} = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: redirectTo || `${baseUrl}/auth/callback`,
+      redirectTo: redirectTo || `${baseUrl}/auth/callback?next=/onboarding`,
     },
   });
 
@@ -113,7 +187,7 @@ export async function getUserTeams(): Promise<Team[]> {
     return [];
   }
 
-  console.log('teamData', teamData)
+  // console.log('teamData', teamData)
   const teamArraySchema = z.array(Team);
   // Parse and return the team records
   try {

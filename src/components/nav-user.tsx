@@ -102,13 +102,17 @@ export function NavUser() {
                   Account
                 </a>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard className="mr-2 h-4 w-4" />
-                Billing
+              <DropdownMenuItem asChild>
+                <a href="/workspaces/settings/billing">
+                  <CreditCard className="mr-2 h-4 w-4" />
+                  Billing
+                </a>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell className="mr-2 h-4 w-4" />
-                Notifications
+              <DropdownMenuItem asChild>
+                <a href="/workspaces/settings/notifications">
+                  <Bell className="mr-2 h-4 w-4" />
+                  Notifications
+                </a>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             {
