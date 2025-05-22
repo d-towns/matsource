@@ -1,35 +1,43 @@
-import { AppPerformance } from "@/components/app-performance";
-import { Insights } from "@/components/insights";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { UserFeedback } from "@/components/user-feedback";
-import { UserStats } from "@/components/user-stats";
+import { AppointmentAnalytics } from "@/components/analytics/appointment-analytics";
+import { CallAnalytics } from "@/components/analytics/call-analytics";
+import { LeadAnalytics } from "@/components/analytics/lead-analytics";
+import { SubscriptionAnalytics } from "@/components/analytics/subscription-analytics";
 
 export default function DashboardPage() {
   return (
-    <div>
-      <div className="container mx-auto">
-      <h1 className="text-3xl font-bold mb-6">Analytics Dashboard</h1>
-      <Tabs defaultValue="user-stats" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="user-stats">User Stats</TabsTrigger>
-          <TabsTrigger value="app-performance">App Performance</TabsTrigger>
-          <TabsTrigger value="insights">Insights</TabsTrigger>
-          <TabsTrigger value="user-feedback">User Feedback</TabsTrigger>
+    <div className="container mx-auto py-6">
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold font-sans">Analytics Dashboard</h1>
+        <p className="text-muted-foreground font-sans">
+          Comprehensive insights into your MatBot performance and metrics
+        </p>
+      </div>
+      
+      <Tabs defaultValue="appointments" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="appointments" className="font-sans">Appointments</TabsTrigger>
+          <TabsTrigger value="calls" className="font-sans">Calls</TabsTrigger>
+          <TabsTrigger value="leads" className="font-sans">Leads</TabsTrigger>
+          <TabsTrigger value="subscription" className="font-sans">Usage</TabsTrigger>
         </TabsList>
-        <TabsContent value="user-stats">
-          <UserStats />
+        
+        <TabsContent value="appointments" className="space-y-6">
+          <AppointmentAnalytics />
         </TabsContent>
-        <TabsContent value="app-performance">
-          <AppPerformance />
+        
+        <TabsContent value="calls" className="space-y-6">
+          <CallAnalytics />
         </TabsContent>
-        <TabsContent value="insights">
-          <Insights />
+        
+        <TabsContent value="leads" className="space-y-6">
+          <LeadAnalytics />
         </TabsContent>
-        <TabsContent value="user-feedback">
-          <UserFeedback />
+        
+        <TabsContent value="subscription" className="space-y-6">
+          <SubscriptionAnalytics />
         </TabsContent>
       </Tabs>
-    </div>
     </div>
   )
 }

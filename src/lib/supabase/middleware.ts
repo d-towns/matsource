@@ -63,3 +63,82 @@ export async function updateSession(request: NextRequest) {
 
   return supabaseResponse
 }
+
+export async function checkOnboardingStatus(request: NextRequest) {
+  // Skip onboarding check for certain paths
+  if (
+    request.nextUrl.pathname.startsWith('/onboarding') ||
+    request.nextUrl.pathname.startsWith('/signin') ||
+    request.nextUrl.pathname.startsWith('/auth') ||
+    request.nextUrl.pathname.startsWith('/api')
+  ) {
+    return NextResponse.next()
+  }
+
+  let response = NextResponse.next({
+    request,
+  })
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll()
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
+          response = NextResponse.next({
+            request,
+          })
+          cookiesToSet.forEach(({ name, value, options }) =>
+            response.cookies.set(name, value, options)
+          )
+        },
+      },
+    }
+  )
+
+  try {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+
+    // If no user, let the auth middleware handle it
+    if (!user) {
+      return response
+    }
+
+    // Check user's team onboarding status
+    const { data: userTeamData } = await supabase
+      .from('user_teams')
+      .select(`
+        team_id,
+        teams!inner(onboarding_step)
+      `)
+      .eq('user_id', user.id)
+      .single()
+
+    // If user has no team or team hasn't completed onboarding, redirect to onboarding
+    if (!userTeamData?.team_id || (userTeamData.teams as any)?.onboarding_step !== 'completed') {
+      const onboardingStep = (userTeamData?.teams as any)?.onboarding_step || 'plan_selection'
+      const url = request.nextUrl.clone()
+      url.pathname = '/onboarding'
+      url.searchParams.set('step', onboardingStep)
+      
+      const redirectResponse = NextResponse.redirect(url)
+      // Copy over the cookies from the original response
+      response.cookies.getAll().forEach(cookie => {
+        redirectResponse.cookies.set(cookie.name, cookie.value, cookie)
+      })
+      return redirectResponse
+    }
+
+    return response
+  } catch (error) {
+    console.error('Error checking onboarding status in middleware:', error)
+    // On error, allow the request to continue to avoid breaking the app
+    return response
+  }
+}
