@@ -16,10 +16,10 @@ export interface ChartDataPoint {
   date: string;
   value: number;
   label?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
-export interface MetricResult<T = any> {
+export interface MetricResult<T = unknown> {
   data: T;
   total?: number;
   period: {
@@ -88,5 +88,5 @@ export interface SubscriptionMetrics {
 export type AnalyticsError = {
   code: string;
   message: string;
-  details?: any;
+  details?: unknown;
 }; 

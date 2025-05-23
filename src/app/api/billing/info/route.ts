@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { stripe } from '@/lib/stripe/client';
 import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     const supabase = await createSupabaseSSRClient();
     
@@ -50,7 +50,24 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'User team not found' }, { status: 400 });
     }
 
-    const team = userTeamData.teams as any;
+    const team = userTeamData.teams as unknown as { 
+      name: string; 
+      subscriptions?: {
+        id: string;
+        stripe_customer_id?: string;
+        stripe_subscription_id?: string;
+        status?: string;
+        current_period_start?: string;
+        current_period_end?: string;
+        cancel_at_period_end?: boolean;
+        canceled_at?: string | null;
+        trial_start?: string | null;
+        trial_end?: string | null;
+        quantity?: number;
+        concurrency_max?: number;
+        current_period_pool_minutes_usage?: number;
+      }
+    };
     const subscription = team?.subscriptions
     console.log('subscription', subscription)
     if (!subscription) {
@@ -76,8 +93,8 @@ export async function GET(req: NextRequest) {
           currency: price.currency,
           interval: price.recurring?.interval,
           interval_count: price.recurring?.interval_count,
-          product_name: (price.product as any)?.name,
-          product_description: (price.product as any)?.description,
+          product_name: (price.product as Stripe.Product)?.name,
+          product_description: (price.product as Stripe.Product)?.description,
         };
       } catch (error) {
         console.error('Error fetching price info:', error);

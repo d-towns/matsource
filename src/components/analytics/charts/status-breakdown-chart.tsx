@@ -1,6 +1,6 @@
 'use client'
 
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { StatusBreakdown } from '@/lib/analytics/types';
@@ -38,7 +38,7 @@ export function StatusBreakdownChart({
   }));
 
   // Custom tooltip component
-  const CustomTooltip = ({ active, payload }: any) => {
+  const CustomTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ payload: { name: string; value: number; percentage: number } }> }) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
@@ -57,7 +57,7 @@ export function StatusBreakdownChart({
   };
 
   // Custom label function
-  const renderLabel = (entry: any) => {
+  const renderLabel = (entry: { percentage: number }) => {
     if (!showLabels || entry.percentage < 5) return ''; // Hide labels for small slices
     return `${entry.percentage.toFixed(0)}%`;
   };

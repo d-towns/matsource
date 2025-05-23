@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
@@ -27,7 +27,7 @@ export function AppointmentAnalytics({ className }: AppointmentAnalyticsProps) {
   const [lastUpdated, setLastUpdated] = useState<string>('');
 
   // Fetch appointment metrics
-  const fetchMetrics = async () => {
+  const fetchMetrics = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -54,18 +54,18 @@ export function AppointmentAnalytics({ className }: AppointmentAnalyticsProps) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [period, groupBy]);
 
   // Initial load and period changes
   useEffect(() => {
     fetchMetrics();
-  }, [period, groupBy]);
+  }, [fetchMetrics]);
 
   // Auto-refresh every 5 minutes
   useEffect(() => {
     const interval = setInterval(fetchMetrics, 5 * 60 * 1000);
     return () => clearInterval(interval);
-  }, [period, groupBy]);
+  }, [fetchMetrics]);
 
   // Loading skeleton
   if (loading) {

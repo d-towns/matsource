@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import Stripe from 'stripe';
 import { stripe } from '@/lib/stripe/client';
 
 export async function GET(req: NextRequest) {
@@ -16,9 +17,9 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({
         priceId: price.id,
         priceMetadata: price.metadata,
-        productMetadata: (price.product as any).metadata,
+        productMetadata: (price.product as Stripe.Product).metadata,
         combinedMetadata: {
-          ...(price.product as any).metadata,
+          ...(price.product as Stripe.Product).metadata,
           ...price.metadata, // Price metadata takes precedence
         }
       });
@@ -32,9 +33,9 @@ export async function GET(req: NextRequest) {
 
       const results = prices.data.map(price => ({
         priceId: price.id,
-        productName: (price.product as any).name,
+        productName: (price.product as Stripe.Product).name,
         priceMetadata: price.metadata,
-        productMetadata: (price.product as any).metadata,
+        productMetadata: (price.product as Stripe.Product).metadata,
         hasPoolMinutes: !!price.metadata?.pool_minutes,
         hasConcurrencyMax: !!price.metadata?.concurrency_max,
       }));

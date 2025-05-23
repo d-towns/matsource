@@ -1,7 +1,8 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
+import Stripe from 'stripe';
 import { stripe } from '@/lib/stripe/client';
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
     // Fetch all active prices with expanded product data
     const prices = await stripe.prices.list({
@@ -11,7 +12,7 @@ export async function GET(req: NextRequest) {
     });
 
     // Filter and transform the prices
-    let filteredPrices = prices.data.filter(price => {
+    const filteredPrices = prices.data.filter(price => {
       // Only include recurring prices (subscriptions)
       if (price.type !== 'recurring') return false;
       
@@ -25,7 +26,7 @@ export async function GET(req: NextRequest) {
 
     // Transform prices to a more frontend-friendly format
     const transformedPrices = filteredPrices.map(price => {
-      const product = price.product as any; // Stripe.Product when expanded
+      const product = price.product as Stripe.Product; // Stripe.Product when expanded
       
       // Log metadata for debugging
       if (process.env.NODE_ENV === 'development') {

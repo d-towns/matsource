@@ -25,7 +25,7 @@ interface StripePlan {
   formattedInterval: string;
 }
 
-export function PlanSelection({ onComplete }: PlanSelectionProps) {
+export function PlanSelection({}: PlanSelectionProps) {
   const [plans, setPlans] = useState<StripePlan[]>([]);
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);

@@ -1,6 +1,7 @@
 import Stripe from 'stripe';
+import { config } from '@/lib/config';
 
-export const stripe = new Stripe(process.env.NODE_ENV === 'production' ? process.env.STRIPE_SECRET_KEY! : process.env.STRIPE_DEV_SECRET_KEY!, {
+export const stripe = new Stripe(config.payments.stripe.secretKey, {
     apiVersion: '2025-04-30.basil',
   });
   

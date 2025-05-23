@@ -144,7 +144,7 @@ export default function BillingPage() {
       <div className="font-sans">
         <div className="mb-6">
           <p className="text-muted-foreground font-sans">
-            Manage your team's subscription and billing information
+            Manage your team&apos;s subscription and billing information
           </p>
         </div>
 
@@ -171,7 +171,7 @@ export default function BillingPage() {
     <div className="space-y-6 font-sans">
       <div className="mb-6">
         <p className="text-muted-foreground font-sans">
-          Manage your team's subscription and billing information for {billingInfo.team_name}
+          Manage your team&apos;s subscription and billing information for {billingInfo.team_name}
         </p>
       </div>
 

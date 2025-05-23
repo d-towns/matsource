@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { AppointmentMetricsService } from '@/lib/analytics/metrics/appointments';
 import { AnalyticsQueryBuilder } from '@/lib/analytics/query-builder';
-import { createAnalyticsError, validateDateRange } from '@/lib/analytics/utils';
+import { validateDateRange } from '@/lib/analytics/utils';
 import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
 
 export async function GET(request: NextRequest) {
@@ -103,14 +103,15 @@ export async function GET(request: NextRequest) {
         );
     }
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Analytics API error:', error);
 
     // Handle known analytics errors
-    if (error.code) {
-      const statusCode = error.code === 'UNAUTHORIZED' ? 403 : 500;
+    if (error && typeof error === 'object' && 'code' in error) {
+      const errorObj = error as { code: string; message: string };
+      const statusCode = errorObj.code === 'UNAUTHORIZED' ? 403 : 500;
       return NextResponse.json(
-        { error: error.message, code: error.code }, 
+        { error: errorObj.message, code: errorObj.code }, 
         { status: statusCode }
       );
     }

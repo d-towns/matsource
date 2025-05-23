@@ -121,8 +121,8 @@ export async function checkOnboardingStatus(request: NextRequest) {
       .single()
 
     // If user has no team or team hasn't completed onboarding, redirect to onboarding
-    if (!userTeamData?.team_id || (userTeamData.teams as any)?.onboarding_step !== 'completed') {
-      const onboardingStep = (userTeamData?.teams as any)?.onboarding_step || 'plan_selection'
+    if (!userTeamData?.team_id || (userTeamData.teams as { onboarding_step?: string })?.onboarding_step !== 'completed') {
+      const onboardingStep = (userTeamData?.teams as { onboarding_step?: string })?.onboarding_step || 'plan_selection'
       const url = request.nextUrl.clone()
       url.pathname = '/onboarding'
       url.searchParams.set('step', onboardingStep)

@@ -168,7 +168,7 @@ export function getRelativeTimeDescription(start: string, end: string): string {
 /**
  * Error handling utility
  */
-export function createAnalyticsError(code: string, message: string, details?: any) {
+export function createAnalyticsError(code: string, message: string, details?: unknown) {
   return {
     code,
     message,

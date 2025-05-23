@@ -32,7 +32,6 @@ export function OnboardingLayout() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [currentStep, setCurrentStep] = useState<OnboardingStep>('plan_selection');
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const step = searchParams.get('step') as OnboardingStep;
@@ -78,7 +77,7 @@ export function OnboardingLayout() {
               Welcome to MatBot
             </CardTitle>
             <p className="text-gray-600 font-sans mt-2">
-              Let's get you set up in just a few steps
+              Let&apos;s get you set up in just a few steps
             </p>
             
             {/* Progress Bar */}

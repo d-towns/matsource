@@ -4,10 +4,7 @@ import Stripe from 'stripe';
 import { stripe } from '@/lib/stripe/client';
 import { getSupabaseAdminClient } from '@/lib/supabase/admin';
 import redis from '@/lib/redis/client';
-import { twilioClient } from '@/lib/twilio/client'
 import { headers } from 'next/headers';
-
-const IS_DEV = process.env.NODE_ENV === 'development'
 // export const config = { api: { bodyParser: false } };
 export async function POST(req: NextRequest) {
     // const sig = req.headers.get("stripe-signature") as string;
@@ -120,8 +117,7 @@ export async function POST(req: NextRequest) {
     "5", 
     10
   );
-    const tier = price.nickname || (price.product as any)?.name || 'Unknown Plan'
-    const days_until_due = sub.days_until_due
+    const tier = price.nickname || (price.product as Stripe.Product)?.name || 'Unknown Plan'
     const current_period_end = new Date(sub['current_period_end']).toISOString()
     const current_period_start = new Date(sub['current_period_start']).toISOString()
     /* ── 2. Upsert DB row (team_subscriptions) ──────────────────────────── */
@@ -162,7 +158,7 @@ export async function POST(req: NextRequest) {
       .exec();
   
     /* ── 4. Twilio sub-account (first time only) ────────────────────────── */
-    const { data: existing } = await supabase
+    await supabase
       .from("teams")
       .select("twilio_subaccount_sid")
       .eq("id", teamId)
@@ -212,7 +208,7 @@ export async function POST(req: NextRequest) {
     
     try {
       // Find the subscription associated with this invoice
-      const invoiceSubscription = (invoice as any).subscription;
+      const invoiceSubscription = (invoice as Stripe.Invoice & { subscription?: string | Stripe.Subscription }).subscription;
       if (!invoiceSubscription) {
         console.warn('Invoice without subscription:', invoice.id);
         return;
@@ -223,7 +219,7 @@ export async function POST(req: NextRequest) {
         : invoiceSubscription.id;
 
       // Update subscription based on invoice status
-      const updateData: any = {};
+      const updateData: Record<string, string> = {};
       
       if (eventType === 'invoice.paid') {
         // Invoice was successfully paid

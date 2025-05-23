@@ -28,7 +28,7 @@ export async function PATCH(req: NextRequest) {
     }
 
     // Prepare update data
-    const updateData: any = {};
+    const updateData: Record<string, string> = {};
     
     if (name) updateData.name = name;
     if (description) {

@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe/client';
 import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
 
 const BASE_URL = process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASE_URL : process.env.NEXT_PUBLIC_DEV_BASE_URL;
-export async function POST(req: NextRequest) {
+export async function POST() {
   try {
     const supabase = await createSupabaseSSRClient();
     
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Insufficient permissions to manage billing' }, { status: 403 });
     }
 
-    const subscription = (userTeamData.teams as any)?.subscriptions;
+    const subscription = (userTeamData.teams as unknown as { subscriptions?: { stripe_customer_id?: string; status?: string } })?.subscriptions;
     
     if (!subscription?.stripe_customer_id) {
       return NextResponse.json({ error: 'No billing information found for this team' }, { status: 400 });

@@ -56,11 +56,15 @@ export const TeamProvider = ({ children}: { children: ReactNode,}) => {
       } 
       // If no stored team, load teams and set first as active
       loadTeamsFromServer()
-      if (teams && teams.length > 0) {
-        setActiveTeamState(Team.parse(teams[0]))
-      }
     }
   }, [user])
+
+  // Separate effect to handle setting active team when teams are loaded
+  useEffect(() => {
+    if (teams && teams.length > 0 && !activeTeam) {
+      setActiveTeamState(Team.parse(teams[0]))
+    }
+  }, [teams, activeTeam])
 
   // Whenever activeTeam changes, persist to localStorage and set cookie
   useEffect(() => {

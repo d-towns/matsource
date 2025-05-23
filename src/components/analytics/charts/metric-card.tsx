@@ -44,7 +44,6 @@ export function MetricCard({
 
     const isPositive = trend === 'up';
     const isNegative = trend === 'down';
-    const isNeutral = trend === 'stable';
 
     // For some metrics, "up" might be bad (like cancellation rate)
     // This can be customized based on changeType prop

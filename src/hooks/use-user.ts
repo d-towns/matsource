@@ -33,13 +33,13 @@ export function useUser() {
       mounted = false
       subscription.unsubscribe()
     }
-  }, [])
+  }, [supabase.auth])
 
   useEffect(() => {
     if (user) {
       supabase.from('users').select('partner_id').eq('id', user.id)
         .then(({ data }) => setPartnerId(data?.[0]?.partner_id ?? null))
     }
-  }, [user])
+  }, [user, supabase])
   return { user, isLoading, partnerId }
 } 

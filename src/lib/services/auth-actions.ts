@@ -40,7 +40,7 @@ export async function signIn(formData: FormData) {
         .single();
 
       // If user has no team or team hasn't completed onboarding, redirect to onboarding
-      if (!userTeamData?.team_id || (userTeamData.teams as any)?.onboarding_step !== 'completed') {
+      if (!userTeamData?.team_id || (userTeamData.teams as { onboarding_step?: string })?.onboarding_step !== 'completed') {
         revalidatePath('/', 'layout')
         redirect('/onboarding?step=plan_selection')
         return
