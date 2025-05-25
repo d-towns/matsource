@@ -14,6 +14,7 @@ import {
   PhoneCallIcon,
   BotIcon,
   CalendarIcon,
+  PhoneIcon,
 } from "lucide-react"
 
 import { useTeam } from "@/context/team-context"
@@ -66,6 +67,11 @@ const navMenuItems = {
           title: "Call Attempts",
           url: "/workspaces/calls",
           icon: PhoneCallIcon,
+        },
+        {
+          title: "Phone Numbers",
+          url: "/workspaces/phone-numbers",
+          icon: PhoneIcon,
         },
         {
           title: "Forms",

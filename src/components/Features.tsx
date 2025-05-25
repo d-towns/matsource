@@ -238,7 +238,7 @@ export function Features() {
             Join Service Leaders Increasing Revenue by 35%+
           </h3>
           <p className="text-gray-400 max-w-xl mx-auto mb-8">
-            Elite service businesses are already using Matsource to outperform competitors. Will you be next?
+            Elite service businesses are already using BlueAgent to outperform competitors. Will you be next?
           </p>
           <WaitlistWidget />
         </div>

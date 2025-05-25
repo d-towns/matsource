@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import jwt from 'jsonwebtoken'
 import { LeadSchema } from '@/lib/models/lead'
 import { getSupabaseAdminClient } from '@/lib/supabase/admin'
-import { PhoneNumber } from '@/lib/models/phone_number'
+import { PhoneNumberSchema } from '@/lib/models/phone_number'
+import { createOutboundCall } from '@/lib/services/CallService'
 
 const WidgetLeadSchema = LeadSchema.pick({
   name: true,
@@ -91,7 +92,6 @@ export async function POST(req: NextRequest) {
     phone: data.phone,
     email: data.email || '',
     notes: data.notes || '',
-    // form_id: payload.formId,
     team_id: payload.teamId,
     source: 'widget',
     status: 'new',
@@ -103,44 +103,48 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: '[BlueAgent Widget] Failed to save lead' }, { status: 500, headers: { 'Access-Control-Allow-Origin': allowedOrigin } })
   }
 
+  // Get agent and associated phone number
   const {data: form_agent_id, error: form_agent_id_err} = await supabase.from('forms').select('agent_id').eq('id', payload.formId).single()
   if (form_agent_id_err) {
     return NextResponse.json({ error: '[BlueAgent Widget] Failed to get form agent id' }, { status: 500, headers: { 'Access-Control-Allow-Origin': allowedOrigin } })
   }
+  
   console.log('form_agent_id', form_agent_id)
   const {data: agent, error: phone_number_err} = await supabase.from('agents').select('id, phone_numbers(*)').eq('id', form_agent_id.agent_id).single()
   if (phone_number_err) {
     console.log('phone_number_err', phone_number_err)
     return NextResponse.json({ error: '[BlueAgent Widget] Failed to get agent phone number' }, { status: 500, headers: { 'Access-Control-Allow-Origin': allowedOrigin } })
   }
+  
   console.log('agent and its phone number from form', agent)
-  const phone_number_record = agent.phone_numbers as PhoneNumber
+  const phone_number_record = PhoneNumberSchema.parse(agent.phone_numbers)
   console.log('phone_number_record', phone_number_record)
 
-  const response = await fetch(`${process.env.VOICE_AGENT_SERVICE_URL}/create-outbound-call`, {
-    method: 'POST',
-    body: new URLSearchParams({
-        to_number: leadData.phone,
-        from_number: phone_number_record.phone_number,
-        team_id: payload.teamId,
+  // Validate phone number is ready for use
+  if (phone_number_record.verification_status !== 'success') {
+    return NextResponse.json({ 
+      error: '[BlueAgent Widget] Phone number is not verified and ready for use' 
+    }, { status: 400, headers: { 'Access-Control-Allow-Origin': allowedOrigin } })
+  }
+
+  // Create outbound call using the new service
+  try {
+    const outboundCall = await createOutboundCall(
+      phone_number_record,
+      payload.teamId,
+      leadData.phone,
+      {
         form_id: payload.formId,
         lead_id: leadData.id,
-    }).toString(),
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'X-API-KEY': process.env.VOICE_SERVICE_API_KEY!,
-    },
-  })
-  console.log('outbound call initiated', response)
-  if (!response.ok) {
-    return NextResponse.json({ error: '[BlueAgent Widget] Failed to create outbound call' }, { status: 500, headers: { 'Access-Control-Allow-Origin': allowedOrigin } })
-  }
+      }
+    );
 
-  const {data: outboundCall, error: outboundCallErr} = await response.json()
-  console.log('outbound call created', outboundCall)
-  if (outboundCallErr) {
-    return NextResponse.json({ error: '[BlueAgent Widget] Failed to create outbound call' }, { status: 500, headers: { 'Access-Control-Allow-Origin': allowedOrigin } })
+    console.log('outbound call created', outboundCall)
+    return NextResponse.json({ success: true }, { status: 200, headers: { 'Access-Control-Allow-Origin': allowedOrigin } })
+  } catch (error) {
+    console.error('Error creating outbound call:', error)
+    return NextResponse.json({ 
+      error: '[BlueAgent Widget] Failed to create outbound call: ' + (error instanceof Error ? error.message : 'Unknown error')
+    }, { status: 500, headers: { 'Access-Control-Allow-Origin': allowedOrigin } })
   }
-
-  return NextResponse.json({ success: true }, { status: 200, headers: { 'Access-Control-Allow-Origin': allowedOrigin } })
 } 

@@ -19,7 +19,7 @@ export function IntegrationGuide({ userId }: IntegrationGuideProps) {
         <div className="space-y-4">
           <h3 className="font-medium text-lg">Step 1: Generate a Token</h3>
           <pre className="bg-muted p-4 rounded-md overflow-x-auto text-sm">
-{`curl -X POST https://matbot.com/api/generate-token \
+{`curl -X POST https://blueagent.co/api/generate-token \
   -H "Content-Type: application/json" \
   -H "X-API-Key: YOUR_API_KEY" \
   -d '{
@@ -34,7 +34,7 @@ export function IntegrationGuide({ userId }: IntegrationGuideProps) {
             Add this script tag to your website, replacing <code>YOUR_FORM_ID</code> with the form ID you received in step 1.
           </p>
           <pre className="bg-muted p-4 rounded-md overflow-x-auto text-sm">
-{`<script src="https://matbot.com/loader.js" data-form-id="YOUR_FORM_ID"></script>`}
+{`<script src="https://blueagent.co/loader.js" data-form-id="YOUR_FORM_ID"></script>`}
           </pre>
         </div>
       </CardContent>

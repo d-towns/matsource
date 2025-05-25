@@ -26,12 +26,12 @@ export default function AccountSettingsPage() {
           <CardHeader>
             <CardTitle>API Keys</CardTitle>
             <CardDescription>
-              Create and manage API keys for integrating with the MatSource Widget.
+              Create and manage API keys for integrating with the BlueAgent Widget.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground mb-4">
-              API keys are used to authenticate requests to the MatSource widget service. 
+              API keys are used to authenticate requests to the BlueAgent widget service. 
               They allow you to securely embed lead capture forms on your website.
             </p>
           </CardContent>

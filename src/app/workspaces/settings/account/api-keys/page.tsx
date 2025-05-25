@@ -53,7 +53,7 @@ export default function ApiKeysPage() {
       <div>
         <h1 className="text-2xl font-bold">API Keys</h1>
         <p className="text-muted-foreground mt-2">
-          Create and manage API keys for use with the MatSource Widget Service.
+          Create and manage API keys for use with the BlueAgent Widget Service.
         </p>
       </div>
       

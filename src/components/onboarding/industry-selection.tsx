@@ -47,7 +47,7 @@ export function IndustrySelection({ onComplete }: IndustrySelectionProps) {
         },
         body: JSON.stringify({
           industry: selectedIndustry,
-          onboarding_step: 'completed'
+          onboarding_step: 'caller_id_verification'
         }),
       });
 

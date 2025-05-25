@@ -7,8 +7,9 @@ import { Progress } from '@/components/ui/progress';
 import { PlanSelection } from '@/components/onboarding/plan-selection';
 import { TeamDetails } from '@/components/onboarding/team-details';
 import { IndustrySelection } from '@/components/onboarding/industry-selection';
+import { CallerIdVerification } from '@/components/onboarding/caller-id-verification';
 
-type OnboardingStep = 'plan_selection' | 'team_details' | 'industry_selection' | 'completed';
+type OnboardingStep = 'plan_selection' | 'team_details' | 'industry_selection' | 'caller_id_verification' | 'completed';
 
 const STEPS: { key: OnboardingStep; title: string; description: string }[] = [
   {
@@ -25,6 +26,11 @@ const STEPS: { key: OnboardingStep; title: string; description: string }[] = [
     key: 'industry_selection',
     title: 'Industry Selection',
     description: 'Tell us about your industry'
+  },
+  {
+    key: 'caller_id_verification',
+    title: 'Verify Phone Number',
+    description: 'Set up your business caller ID for outbound calls'
   }
 ];
 
@@ -60,7 +66,14 @@ export function OnboardingLayout() {
       case 'team_details':
         return <TeamDetails onComplete={() => handleStepComplete('industry_selection')} />;
       case 'industry_selection':
-        return <IndustrySelection onComplete={() => handleStepComplete()} />;
+        return <IndustrySelection onComplete={() => handleStepComplete('caller_id_verification')} />;
+      case 'caller_id_verification':
+        return (
+          <CallerIdVerification 
+            onComplete={() => handleStepComplete()} 
+            onSkip={() => handleStepComplete()}
+          />
+        );
       default:
         return null;
     }

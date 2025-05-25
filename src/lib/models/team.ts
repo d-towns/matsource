@@ -9,6 +9,9 @@ export const Team = z.object({
     plan: z.string().optional(),
     role: z.string().optional(),
     partner_id: z.string().uuid().nullable().optional(),
+    twilio_subaccount_sid: z.string().nullable().optional(),
+    twilio_subaccount_auth_token: z.string().nullable().optional(),
+    default_phone_number_id: z.string().uuid().nullable().optional(),
 })
 
 export type Team = z.infer<typeof Team>

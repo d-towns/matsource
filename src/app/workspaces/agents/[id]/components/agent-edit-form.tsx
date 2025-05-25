@@ -11,6 +11,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useTeam } from '@/context/team-context';
+import { usePhoneNumbers } from '@/hooks/usePhoneNumbers';
 
 export interface Agent {
   id: string;
@@ -19,6 +22,7 @@ export interface Agent {
   description: string;
   script: string;
   is_active: boolean;
+  phone_number?: string | null;
 }
 
 interface AgentEditFormProps {
@@ -32,6 +36,14 @@ export function AgentEditForm({ initialAgent, isNewAgent, searchType }: AgentEdi
   const supabase = createClient();
   const { user } = useUser();
   const { toast } = useToast();
+  const { activeTeam } = useTeam();
+  
+  // Fetch phone numbers for the team
+  const { data: phoneNumbers = [], isLoading: phoneNumbersLoading } = usePhoneNumbers(activeTeam?.id);
+  
+  // Filter to only show verified phone numbers
+  const verifiedPhoneNumbers = phoneNumbers.filter(pn => pn.verification_status === 'success');
+  
   const [agent, setAgent] = useState<Agent | null>(() => {
     if (initialAgent) return initialAgent;
     if (isNewAgent) {
@@ -52,7 +64,8 @@ Important guidelines:
 - Adapt to the customer's tone and energy level
 - Listen carefully to their requirements and respond appropriately`
           : '',
-        is_active: true
+        is_active: true,
+        phone_number: null
       };
     }
     return null;
@@ -60,7 +73,7 @@ Important guidelines:
   const [saving, setSaving] = useState(false);
 
   // Handle form field changes
-  const handleChange = (field: keyof Agent, value: string | boolean) => {
+  const handleChange = (field: keyof Agent, value: string | boolean | null) => {
     if (!agent) return;
     setAgent({ ...agent, [field]: value });
   };
@@ -82,7 +95,9 @@ Important guidelines:
             description: agent.description,
             script: agent.script,
             is_active: agent.is_active,
-            user_id: user.id
+            phone_number: agent.phone_number,
+            user_id: user.id,
+            team_id: activeTeam?.id
           })
           .select()
           .single();
@@ -106,7 +121,8 @@ Important guidelines:
             name: agent.name,
             description: agent.description,
             script: agent.script,
-            is_active: agent.is_active
+            is_active: agent.is_active,
+            phone_number: agent.phone_number
           })
           .eq('id', agent.id);
           
@@ -195,6 +211,48 @@ Important guidelines:
               rows={3}
             />
           </div>
+
+          {/* Phone Number Selection - Only show for voice agents */}
+          {(agent.type === 'inbound_voice' || agent.type === 'outbound_voice') && (
+            <div>
+              <Label htmlFor="phone_number">Phone Number</Label>
+              <Select
+                value={agent.phone_number || 'none'}
+                onValueChange={(value) => handleChange('phone_number', value === 'none' ? null : value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder={
+                    phoneNumbersLoading 
+                      ? "Loading phone numbers..." 
+                      : verifiedPhoneNumbers.length === 0 
+                        ? "No verified phone numbers available"
+                        : "Select a phone number"
+                  } />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">No phone number</SelectItem>
+                  {verifiedPhoneNumbers.map((phoneNumber) => (
+                    <SelectItem key={phoneNumber.id} value={phoneNumber.id}>
+                      {phoneNumber.phone_number} 
+                      {phoneNumber.friendly_name && ` (${phoneNumber.friendly_name})`}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {verifiedPhoneNumbers.length === 0 && !phoneNumbersLoading && (
+                <p className="text-sm text-muted-foreground mt-1">
+                  No verified phone numbers available. 
+                  <Button 
+                    variant="link" 
+                    className="p-0 h-auto font-normal text-sm"
+                    onClick={() => router.push('/workspaces/phone-numbers/new')}
+                  >
+                    Add a phone number
+                  </Button> first.
+                </p>
+              )}
+            </div>
+          )}
           
           <div className="flex items-center space-x-2">
             <Switch

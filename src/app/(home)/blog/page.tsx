@@ -5,10 +5,10 @@ import { Metadata } from "next";
 import BlogCard from "@/components/BlogCard";
 
 export const metadata: Metadata = {
-  title: "Blog | Matsource",
+  title: "Blog | BlueAgent",
   description: "Insights, trends, and strategies to help businesses thrive with AI and voice technologies",
   openGraph: {
-    title: "Matsource Blog",
+    title: "BlueAgent Blog",
     description: "Insights, trends, and strategies to help businesses thrive with AI and voice technologies",
     type: "website",
   },
