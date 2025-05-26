@@ -31,7 +31,7 @@ const solutions = [
   },
   {
     title: "Customer Support",
-    href: "/solutions/customer-support",
+    href: "/solutions/customer-service",
     description: "Regular updates, performace boosts & fixes to ensure your agents run smoothly."
   }
 ];

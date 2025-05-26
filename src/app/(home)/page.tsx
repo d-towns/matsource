@@ -3,11 +3,13 @@ import { FAQ } from "@/components/FAQ";
 import FeaturesGrid from "@/components/FeaturesGrid";
 // import BlogSection from "@/components/BlogSection";
 import ExpertiseSection from "@/components/ExpertiseSection";
+import ExpertiseGrid from "@/components/ExpertiseGrid";
 import { Pricing } from "@/components/Pricing";
 // import { getAllPosts } from "./blog/actions";
 import CalendarSection from "@/components/ui/CalendarSection";
 import { AudioPlayer } from "@/components/AudioPlayer";
 import { ValidationSection } from "@/components/ValidationSection";
+import { DotMatrix } from "@/components/DotMatrix";
 // import { QuestionSection } from "@/components/QuestionSection";
 
 export const dynamic = 'force-dynamic';
@@ -15,8 +17,19 @@ export const dynamic = 'force-dynamic';
 export default async function Home() {
   // const allPosts = await getAllPosts();
   return (
-    <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
-      <main>
+    <div className="min-h-screen bg-background text-foreground overflow-x-hidden relative">
+      {/* Full Page Dot Matrix Background */}
+      <DotMatrix 
+        rows={1000}
+        cols={90}
+        dotSize={1}
+        spacing={20}
+        opacity={0.4}
+        animated={false}
+        className="fixed inset-0 z-0 text-gray-400"
+      />
+      
+      <main className="relative z-10">
         {/* Hero Section */}
         <Hero />
         <section className="py-16 bg-gradient-to-r from-primary/10 to-secondary/10">
@@ -32,9 +45,9 @@ export default async function Home() {
         
         {/* <QuestionSection /> */}
 
-        <ExpertiseSection />
+        <ExpertiseGrid />
 
-        <ValidationSection />
+        {/* <ValidationSection /> */}
 
         {/* Audio Player Section */}
 

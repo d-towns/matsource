@@ -52,25 +52,32 @@ export function Hero() {
   >
     <section className="relative">
       {/* Gradient background with fade to black */}
-      <div className="absolute inset-0 
+      <div className="absolute inset-0 z-10
         from-purple-900/90 via-blue-900/50 to-transparent"
       />
 
       {/* Content */}
-      <div className="relative flex flex-col items-center pt-8 md:pt-12 pb-16 md:pb-20">
+      <div className="relative z-20 flex flex-col items-center pt-8 md:pt-12 pb-16 md:pb-20">
         <div className="container mx-auto px-4 text-center mt-8">
           <h1 className="text-5xl md:text-8xl font-bold mb-4 md:mb-6">
             <span
               className="font-sans font-medium"
             >
-              Handle <span className="bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">Real Calls</span><br />
-              With Voice AI Agents.<br />
+              Convert <span className="bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">Every Ring</span><br />
+              Into Revenue.<br />
             </span>
           </h1>
-          <p className="text-base md:text-xl mb-4 max-w-3xl mx-auto px-4">
-          <span className="font-semibold">Qualify </span>More Leads. {' '}
+          <p className="text-base md:text-xl mb-4 max-w-4xl mx-auto px-4">
+          {/* <span className="font-semibold">Qualify </span>More Leads. {' '}
           <span className=" font-semibold">Book </span> More Appointments. {' '}
-          <span className="font-semibold">Close </span>More Deals.
+          <span className="font-semibold">Close </span>More Deals. */}
+          {/* <span className="font-semibold">
+Turn every ring into revenue.
+</span>{' '} */}
+<span className="font-semibold">
+  Qualify leads, book jobs, and send reminders automatically with our 24/7 AI voice agents. <br /> Hosted on your exisitng phone number and fully trained on your scripts and CRM.
+</span>
+
           </p>
           
           <div className="flex justify-center mb-8">

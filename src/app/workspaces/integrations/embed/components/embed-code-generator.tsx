@@ -19,7 +19,7 @@ function EmbedCodeGeneratorContent({ teamId }: { teamId: string }) {
   const { toast } = useToast();
   const { data: domains, isLoading: isDomainsLoading, isError: isDomainsError } = useDomains(teamId);
   const { data: apiKeys, isLoading: isApiKeysLoading, isError: isApiKeysError } = useApiKeys(teamId);
-  const { data: agents, isLoading: isAgentsLoading, isError: isAgentsError } = useAgents();
+  const { data: agents, isLoading: isAgentsLoading, isError: isAgentsError } = useAgents(teamId);
   const [generating, setGenerating] = useState(false);
   const [formName, setFormName] = useState('');
   const [selectedDomains, setSelectedDomains] = useState<string[]>([]);

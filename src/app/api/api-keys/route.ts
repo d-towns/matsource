@@ -45,9 +45,11 @@ export async function POST(request: NextRequest) {
   const body = await request.json();
   const { teamId, name } = body;
   if (!teamId) {
+    console.log('teamId is required')
     return NextResponse.json({ error: "teamId is required" }, { status: 400 });
   }
   if (!name || typeof name !== "string") {
+    console.log('name is required')
     return NextResponse.json({ error: "Name is required" }, { status: 400 })
   }
   try {

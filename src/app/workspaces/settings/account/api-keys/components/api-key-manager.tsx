@@ -11,6 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import { useTeam } from "@/context/team-context";
 
 export interface ApiKey {
   id: string;
@@ -38,7 +39,7 @@ export function ApiKeyManager({ initialKeys }: ApiKeyManagerProps) {
   const [newKey, setNewKey] = useState<NewApiKey | null>(null);
   const [keyName, setKeyName] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
-
+  const { activeTeam } = useTeam();
   // Create a new API key
   async function createApiKey() {
     if (!keyName.trim()) return;
@@ -50,7 +51,7 @@ export function ApiKeyManager({ initialKeys }: ApiKeyManagerProps) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name: keyName }),
+        body: JSON.stringify({ name: keyName, teamId: activeTeam?.id }),
       });
       
       if (!response.ok) throw new Error("Failed to create API key");

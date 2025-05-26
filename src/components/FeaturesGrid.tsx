@@ -28,25 +28,25 @@ const features: Feature[] = [
     slug: "/solutions/outbound-voice-agents",
     core: true
   },
-    {
-    title: "24/7 Customer Support",
-    description: "Regular updates, performace boosts & fixes to ensure your agents run smoothly.",
-    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d",
-    slug: "/solutions/customer-support"
-  },
-  {
-    title: "Smart Quotes",
-    description: "Give your customers accurate quotes based on their needs.",
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71",
-    slug: "/solutions/inbound-voice-agents"
-  },
-  {
-    title: "Automated Procurement",
-    description: "Streamline your supply chain with Automated, AI-driven procurement workflows.",
-    image: "https://images.unsplash.com/photo-1699549196390-e31bfc88536d?q=80&w=2074&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    slug: "/solutions/automated-procurement",
-    core: true
-  },
+  //   {
+  //   title: "24/7 Customer Support",
+  //   description: "Regular updates, performace boosts & fixes to ensure your agents run smoothly.",
+  //   image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d",
+  //   slug: "/solutions/customer-support"
+  // },
+  // {
+  //   title: "Smart Quotes",
+  //   description: "Give your customers accurate quotes based on their needs.",
+  //   image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71",
+  //   slug: "/solutions/inbound-voice-agents"
+  // },
+  // {
+  //   title: "Automated Procurement",
+  //   description: "Streamline your supply chain with Automated, AI-driven procurement workflows.",
+  //   image: "https://images.unsplash.com/photo-1699549196390-e31bfc88536d?q=80&w=2074&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  //   slug: "/solutions/automated-procurement",
+  //   core: true
+  // },
 ];
 
 export default function FeaturesGrid() {

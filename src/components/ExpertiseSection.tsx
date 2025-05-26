@@ -1,14 +1,14 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { Phone, Calendar, TrendingUp, Zap, DollarSign } from 'lucide-react';
+import { motion, MotionValue, useScroll, useSpring, useTransform } from 'framer-motion';
+import { Phone, Calendar, TrendingUp, Zap, DollarSign, FileText } from 'lucide-react';
 import { BookDemoButton } from './BookDemoButton';
-import { Card, CardContent, CardHeader } from './ui/card';
+import { useRef } from 'react';
 
 interface FeatureItem {
   title: string;
   description: string;
-  flairType: 'phone' | 'calendar' | 'chart' | 'integration' | 'pricing';
+  flairType: 'phone' | 'calendar' | 'chart' | 'integration' | 'pricing' | 'form';
   metrics?: string;
 }
 
@@ -38,12 +38,21 @@ const features: FeatureItem[] = [
     title: "Minutes-Based Plans, No Surprise Bills",
     description: "Transparent bundles, 60% cheaper than human answering services, and overage alerts before you ever hit the cap.",
     flairType: "pricing"
+  },
+  {
+    title: "Plug & Play Contact Forms",
+    description: "Drop our smart forms into your existing 'Contact Us' page. When leads express interest, we instantly call them back and book the appointment—no waiting, no missed opportunities.",
+    flairType: "form"
   }
 ];
 
-// Animated Flair Components
-const PhoneFlair = () => (
-  <motion.div className="relative">
+function useParallax(value: MotionValue<number>, distance: number) {
+  return useTransform(value, [0, 1], [-distance, distance]);
+}
+
+// Enhanced Animated Flair Components (larger and more elaborate)
+const PhoneFlair = ({ parallaxY }: { parallaxY: MotionValue<number> }) => (
+  <motion.div className="relative w-32 h-32" style={{ y: parallaxY }}>
     <motion.div
       animate={{ 
         scale: [1, 1.1, 1],
@@ -54,9 +63,9 @@ const PhoneFlair = () => (
         repeat: Infinity,
         ease: "easeInOut"
       }}
-      className="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center"
+      className="w-32 h-32 bg-gradient-to-br from-green-400 to-green-600 rounded-2xl flex items-center justify-center shadow-2xl"
     >
-      <Phone className="w-6 h-6 text-white" />
+      <Phone className="w-16 h-16 text-white" />
     </motion.div>
     <motion.div
       animate={{ 
@@ -68,62 +77,96 @@ const PhoneFlair = () => (
         repeat: Infinity,
         ease: "easeInOut"
       }}
-      className="absolute inset-0 w-12 h-12 bg-green-400 rounded-full"
+      className="absolute inset-0 w-32 h-32 bg-green-400 rounded-2xl"
+    />
+    {/* Additional decorative elements */}
+    <motion.div
+      animate={{ rotate: 360 }}
+      transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+      className="absolute -top-4 -right-4 w-8 h-8 border-4 border-green-300 rounded-full"
+    />
+    <motion.div
+      animate={{ scale: [1, 1.2, 1] }}
+      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+      className="absolute -bottom-2 -left-2 w-6 h-6 bg-green-200 rounded-full"
     />
   </motion.div>
 );
 
-const CalendarFlair = () => (
-  <motion.div className="relative w-12 h-12">
+const CalendarFlair = ({ parallaxY }: { parallaxY: MotionValue<number> }) => (
+  <motion.div className="relative w-32 h-32" style={{ y: parallaxY }}>
     <motion.div
       whileHover={{ scale: 1.05 }}
-      className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg flex items-center justify-center"
+      className="w-32 h-32 bg-gradient-to-br from-blue-400 to-blue-600 rounded-2xl flex items-center justify-center shadow-2xl"
     >
-      <Calendar className="w-6 h-6 text-white" />
+      <Calendar className="w-16 h-16 text-white" />
     </motion.div>
     <motion.div
       animate={{ 
-        x: [0, 2, 0],
-        y: [0, -1, 0]
+        x: [0, 8, 0],
+        y: [0, -4, 0]
       }}
       transition={{ 
         duration: 3,
         repeat: Infinity,
         ease: "easeInOut"
       }}
-      className="absolute -top-1 -right-1 w-3 h-3 bg-orange-400 rounded-full"
+      className="absolute -top-2 -right-2 w-8 h-8 bg-orange-400 rounded-full shadow-lg"
+    />
+    <motion.div
+      animate={{ 
+        rotate: [0, 180, 360]
+      }}
+      transition={{ 
+        duration: 8,
+        repeat: Infinity,
+        ease: "linear"
+      }}
+      className="absolute -bottom-4 -left-4 w-6 h-6 border-2 border-blue-300 rounded-full"
     />
   </motion.div>
 );
 
-const ChartFlair = ({ metrics }: { metrics?: string }) => (
-  <motion.div className="relative w-12 h-12">
+const ChartFlair = ({ parallaxY, metrics }: { parallaxY: MotionValue<number>; metrics?: string }) => (
+  <motion.div className="relative w-32 h-32" style={{ y: parallaxY }}>
     <motion.div
       whileHover={{ scale: 1.05 }}
-      className="w-12 h-12 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-lg flex items-center justify-center"
+      className="w-32 h-32 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-2xl flex items-center justify-center shadow-2xl"
     >
-      <TrendingUp className="w-6 h-6 text-white" />
+      <TrendingUp className="w-16 h-16 text-white" />
     </motion.div>
     {metrics && (
       <motion.div
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         transition={{ delay: 0.5, type: "spring" }}
-        className="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full"
+        className="absolute -top-4 -right-4 bg-green-500 text-white text-lg font-bold px-3 py-2 rounded-xl shadow-lg"
       >
         {metrics}
       </motion.div>
     )}
+    <motion.div
+      animate={{ 
+        y: [0, -10, 0],
+        opacity: [0.5, 1, 0.5]
+      }}
+      transition={{ 
+        duration: 2,
+        repeat: Infinity,
+        ease: "easeInOut"
+      }}
+      className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-4 h-8 bg-emerald-300 rounded-full"
+    />
   </motion.div>
 );
 
-const IntegrationFlair = () => (
-  <motion.div className="relative w-12 h-12">
+const IntegrationFlair = ({ parallaxY }: { parallaxY: MotionValue<number> }) => (
+  <motion.div className="relative w-32 h-32" style={{ y: parallaxY }}>
     <motion.div
       whileHover={{ scale: 1.05 }}
-      className="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex items-center justify-center"
+      className="w-32 h-32 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center shadow-2xl"
     >
-      <Zap className="w-6 h-6 text-white" />
+      <Zap className="w-16 h-16 text-white" />
     </motion.div>
     <motion.div
       animate={{ 
@@ -134,23 +177,35 @@ const IntegrationFlair = () => (
         repeat: Infinity,
         ease: "linear"
       }}
-      className="absolute inset-0 w-12 h-12"
+      className="absolute inset-0 w-32 h-32"
     >
-      <div className="absolute top-0 left-1/2 w-1 h-1 bg-purple-300 rounded-full transform -translate-x-1/2" />
-      <div className="absolute bottom-0 left-1/2 w-1 h-1 bg-purple-300 rounded-full transform -translate-x-1/2" />
-      <div className="absolute left-0 top-1/2 w-1 h-1 bg-purple-300 rounded-full transform -translate-y-1/2" />
-      <div className="absolute right-0 top-1/2 w-1 h-1 bg-purple-300 rounded-full transform -translate-y-1/2" />
+      <div className="absolute top-0 left-1/2 w-3 h-3 bg-purple-300 rounded-full transform -translate-x-1/2" />
+      <div className="absolute bottom-0 left-1/2 w-3 h-3 bg-purple-300 rounded-full transform -translate-x-1/2" />
+      <div className="absolute left-0 top-1/2 w-3 h-3 bg-purple-300 rounded-full transform -translate-y-1/2" />
+      <div className="absolute right-0 top-1/2 w-3 h-3 bg-purple-300 rounded-full transform -translate-y-1/2" />
     </motion.div>
+    <motion.div
+      animate={{ 
+        scale: [1, 1.3, 1],
+        rotate: [0, 90, 180, 270, 360]
+      }}
+      transition={{ 
+        duration: 4,
+        repeat: Infinity,
+        ease: "easeInOut"
+      }}
+      className="absolute -top-6 -right-6 w-4 h-4 bg-yellow-400 rounded-sm"
+    />
   </motion.div>
 );
 
-const PricingFlair = () => (
-  <motion.div className="relative w-12 h-12">
+const PricingFlair = ({ parallaxY }: { parallaxY: MotionValue<number> }) => (
+  <motion.div className="relative w-32 h-32" style={{ y: parallaxY }}>
     <motion.div
       whileHover={{ scale: 1.05 }}
-      className="w-12 h-12 bg-gradient-to-br from-amber-400 to-amber-600 rounded-lg flex items-center justify-center"
+      className="w-32 h-32 bg-gradient-to-br from-amber-400 to-amber-600 rounded-2xl flex items-center justify-center shadow-2xl"
     >
-      <DollarSign className="w-6 h-6 text-white" />
+      <DollarSign className="w-16 h-16 text-white" />
     </motion.div>
     <motion.div
       animate={{ 
@@ -161,91 +216,218 @@ const PricingFlair = () => (
         repeat: Infinity,
         ease: "easeInOut"
       }}
-      className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full flex items-center justify-center"
+      className="absolute -top-2 -right-2 w-10 h-10 bg-green-400 rounded-full flex items-center justify-center shadow-lg"
     >
-      <span className="text-white text-xs font-bold">%</span>
+      <span className="text-white text-lg font-bold">%</span>
     </motion.div>
+    <motion.div
+      animate={{ 
+        x: [0, 10, 0],
+        rotate: [0, 15, -15, 0]
+      }}
+      transition={{ 
+        duration: 3,
+        repeat: Infinity,
+        ease: "easeInOut"
+      }}
+      className="absolute -bottom-4 -left-4 w-8 h-8 bg-amber-200 rounded-lg"
+    />
   </motion.div>
 );
 
-const FlairComponent = ({ type, metrics }: { type: string; metrics?: string }) => {
+const FormFlair = ({ parallaxY }: { parallaxY: MotionValue<number> }) => (
+  <motion.div className="relative w-32 h-32" style={{ y: parallaxY }}>
+    <motion.div
+      whileHover={{ scale: 1.05 }}
+      className="w-32 h-32 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-2xl flex items-center justify-center shadow-2xl"
+    >
+      <FileText className="w-16 h-16 text-white" />
+    </motion.div>
+    <motion.div
+      animate={{ 
+        y: [0, -8, 0],
+        opacity: [0.5, 1, 0.5]
+      }}
+      transition={{ 
+        duration: 2.5,
+        repeat: Infinity,
+        ease: "easeInOut"
+      }}
+      className="absolute -top-2 -right-2 w-8 h-8 bg-green-400 rounded-full shadow-lg"
+    />
+    <motion.div
+      animate={{ 
+        scale: [1, 1.3, 1],
+        opacity: [0.3, 0.8, 0.3]
+      }}
+      transition={{ 
+        duration: 3,
+        repeat: Infinity,
+        ease: "easeInOut",
+        delay: 1
+      }}
+      className="absolute -bottom-2 -left-2 w-6 h-6 bg-blue-300 rounded-full"
+    />
+    <motion.div
+      animate={{ 
+        rotate: [0, 360]
+      }}
+      transition={{ 
+        duration: 6,
+        repeat: Infinity,
+        ease: "linear"
+      }}
+      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-40 border-2 border-indigo-200 rounded-full opacity-30"
+    />
+  </motion.div>
+);
+
+const FlairComponent = ({ type, metrics, parallaxY }: { type: string; metrics?: string; parallaxY: MotionValue<number> }) => {
   switch (type) {
     case 'phone':
-      return <PhoneFlair />;
+      return <PhoneFlair parallaxY={parallaxY} />;
     case 'calendar':
-      return <CalendarFlair />;
+      return <CalendarFlair parallaxY={parallaxY} />;
     case 'chart':
-      return <ChartFlair metrics={metrics} />;
+      return <ChartFlair parallaxY={parallaxY} metrics={metrics} />;
     case 'integration':
-      return <IntegrationFlair />;
+      return <IntegrationFlair parallaxY={parallaxY} />;
     case 'pricing':
-      return <PricingFlair />;
+      return <PricingFlair parallaxY={parallaxY} />;
+    case 'form':
+      return <FormFlair parallaxY={parallaxY} />;
     default:
-      return <PhoneFlair />;
+      return <PhoneFlair parallaxY={parallaxY} />;
   }
 };
 
-export default function ExpertiseSection() {
+function FeatureSection({ feature, index }: { feature: FeatureItem; index: number }) {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({ target: ref });
+  const y = useParallax(scrollYProgress, 50); // Smooth parallax with 50px movement
+
   return (
-    <section className="py-12 md:py-24 px-4 md:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex w-full items-center justify-between mb-12">
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+    <section 
+      ref={ref}
+      className="img-container min-h-screen flex items-center justify-center px-4 md:px-8 lg:px-16"
+    >
+      <div className="max-w-7xl mx-auto w-full h-full flex items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center w-full">
+          {/* Flair Side */}
+          <motion.div 
+            className="flex justify-center lg:justify-end order-2 lg:order-1"
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="text-2xl md:text-4xl font-bold font-sans text-left"
+            transition={{ delay: index * 0.1, duration: 0.8 }}
           >
-            Why Choose Us?
-          </motion.h2>
-          <BookDemoButton />
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((feature, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ 
-                delay: index * 0.1,
-                type: "spring",
-                stiffness: 100
-              }}
-              whileHover={{ 
-                y: -5,
-                transition: { type: "spring", stiffness: 300 }
-              }}
-              className="h-full"
+            <FlairComponent type={feature.flairType} metrics={feature.metrics} parallaxY={y} />
+          </motion.div>
+
+          {/* Content Side */}
+          <motion.div 
+            className="order-1 lg:order-2 text-center lg:text-left"
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: index * 0.1 + 0.2, duration: 0.8 }}
+          >
+            <motion.h3 
+              className="text-3xl md:text-4xl lg:text-5xl font-bold font-sans text-gray-900 mb-6 leading-tight"
+              whileHover={{ color: "#3B82F6" }}
+              transition={{ duration: 0.2 }}
             >
-              <Card className="h-full hover:shadow-xl transition-shadow duration-300 border-0 shadow-lg bg-gradient-to-br from-white to-gray-50/50">
-                <CardHeader className="pb-4">
-                  <motion.div
-                    whileHover={{ scale: 1.1 }}
-                    transition={{ type: "spring", stiffness: 300 }}
-                    className="mb-4"
-                  >
-                    <FlairComponent type={feature.flairType} metrics={feature.metrics} />
-                  </motion.div>
-                  <motion.h3 
-                    className="text-lg md:text-xl font-bold font-sans text-gray-900 leading-tight"
-                    whileHover={{ color: "#3B82F6" }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    {feature.title}
-                  </motion.h3>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <p className="text-gray-600 font-sans leading-relaxed">
-                    {feature.description}
-                  </p>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
+              {feature.title}
+            </motion.h3>
+            <p className="text-lg md:text-xl text-gray-600 font-sans leading-relaxed mb-8 max-w-2xl">
+              {feature.description}
+            </p>
+            {/* <div className="flex justify-center lg:justify-start">
+              <BookDemoButton />
+            </div> */}
+          </motion.div>
         </div>
       </div>
     </section>
+  );
+}
+
+export default function ExpertiseSection() {
+  const containerRef = useRef(null);
+  const { scrollYProgress } = useScroll({ container: containerRef });
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001,
+  });
+
+  return (
+    <>
+      <style jsx global>{`
+        .expertise-scroll-container {
+          height: 100vh;
+          overflow-y: scroll;
+          scroll-snap-type: y mandatory;
+          scroll-behavior: smooth;
+        }
+        
+        .expertise-scroll-container .img-container {
+          scroll-snap-align: start;
+          scroll-snap-stop: always;
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        /* Hide scrollbar but keep functionality */
+        .expertise-scroll-container::-webkit-scrollbar {
+          display: none;
+        }
+        .expertise-scroll-container {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
+      
+      <div 
+        ref={containerRef}
+        className="expertise-scroll-container"
+      >
+        {/* Header Section */}
+        <section className="img-container px-4 md:px-6 lg:px-8 mb-44">
+          <div className="max-w-7xl mx-auto text-center">
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-3xl md:text-5xl font-bold font-sans mb-4"
+            >
+              Why Choose Us?
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto"
+            >
+              Discover the features that make our AI voice agents the perfect solution for your business
+            </motion.p>
+          </div>
+        </section>
+
+        {/* Feature Sections */}
+        {features.map((feature, index) => (
+          <FeatureSection key={index} feature={feature} index={index} />
+        ))}
+
+        {/* Progress Bar */}
+        <motion.div 
+          className="progress fixed left-0 right-0 h-1 bg-gradient-to-r from-primary to-secondary bottom-8 mx-4 rounded-full z-50"
+          style={{ scaleX, transformOrigin: "0%" }}
+        />
+      </div>
+    </>
   );
 } 
