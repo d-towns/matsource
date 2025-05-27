@@ -97,7 +97,7 @@ export function HeroSideBySide() {
               >
                 <Image
                   src="/blueagent-hero-splash.png"
-                  alt="MatBot AI Voice Agent Dashboard"
+                  alt="BlueAgent AI Voice Agent Dashboard"
                   width={800}
                   height={600}
                   className="w-full h-auto rounded-lg shadow-2xl"
