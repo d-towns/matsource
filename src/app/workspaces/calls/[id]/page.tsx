@@ -4,6 +4,7 @@ import { DataTable } from '@/components/ui/data-table';
 import { columns } from '@/components/calls/calls-columns';
 import { getCallById, getCallsForLead } from '@/lib/services/CallAttemptService';
 import { getLeadById } from '@/lib/services/LeadService';
+import { CallTranscript } from '@/components/calls/call-transcript';
 import {
   PhoneIcon,
   CalendarIcon,
@@ -113,6 +114,11 @@ export default async function CallPage({ params }: { params: Promise<{ id: strin
             <DataTable columns={columns} data={history} />
           </CardContent>
         </Card>
+      </div>
+
+      {/* Call Transcript Section */}
+      <div className="mb-8">
+        <CallTranscript transcript={call.transcript} leadName={lead.name} />
       </div>
     </div>
   );
