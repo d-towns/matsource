@@ -62,7 +62,7 @@ export default function BlueAgentFormDemo() {
                 Get Your Free Quote
               </h3>
               <p className="text-gray-600">
-                Fill out the form below and we'll call you back within minutes to discuss your project
+                Fill out the form below and we&apos;ll call you back within minutes to discuss your project
               </p>
             </div>
             
