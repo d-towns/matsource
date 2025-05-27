@@ -152,7 +152,7 @@ export function Pricing() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 "
         >
           {pricingPlans.map((plan) => (
             <PlanCard key={plan.name} plan={plan} isBestValue={plan.name === 'Growth'} />
@@ -165,7 +165,7 @@ export function Pricing() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
           viewport={{ once: true }}
-          className="mt-16 rounded-3xl border shadow-md p-8 flex flex-col md:flex-row justify-between items-center"
+          className="mt-16 rounded-3xl border shadow-md p-8 flex flex-col md:flex-row justify-between items-center bg-white"
         >
           <h3 className="text-2xl font-bold mb-4 md:mb-0">Book Your AI Voice Agent Discovery Call Today.</h3>
           <BookDemoButton />

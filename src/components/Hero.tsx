@@ -63,7 +63,7 @@ export function Hero() {
             <span
               className="font-sans font-medium"
             >
-              Convert <span className="bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">Every Ring</span><br />
+            Convert <br className="sm:hidden block"/> <span className="bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">Every Ring</span><br />
               Into Revenue.<br />
             </span>
           </h1>
@@ -74,8 +74,8 @@ export function Hero() {
           {/* <span className="font-semibold">
 Turn every ring into revenue.
 </span>{' '} */}
-<span className="font-semibold">
-  Qualify leads, book jobs, and send reminders automatically with our 24/7 AI voice agents. <br /> Hosted on your exisitng phone number and fully trained on your scripts and CRM.
+<span className="font-semibold text-sm">
+24/7 AI voice agents that book jobs, follow up, and never miss a lead—trained on your scripts, running on your existing number.
 </span>
 
           </p>

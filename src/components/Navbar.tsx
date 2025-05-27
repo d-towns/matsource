@@ -3,6 +3,7 @@ import { NavMenu } from "@/components/ui/nav-menu";
 import { AuthStatus } from "@/components/auth/auth-status";
 // import { ThemeToggle } from "@/components/ThemeToggle";
 import { MobileNav } from "@/components/MobileNav";
+import Image from "next/image";
 
 export function Navbar() {
   return (
@@ -12,9 +13,10 @@ export function Navbar() {
           {/* Left - Logo */}
           <div className="flex items-center">
             <Link href="/" className="flex items-center">
-              <span className="text-3xl mr-2" role="img" aria-label="Construction Worker">
+              {/* <span className="text-3xl mr-2" role="img" aria-label="Construction Worker">
                 👨‍🔧
-              </span>
+              </span> */}
+              <Image src="/blueagent-logo.png" alt="BlueAgent" width={48} height={48} />
               <span className="text-xl font-bold font-sans">BlueAgent</span>
             </Link>
           </div>

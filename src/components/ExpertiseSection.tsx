@@ -2,7 +2,6 @@
 
 import { motion, MotionValue, useScroll, useSpring, useTransform } from 'framer-motion';
 import { Phone, Calendar, TrendingUp, Zap, DollarSign, FileText } from 'lucide-react';
-import { BookDemoButton } from './BookDemoButton';
 import { useRef } from 'react';
 
 interface FeatureItem {

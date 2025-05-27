@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import { Phone, Calendar, TrendingUp, Zap, DollarSign, FileText } from 'lucide-react';
-import { useRef } from 'react';
 
 interface FeatureItem {
   title: string;
