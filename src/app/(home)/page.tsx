@@ -4,6 +4,7 @@ import FeaturesGrid from "@/components/FeaturesGrid";
 // import BlogSection from "@/components/BlogSection";
 // import ExpertiseSection from "@/components/ExpertiseSection";
 import ExpertiseGrid from "@/components/ExpertiseGrid";
+import BlueAgentFormDemo from "@/components/BlueAgentFormDemo";
 import { Pricing } from "@/components/Pricing";
 // import { getAllPosts } from "./blog/actions";
 import CalendarSection from "@/components/ui/CalendarSection";
@@ -45,6 +46,9 @@ export default async function Home() {
         {/* <QuestionSection /> */}
 
         <ExpertiseGrid />
+
+        {/* BlueAgent Form Demo Section */}
+        <BlueAgentFormDemo />
 
         {/* <ValidationSection /> */}
 
