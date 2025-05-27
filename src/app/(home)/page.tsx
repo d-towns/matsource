@@ -12,6 +12,7 @@ import { AudioPlayer } from "@/components/AudioPlayer";
 // import { ValidationSection } from "@/components/ValidationSection";
 import { DotMatrix } from "@/components/DotMatrix";
 import { HeroSideBySide } from "@/components/HeroSideBySide";
+// import ProblemStatsSection from "@/components/ProblemStatsSection";
 // import { QuestionSection } from "@/components/QuestionSection";
 
 export const dynamic = 'force-dynamic';
@@ -32,16 +33,20 @@ export default async function Home() {
       <main className="relative z-10">
         {/* Hero Section */}
         <HeroSideBySide />
+        
         <section className="py-16 bg-gradient-to-r from-primary/10 to-secondary/10">
           <div className="container">
             <h2 className="text-4xl font-sans font-bold text-center mb-8">
-              Listen to a sample of our work!
+              Instead of voicemail, send your customers to an intelligent AI
             </h2>
             <AudioPlayer />
           </div>
         </section>
 
         <FeaturesGrid />
+        
+        {/* Problem Stats Section */}
+        {/* <ProblemStatsSection /> */}
         
         {/* <QuestionSection /> */}
 
