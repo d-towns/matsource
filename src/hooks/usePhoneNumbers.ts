@@ -18,6 +18,12 @@ export function usePhoneNumber(id: string, teamId?: string) {
     queryKey: ['phoneNumber', id, teamId],
     queryFn: () => api.fetchPhoneNumber(id, teamId!),
     enabled: !!id && !!teamId,
+    // Poll every 10 seconds if status is pending, otherwise use default behavior
+    refetchInterval: (query) => {
+      return query.state.data?.status === 'pending' ? 10000 : false;
+    },
+    // Stop polling when window is not focused to reduce unnecessary requests
+    refetchIntervalInBackground: false,
   });
 }
 

@@ -106,6 +106,7 @@ export async function POST(req: NextRequest) {
   // Get agent and associated phone number
   const {data: form_agent_id, error: form_agent_id_err} = await supabase.from('forms').select('agent_id').eq('id', payload.formId).single()
   if (form_agent_id_err) {
+    console.log('form_agent_id_err', form_agent_id_err)
     return NextResponse.json({ error: '[BlueAgent Widget] Failed to get form agent id' }, { status: 500, headers: { 'Access-Control-Allow-Origin': allowedOrigin } })
   }
   
