@@ -220,7 +220,7 @@ export default function ProblemStatsSection() {
             transition={{ delay: 0.4, duration: 0.8 }}
             className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed"
           >
-            Every missed call is a lost opportunity. Here's the harsh reality of what's happening to your business right now.
+            Every missed call is a lost opportunity. Here&apos;s the harsh reality of what&apos;s happening to your business right now.
           </motion.p>
         </motion.div>
 
