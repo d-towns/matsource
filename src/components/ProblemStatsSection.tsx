@@ -48,7 +48,7 @@ const StatCard = ({
   delay = 0,
   isInView 
 }: {
-  icon: any;
+  icon: React.ElementType;
   value: number;
   suffix: string;
   label: string;
