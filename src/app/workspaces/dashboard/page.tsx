@@ -10,7 +10,7 @@ export default function DashboardPage() {
       <div className="mb-6">
         <h1 className="text-3xl font-bold font-sans">Analytics Dashboard</h1>
         <p className="text-muted-foreground font-sans">
-          Comprehensive insights into your MatBot performance and metrics
+          Comprehensive insights into your BlueAgent performance and metrics
         </p>
       </div>
       

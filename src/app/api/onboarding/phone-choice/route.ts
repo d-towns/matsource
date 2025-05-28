@@ -23,17 +23,27 @@ export async function POST(req: NextRequest) {
 
     // Parse and validate request body
     const body = await req.json();
-    console.log('body', body);
     const { choice, teamId, areaCode } = PhoneChoiceSchema.parse(body);
 
     // Verify user has access to the team
     const { data: userTeam, error: teamError } = await supabase.rpc('get_user_teams')
-    console.log('userTeam', userTeam);
+
     if (teamError || !userTeam) {
       return NextResponse.json({ error: 'Access denied to team' }, { status: 403 });
     }
 
+    // Ensure the team has a subaccount
+    const subaccountResult = await ensureTeamHasSubaccount(teamId, userTeam.name);
+        
+    // Purchase a phone number for the subaccount
+    const phoneNumberResult = await purchasePhoneNumberForSubaccount(
+      subaccountResult.subaccountSid,
+      subaccountResult.authToken,
+      areaCode
+    );
+
     if (choice === 'existing') {
+
       // User wants to verify their own number - just return success
       // The caller ID verification flow will handle the rest
       return NextResponse.json({ 
@@ -45,28 +55,10 @@ export async function POST(req: NextRequest) {
 
     if (choice === 'new') {
       // User wants a new Twilio number - create subaccount and purchase number
-      
-      // Get team details
-      const { data: team, error: teamFetchError } = await supabase
-        .from('teams')
-        .select('name')
-        .eq('id', teamId)
-        .single();
-
-      if (teamFetchError || !team) {
-        return NextResponse.json({ error: 'Team not found' }, { status: 404 });
-      }
 
       try {
         // Ensure team has a subaccount
-        const subaccountResult = await ensureTeamHasSubaccount(teamId, team.name);
-        
-        // Purchase a phone number for the subaccount
-        const phoneNumberResult = await purchasePhoneNumberForSubaccount(
-          subaccountResult.subaccountSid,
-          subaccountResult.authToken,
-          areaCode
-        );
+
 
         // Store the phone number in our database
         const phoneNumberRecord = await createTwilioPhoneNumber({

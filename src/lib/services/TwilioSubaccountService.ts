@@ -89,6 +89,10 @@ export async function purchasePhoneNumberForSubaccount(
     const purchasedNumber = await subClient.incomingPhoneNumbers.create({
       phoneNumber: selectedNumber.phoneNumber,
       friendlyName: 'Business Phone Number',
+      voiceMethod: 'POST',
+      voiceUrl: `${config.services.voice.serviceUrl}/create-inbound-call`,
+      statusCallback: `${config.services.voice.serviceUrl}/call-status`,
+      statusCallbackMethod: 'POST',
     });
 
     console.log(`Purchased phone number ${purchasedNumber.phoneNumber} for subaccount ${subaccountSid}`);

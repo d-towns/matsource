@@ -6,8 +6,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Separator } from "@/components/ui/separator"
 
 export const metadata: Metadata = {
-  title: "Account Settings | MatBot",
-  description: "Manage your MatBot account information",
+  title: "Account Settings | BlueAgent",
+  description: "Manage your BlueAgent account information",
 }
 
 export default function AccountSettingsPage() {

@@ -39,7 +39,7 @@ export function HeroSideBySide() {
               >
                 <h1 className="text-5xl md:text-6xl lg:text-8xl font-bold mb-4 md:mb-6">
                   <span className="font-sans font-medium">
-                    Convert <br className="sm:hidden block" />
+                    Convert <br className="" />
                     <span className="bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text">
                       Every Ring
                     </span>
@@ -49,7 +49,7 @@ export function HeroSideBySide() {
                 </h1>
                 
                 <p className="text-base md:text-xl mb-4 max-w-4xl mx-auto lg:mx-0 px-4 lg:px-0">
-                  <span className="font-semibold text-sm">
+                  <span className="font-semibold xl:text-xl sm:text-lg text-sm">
                     24/7 AI voice agents that book jobs, follow up, and never miss a lead—trained on your scripts, running on your existing number.
                   </span>
                 </p>
