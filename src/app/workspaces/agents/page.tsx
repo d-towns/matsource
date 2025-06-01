@@ -11,6 +11,35 @@ import { useAgents } from '@/hooks/useAgents';
 import { usePhoneNumbers } from '@/hooks/usePhoneNumbers';
 import { PhoneIcon } from 'lucide-react';
 import { Agent } from '@/lib/models/agent';
+import Image from 'next/image';
+
+// New EmptyState component
+const EmptyState = () => (
+  <div className=" flex flex-col md:flex-row items-center justify-center md:justify-start text-center md:text-left py-12 md:py-16 gap-8 md:gap-12 lg:gap-16 w-full">
+    <div className="flex-shrink-0 mb-6 md:mb-0">
+      <Image 
+        src="/blueagent-agent-single.png" 
+        alt="Create agent illustration" 
+        width={600} // Base width, Tailwind classes will control display size
+        height={600} // Base height, Tailwind classes will control display size
+        className="rounded-lg w-full h-full" // Rounded image and responsive sizing
+      />
+    </div>
+    <div className="flex flex-col items-center md:items-start">
+      <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold font-sans mb-3 md:mb-4">
+        Create Your First Agent!
+      </h2>
+      <p className="text-base md:text-lg text-muted-foreground font-sans mb-6 md:mb-8 max-w-md">
+        It looks like you haven&apos;t created any agents yet. Get started by creating your first intelligent assistant.
+      </p>
+      <Link href="/workspaces/agents/new">
+        <Button size="lg" className="px-8 py-4 text-base md:text-lg font-sans">
+          Create New Agent
+        </Button>
+      </Link>
+    </div>
+  </div>
+);
 
 export default function AgentsPage() {
   const { activeTeam } = useTeam();
@@ -110,39 +139,49 @@ export default function AgentsPage() {
         </div>
         {/* Tab content for all agents */}
         <TabsContent value="all">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {agents.length === 0 ? (
-              <p>No agents found. Create your first agent!</p>
-            ) : (
-              agents.map(renderAgentCard)
-            )}
-          </div>
+          {agents.length === 0 ?  (
+            <EmptyState />
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {agents.map(renderAgentCard)}
+            </div>
+          )}
+          
         </TabsContent>
         {/* Tab content for inbound voice agents */}
         <TabsContent value="inbound_voice">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {agents
-              .filter((agent) => agent.type === 'inbound_voice')
-              .map(renderAgentCard)
-            }
+            {agents.filter((agent) => agent.type === 'inbound_voice').length === 0 ? (
+              <EmptyState />
+            ) : (
+              agents
+                .filter((agent) => agent.type === 'inbound_voice')
+                .map(renderAgentCard)
+            )}
           </div>
         </TabsContent>
         {/* Tab content for outbound voice agents */}
         <TabsContent value="outbound_voice">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {agents
-              .filter((agent) => agent.type === 'outbound_voice')
-              .map(renderAgentCard)
-            }
+            {agents.filter((agent) => agent.type === 'outbound_voice').length === 0 ? (
+              <EmptyState />
+            ) : (
+              agents
+                .filter((agent) => agent.type === 'outbound_voice')
+                .map(renderAgentCard)
+            )}
           </div>
         </TabsContent>
         {/* Tab content for browser agents */}
         <TabsContent value="browser">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {agents
-              .filter((agent) => agent.type === 'browser')
-              .map(renderAgentCard)
-            }
+            {agents.filter((agent) => agent.type === 'browser').length === 0 ? (
+              <EmptyState />
+            ) : (
+              agents
+                .filter((agent) => agent.type === 'browser')
+                .map(renderAgentCard)
+            )}
           </div>
         </TabsContent>
       </Tabs>

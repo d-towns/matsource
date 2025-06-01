@@ -128,6 +128,7 @@ export async function POST(req: NextRequest) {
       .upsert(
         {
           team_id: teamId,
+          name: tier,
           stripe_subscription_id: sub.id,
           stripe_customer_id: customerId,
           stripe_item_id: item.id,

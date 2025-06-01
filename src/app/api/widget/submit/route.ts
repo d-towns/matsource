@@ -42,6 +42,7 @@ export async function OPTIONS(req: NextRequest) {
   const formId = req.nextUrl.searchParams.get('formId');
   if (!formId) return new NextResponse(null, { status: 400 });
   const allowedOrigin = await getAllowedOriginForFormId(req, formId);
+  console.log('allowedOrigin', allowedOrigin);
   if (!allowedOrigin) return new NextResponse(null, { status: 403 });
   return new NextResponse(null, {
     status: 204,
@@ -57,6 +58,7 @@ export async function POST(req: NextRequest) {
   // Validate JWT
   const authHeader = req.headers.get('authorization')
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    console.log('missing or invalid authorization header')
     return NextResponse.json({ error: '[BlueAgent Widget] Missing or invalid Authorization header' }, { status: 401 })
   }
   const token = authHeader.replace('Bearer ', '')
@@ -64,6 +66,7 @@ export async function POST(req: NextRequest) {
   try {
     payload = jwt.verify(token, process.env.WIDGET_JWT_SECRET!)
   } catch (e) {
+    console.log('invalid or expired token', e)
     return NextResponse.json({ error: '[BlueAgent Widget] Invalid or expired token: ' + e }, { status: 401 })
   }
 

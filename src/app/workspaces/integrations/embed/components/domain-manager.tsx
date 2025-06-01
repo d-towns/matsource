@@ -23,7 +23,7 @@ function DomainManagerContent({ teamId }: { teamId: string }) {
   // Add a new domain
   const handleAddDomain = async () => {
     if (!newDomain || !user) return;
-    if (!/^([*.])?[a-zA-Z0-9][\w-]+(\.[\w-]+)+$/.test(newDomain)) {
+    if (!/^([*.])?[a-zA-Z0-9][\w-]+(\.[\w-]+)+$/.test(newDomain) && !newDomain.includes('localhost')) {
       toast({
         variant: 'destructive',
         title: 'Invalid domain format',

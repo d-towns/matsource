@@ -7,6 +7,7 @@
   }
 
   var formId = window.__BLUEAGENT_WIDGET_FORM_ID__;
+  var isLocal = window.__BLUEAGENT_WIDGET_IS_LOCAL__;
   if (!formId) {
     root.innerHTML = '<div style="color: red; font-family: sans-serif;">[BlueAgent Widget] No form ID provided.</div>';
     return;
@@ -25,7 +26,8 @@
   root.innerHTML = '<div id="blueagent-widget-loading" style="text-align:center; color:#888;">Loading BlueAgent Widget...</div>';
 
   // Fetch JWT and config from blueagent.co
-  fetch('https://blueagent.co/api/widget/init?formId=' + encodeURIComponent(formId))
+  const baseUrl = isLocal ? 'http://localhost:3000' : 'https://blueagent.co';
+  fetch(baseUrl + '/api/widget/init?formId=' + encodeURIComponent(formId))
     .then(function(res) { return res.json(); })
     .then(function(data) {
       if (data.error) {
@@ -100,7 +102,8 @@
       if (email) payload.email = email;
       if (notes) payload.notes = notes;
       // Submit
-      fetch('https://blueagent.co/api/widget/submit?formId=' + encodeURIComponent(formId), {
+      const baseUrl = isLocal ? 'http://localhost:3000' : 'https://blueagent.co';
+      fetch(baseUrl + '/api/widget/submit?formId=' + encodeURIComponent(formId), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

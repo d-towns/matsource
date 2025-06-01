@@ -122,18 +122,21 @@ export async function ensureTeamHasSubaccount(teamId: string, teamName: string):
   const supabase = getSupabaseAdminClient();
   
   // Check if team already has a subaccount
-  const { data: team, error } = await supabase
+  const { data, error } = await supabase
     .from('teams')
     .select('twilio_subaccount_sid, twilio_subaccount_auth_token')
     .eq('id', teamId)
-    .single();
 
   if (error) {
+    console.error('Error fetching team details:', error);
     throw new Error('Failed to fetch team details');
   }
 
+  const team = data[0];
+
+
   // If subaccount already exists, return existing details
-  if (team.twilio_subaccount_sid && team.twilio_subaccount_auth_token) {
+  if (team && team.twilio_subaccount_sid && team.twilio_subaccount_auth_token) {
     return {
       subaccountSid: team.twilio_subaccount_sid,
       authToken: team.twilio_subaccount_auth_token,

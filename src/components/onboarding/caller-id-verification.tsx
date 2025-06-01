@@ -39,6 +39,8 @@ export function CallerIdVerification({ onComplete, onSkip }: CallerIdVerificatio
   const { activeTeam } = useTeam();
   
   // State management
+  const [areaCode, setAreaCode] = useState('');
+  const [areaCodeError, setAreaCodeError] = useState<string | null>(null);
   const [flowState, setFlowState] = useState<FlowState>('choice');
   const [purchasedNumber, setPurchasedNumber] = useState<PurchasedNumber | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -127,6 +129,7 @@ export function CallerIdVerification({ onComplete, onSkip }: CallerIdVerificatio
           body: JSON.stringify({
             choice: 'new',
             teamId: activeTeam?.id,
+            areaCode: areaCode,
           }),
         });
 
@@ -196,22 +199,53 @@ export function CallerIdVerification({ onComplete, onSkip }: CallerIdVerificatio
           <h2 className="text-2xl font-bold font-sans text-gray-900 mb-2">
             Phone Number Setup
           </h2>
-          <p className="text-gray-600 font-sans">
-            Choose how you&apos;d like to set up your business phone number for making calls
+          <p className="text-gray-600 font-sans mb-6">
+            First, please enter your desired 3-digit area code for your business phone number.
           </p>
         </div>
 
+        {/* Area Code Input */}
+        <div className="max-w-xs mx-auto">
+          <Label htmlFor="area-code" className="text-sm font-medium font-sans text-gray-700">
+            Desired Area Code (3 digits)
+          </Label>
+          <Input
+            id="area-code"
+            type="text"
+            value={areaCode}
+            onChange={(e) => {
+              const val = e.target.value.replace(/\D/g, '');
+              if (val.length <= 3) {
+                setAreaCode(val);
+                if (val.length === 3) {
+                  setAreaCodeError(null);
+                } else {
+                  setAreaCodeError('Area code must be 3 digits.');
+                }
+              } else {
+                 setAreaCodeError('Area code must be 3 digits.');
+              }
+            }}
+            placeholder="e.g., 555"
+            className={`mt-1 font-sans text-center text-lg ${areaCodeError ? 'border-red-500' : (areaCode.length === 3 ? 'border-green-500' : '')}`}
+            maxLength={3}
+          />
+          {areaCodeError && areaCode.length < 3 && (
+            <p className="text-sm text-red-600 font-sans mt-1 text-center">{areaCodeError}</p>
+          )}
+        </div>
+
         {choiceError && (
-          <Alert variant="destructive">
+          <Alert variant="destructive" className="mt-4">
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>{choiceError}</AlertDescription>
           </Alert>
         )}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className={`grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 ${areaCode.length !== 3 ? 'opacity-50 pointer-events-none' : ''}`}>
           <Card 
             className="cursor-pointer hover:border-blue-500 hover:shadow-md transition-all duration-200 border-2"
-            onClick={() => !isProcessing && handleChoice('existing')}
+            onClick={() => !isProcessing && areaCode.length === 3 && handleChoice('existing')}
           >
             <CardContent className="p-6 text-center">
               <div className="flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mx-auto mb-4">
@@ -231,7 +265,7 @@ export function CallerIdVerification({ onComplete, onSkip }: CallerIdVerificatio
 
           <Card 
             className="cursor-pointer hover:border-green-500 hover:shadow-md transition-all duration-200 border-2"
-            onClick={() => !isProcessing && handleChoice('new')}
+            onClick={() => !isProcessing && areaCode.length === 3 && handleChoice('new')}
           >
             <CardContent className="p-6 text-center">
               <div className="flex items-center justify-center w-16 h-16 bg-green-100 rounded-full mx-auto mb-4">

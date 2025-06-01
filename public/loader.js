@@ -8,6 +8,7 @@
 
   // Get formId from data attribute
   var formId = script.getAttribute('data-form-id');
+  var isLocal = script.getAttribute('data-is-local') === 'true';
   if (!formId) {
     console.error('[BlueAgent Widget] Missing data-form-id attribute on loader script.');
     return;
@@ -30,10 +31,11 @@
 
   // Expose formId globally for widget.js
   window.__BLUEAGENT_WIDGET_FORM_ID__ = formId;
+  window.__BLUEAGENT_WIDGET_IS_LOCAL__ = isLocal;
 
   // Dynamically load the widget.js script from blueagent.co unless overridden
   var widgetScript = document.createElement('script');
-  widgetScript.src = script.getAttribute('data-widget-src') || 'https://blueagent.co/widget.js';
+  widgetScript.src = script.getAttribute('data-widget-src') || (isLocal ? 'http://localhost:3000/widget.js' : 'https://blueagent.co/widget.js');
   widgetScript.async = true;
   widgetScript.onload = function() {
     // Optionally, notify that widget.js loaded

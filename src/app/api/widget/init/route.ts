@@ -17,6 +17,8 @@ async function getAllowedOrigin(req: NextRequest, formId: string): Promise<strin
   if (!domains) return null;
 
   for (const { domain } of domains) {
+    console.log('domain', domain);
+    console.log('originHost', originHost);
     if (domain.startsWith('*.')) {
       const base = domain.slice(2);
       if (originHost === base || originHost.endsWith('.' + base)) return originHeader;

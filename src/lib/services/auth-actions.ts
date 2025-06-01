@@ -181,12 +181,13 @@ export async function getUserTeams(): Promise<Team[]> {
 
   // Call the database function to get the teams for this user under RLS
   const { data: teamData, error: rpcError } = await supabase
-    .rpc('get_user_teams') 
+    .rpc('get_user_teams_and_subscription_plan') 
   if (rpcError || !teamData) {
     console.error('RPC error in getUserTeams:', rpcError);
     return [];
   }
 
+  console.log('teamData', teamData)
   // console.log('teamData', teamData)
   const teamArraySchema = z.array(Team);
   // Parse and return the team records

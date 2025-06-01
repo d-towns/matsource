@@ -92,8 +92,8 @@ export async function createOutboundCall(
         formData.append(key, value.toString());
       }
     });
-
-    const response = await fetch(`${process.env.VOICE_AGENT_SERVICE_URL}/create-outbound-call`, {
+    const baseUrl = process.env.NEXT_PUBLIC_NODE_ENV === 'production' ? process.env.VOICE_AGENT_SERVICE_URL : process.env.VOICE_AGENT_SERVICE_URL_DEV;
+    const response = await fetch(`${baseUrl}/create-outbound-call`, {
       method: 'POST',
       body: formData.toString(),
       headers: {

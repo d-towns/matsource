@@ -2,12 +2,10 @@
 
 import * as React from "react"
 import {
-  BookOpen,
   Frame,
   Map,
   PieChart,
   NotebookPen,
-  PackageSearchIcon,
   HomeIcon,
   PuzzleIcon,
   UsersIcon,
@@ -15,6 +13,7 @@ import {
   BotIcon,
   CalendarIcon,
   PhoneIcon,
+  HelpCircleIcon,
 } from "lucide-react"
 
 import { useTeam } from "@/context/team-context"
@@ -68,68 +67,50 @@ const navMenuItems = {
           url: "/workspaces/calls",
           icon: PhoneCallIcon,
         },
-        {
+
+        
+      ],
+    },
+    {
           title: "Phone Numbers",
           url: "/workspaces/phone-numbers",
           icon: PhoneIcon,
         },
-        {
-          title: "Forms",
-          url: "/workspaces/integrations/embed",
-          icon: NotebookPen,
-        },
-      ],
-    },
     {
-      title: "Search",
-      url: "#",
-      icon: PackageSearchIcon,
-      isActive: true,
-      items: [
-        {
-          title: "Parts",
-          url: "/workspaces/search/parts",
-        },
-        {
-          title: "Vehicles",
-          url: "/workspaces/search/vehicles",
-        },
-      ],
+      title: "Forms",
+      url: "/workspaces/integrations/embed",
+      icon: NotebookPen,
     },
+    // {
+    //   title: "Search",
+    //   url: "#",
+    //   icon: PackageSearchIcon,
+    //   isActive: true,
+    //   items: [
+    //     {
+    //       title: "Parts",
+    //       url: "/workspaces/search/parts",
+    //     },
+    //     {
+    //       title: "Vehicles",
+    //       url: "/workspaces/search/vehicles",
+    //     },
+    //   ],
+    // },
     {
       title: "Agents",
       url: '/workspaces/agents',
       icon: BotIcon,
     },
-
-
     {
-      title: "Integrations",
+      title: "Third-Party Integrations",
       url: "/workspaces/integrations",
       icon: PuzzleIcon,
     },
     {
-      title: "Reports",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
+      title: "Help",
+      url: "/workspaces/help",
+      icon: HelpCircleIcon,
     },
     // {
     //   title: "Settings",

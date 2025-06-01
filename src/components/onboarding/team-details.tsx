@@ -5,7 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2 } from 'lucide-react';
+import { useTeam } from '@/context/team-context';
+import { timezones } from '@/lib/timezones';
 
 interface TeamDetailsProps {
   onComplete: () => void;
@@ -14,10 +17,12 @@ interface TeamDetailsProps {
 export function TeamDetails({ onComplete }: TeamDetailsProps) {
   const [formData, setFormData] = useState({
     name: '',
-    description: ''
+    description: '',
+    timezone: ''
   });
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const { activeTeam, setActiveTeam } = useTeam();
 
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
@@ -28,6 +33,10 @@ export function TeamDetails({ onComplete }: TeamDetailsProps) {
     
     if (!formData.description.trim()) {
       newErrors.description = 'Team description is required';
+    }
+    
+    if (!formData.timezone.trim()) {
+      newErrors.timezone = 'Team timezone is required';
     }
     
     setErrors(newErrors);
@@ -52,11 +61,21 @@ export function TeamDetails({ onComplete }: TeamDetailsProps) {
         body: JSON.stringify({
           name: formData.name,
           description: formData.description,
+          timezone: formData.timezone,
           onboarding_step: 'industry_selection'
         }),
       });
 
       if (response.ok) {
+        if (activeTeam) {
+          const updatedTeam = {
+            ...activeTeam,
+            name: formData.name,
+            description: formData.description,
+            timezone: formData.timezone,
+          };
+          setActiveTeam(updatedTeam);
+        }
         onComplete();
       } else {
         throw new Error('Failed to update team details');
@@ -116,6 +135,34 @@ export function TeamDetails({ onComplete }: TeamDetailsProps) {
           )}
           <p className="text-sm text-gray-500 font-sans mt-1">
             This helps us customize your experience and provide relevant features.
+          </p>
+        </div>
+
+        <div>
+          <Label htmlFor="team-timezone" className="text-sm font-medium font-sans text-gray-700">
+            Team Timezone *
+          </Label>
+          <Select 
+            value={formData.timezone} 
+            onValueChange={(value) => handleInputChange('timezone', value)}
+            disabled={isLoading}
+          >
+            <SelectTrigger id="team-timezone" className={`mt-1 font-sans ${errors.timezone ? 'border-red-500' : ''}`}>
+              <SelectValue placeholder="Select your team's timezone" />
+            </SelectTrigger>
+            <SelectContent>
+              {timezones.map((tz) => (
+                <SelectItem key={tz.value} value={tz.value}>
+                  {tz.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {errors.timezone && (
+            <p className="text-sm text-red-600 font-sans mt-1">{errors.timezone}</p>
+          )}
+          <p className="text-sm text-gray-500 font-sans mt-1">
+            This ensures that scheduled events and logs are displayed correctly.
           </p>
         </div>
       </div>
