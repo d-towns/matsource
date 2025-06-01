@@ -59,10 +59,11 @@ const pricingPlans = [
     concurrent_calls: "Unlimited",
     perfect_for: "Franchises & partners",
     features: [
-      "Outcome-based pricing ($12 / booked job after first 100)",
-      "Smart-Quote & parts-procurement AI",
+      "Outcome based pricing",
+      "Smart-Quotes & Upselling",
       "Dedicated account manager",
       "Custom SIP trunk / BYO numbers",
+      "Early Access to Browser-based agents",
       "Volume minute discounts & on-prem options"
     ],
     cta: "Contact Sales"
