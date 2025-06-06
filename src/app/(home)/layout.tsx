@@ -1,5 +1,5 @@
-import { Navbar } from "@/components/Navbar"
-import Footer from "@/components/Footer"
+// import { Navbar } from "@/components/Navbar"
+// import Footer from "@/components/Footer"
 export default function HomeLayout({
   children,
 }: {
@@ -7,9 +7,9 @@ export default function HomeLayout({
 }) {
   return (
     <div className="min-h-screen bg-background text-foreground font-sans">
-      <Navbar />
+      {/* <Navbar /> */}
       {children}
-      <Footer />
+      {/* <Footer /> */}
     </div>
   )
 } 

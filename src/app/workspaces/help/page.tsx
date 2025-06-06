@@ -32,7 +32,7 @@ export default function HelpPage() {
     <div className="container py-10">
       <div className="flex items-center mb-10">
         <InfoIcon className="h-10 w-10 mr-4 text-primary" />
-        <h1 className="text-4xl font-bold">How BlueAgent works</h1>
+        <h1 className="text-4xl font-bold">How It Works</h1>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
@@ -44,7 +44,7 @@ export default function HelpPage() {
         />
         <HelpTopicCard
           title="Third-Party Integrations"
-          description="Learn how to connect BlueAgent with external services like Google Calendar for automated appointment scheduling."
+          description="Learn how to connect with external services like Google Calendar for automated appointment scheduling."
           href="/workspaces/help/integrations"
           icon={PuzzleIcon}
         />

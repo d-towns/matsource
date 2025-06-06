@@ -34,12 +34,12 @@ export default function FormsHelpPage() {
 
       <HelpDetailSection>
         <p className="text-base md:text-lg mb-6">
-          Integrate BlueAgent directly into your website using our embeddable forms. This is a powerful way to capture leads and provide immediate AI-powered assistance to your website visitors.
+          Integrate the widget directly into your website using our embeddable forms. This is a powerful way to capture leads and provide immediate AI-powered assistance to your website visitors.
         </p>
         
         <h3 className="text-xl font-semibold font-sans mt-6 mb-3">How it Works</h3>
         <p className="mb-4 text-base">
-          The process involves generating an embed code within BlueAgent and then placing that code onto your website pages:
+          The process involves generating an embed code within the widget and then placing that code onto your website pages:
         </p>
         <ol className="list-decimal space-y-3 pl-5 mb-4 text-base">
           <li>
@@ -48,7 +48,7 @@ export default function FormsHelpPage() {
           </li>
           <li>
             <h4 className="text-lg font-semibold font-sans mb-1">Customize Your Form/Widget</h4> 
-            Assign a name to your form for easy identification within BlueAgent. Most importantly, link it to one of your existing Inbound Voice Agents. This selected agent will be responsible for handling all interactions initiated through this specific form.
+            Assign a name to your form for easy identification within the widget. Most importantly, link it to one of your existing Inbound Voice Agents. This selected agent will be responsible for handling all interactions initiated through this specific form.
           </li>
           <li>
             <h4 className="text-lg font-semibold font-sans mb-1">Domain Security</h4> 

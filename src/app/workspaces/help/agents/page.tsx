@@ -35,7 +35,7 @@ export default function AgentsHelpPage() {
 
       <HelpDetailSection>
         <p className="text-base md:text-lg mb-6">
-          Agents are your AI-powered assistants in BlueAgent. They can be configured to handle various tasks based on their type and script.
+          Agents are your AI-powered assistants. They can be configured to handle various tasks based on their type and script.
         </p>
         <Accordion type="single" collapsible className="w-full">
           <AccordionItem value="item-1">
@@ -44,7 +44,7 @@ export default function AgentsHelpPage() {
             </AccordionTrigger>
             <AccordionContent className="pt-4">
               <p className="mb-4 text-base">
-                BlueAgent offers three main types of agents, each tailored for specific interaction scenarios:
+                There are three main types of agents, each tailored for specific interaction scenarios:
               </p>
               <ul className="space-y-3 list-disc pl-5 mb-4">
                 <li>

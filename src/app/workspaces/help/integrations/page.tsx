@@ -34,12 +34,12 @@ export default function IntegrationsHelpPage() {
 
       <HelpDetailSection title="Google Calendar Integration">
         <p className="text-base md:text-lg mb-4">
-          BlueAgent allows you to connect with third-party services to extend its functionality. Currently, we offer integration with Google Calendar to streamline your appointment scheduling.
+          You can connect with third-party services to extend functionality. Currently, we offer integration with Google Calendar to streamline your appointment scheduling.
         </p>
         
         <h3 className="text-xl font-semibold font-sans mt-6 mb-3">Connecting Google Calendar</h3>
         <p className="mb-4 text-base">
-          Follow these steps to link your Google Calendar with BlueAgent:
+          Follow these steps to link your Google Calendar:
         </p>
         <ol className="list-decimal space-y-2 pl-5 mb-4 text-base">
           <li>
@@ -52,16 +52,16 @@ export default function IntegrationsHelpPage() {
             You will be redirected to Google&apos;s authentication page. Sign in to your Google account if prompted.
           </li>
           <li>
-            Grant BlueAgent the necessary permissions to access your calendar. This typically includes viewing calendars and creating/editing events.
+            Grant the necessary permissions to access your calendar. This typically includes viewing calendars and creating/editing events.
           </li>
           <li>
-            Once authorized, you will be redirected back to BlueAgent, and the connection should be active.
+            Once authorized, you will be redirected back to the application, and the connection should be active.
           </li>
         </ol>
         
         <h3 className="text-xl font-semibold font-sans mt-6 mb-3">Benefits of Integration</h3>
         <p className="text-base">
-          Once connected, BlueAgent can automatically schedule appointments with leads based on your availability as reflected in your Google Calendar. This helps to:
+          Once connected, the application can automatically schedule appointments with leads based on your availability as reflected in your Google Calendar. This helps to:
         </p>
         <ul className="list-disc space-y-1 pl-5 text-base">
           <li>Reduce manual effort in booking appointments.</li>

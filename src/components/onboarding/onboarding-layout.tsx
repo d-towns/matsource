@@ -87,7 +87,6 @@ export function OnboardingLayout() {
         <Card className="shadow-xl">
           <CardHeader className="text-center pb-6">
             <CardTitle className="text-2xl font-bold font-sans text-gray-900">
-              Welcome to BlueAgent
             </CardTitle>
             <p className="text-gray-600 font-sans mt-2">
               Let&apos;s get you set up in just a few steps

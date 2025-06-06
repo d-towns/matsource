@@ -2,7 +2,6 @@ import { createClient } from "@/lib/supabase/client";
 import { redirect } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
 import { ApiKeyManager } from "./components/api-key-manager";
-import { IntegrationGuide } from "./components/integration-guide";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { Suspense } from "react";
 import { ApiKey } from "./components/api-key-manager";
@@ -42,7 +41,7 @@ async function ApiKeysContent() {
   return (
     <div className="grid gap-6">
       <ApiKeyManager initialKeys={apiKeys} userId={userId} />
-      <IntegrationGuide userId={userId} />
+      {/* <IntegrationGuide userId={userId} /> */}
     </div>
   );
 }
@@ -53,7 +52,7 @@ export default function ApiKeysPage() {
       <div>
         <h1 className="text-2xl font-bold">API Keys</h1>
         <p className="text-muted-foreground mt-2">
-          Create and manage API keys for use with the BlueAgent Widget Service.
+          Create and manage API keys for use with the Widget Service.
         </p>
       </div>
       

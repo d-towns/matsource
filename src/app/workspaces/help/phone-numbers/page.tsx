@@ -35,7 +35,7 @@ export default function PhoneNumbersHelpPage() {
 
       <HelpDetailSection>
         <p className="text-base md:text-lg mb-6">
-          Proper phone number management is crucial for effective voice communications in BlueAgent. This includes how numbers are provisioned via Twilio subaccounts, how new numbers might be acquired, and critically, how to verify your existing phone numbers for use as Caller IDs in outbound calls.
+          Proper phone number management is crucial for effective voice communications. This includes how numbers are provisioned via Twilio subaccounts, how new numbers might be acquired, and critically, how to verify your existing phone numbers for use as Caller IDs in outbound calls.
         </p>
         <Accordion type="single" collapsible className="w-full">
           <AccordionItem value="item-1">
@@ -44,7 +44,7 @@ export default function PhoneNumbersHelpPage() {
             </AccordionTrigger>
             <AccordionContent className="pt-4">
               <p className="mb-4 text-base">
-                For each team created within BlueAgent, a dedicated Twilio subaccount is automatically provisioned behind the scenes. You generally don&apos;t need to interact with these subaccounts directly; BlueAgent handles their creation and management. This approach offers several benefits:
+                For each team created within the platform, a dedicated Twilio subaccount is automatically provisioned behind the scenes. You generally don&apos;t need to interact with these subaccounts directly; the platform handles their creation and management. This approach offers several benefits:
               </p>
               <ul className="space-y-3 list-disc pl-5 mb-4 text-base">
                 <li>
@@ -68,13 +68,13 @@ export default function PhoneNumbersHelpPage() {
             </AccordionTrigger>
             <AccordionContent className="pt-4">
               <p className="mb-4 text-base">
-                BlueAgent, through its deep integration with Twilio, has the capability to search for and acquire new phone numbers for your team&apos;s subaccount (e.g., based on area code or other criteria).
+                The platform, through its deep integration with Twilio, has the capability to search for and acquire new phone numbers for your team&apos;s subaccount (e.g., based on area code or other criteria).
               </p>
               <p className="text-base">
-                While the primary user interface under <Link href="/workspaces/phone-numbers" className="text-primary hover:underline">Phone Numbers <ExternalLinkIcon className="inline-block h-4 w-4 ml-1" /></Link> focuses on verifying *existing* numbers for caller ID, the underlying system can provision new ones. If you need new phone numbers for your agents (e.g., for specific campaigns, local presence, or unique tracking), this may be handled via an administrative process or a dedicated interface not covered in the standard user flow. Please consult your account administrator or BlueAgent support for details on requesting new numbers.
+                While the primary user interface under <Link href="/workspaces/phone-numbers" className="text-primary hover:underline">Phone Numbers <ExternalLinkIcon className="inline-block h-4 w-4 ml-1" /></Link> focuses on verifying *existing* numbers for caller ID, the underlying system can provision new ones. If you need new phone numbers for your agents (e.g., for specific campaigns, local presence, or unique tracking), this may be handled via an administrative process or a dedicated interface not covered in the standard user flow. Please consult your account administrator or the platform&apos;s support for details on requesting new numbers.
               </p>
               <p className="mt-3 text-base">
-                Purchased numbers are automatically configured with the necessary voice URLs to work seamlessly with your BlueAgent voice agents.
+                Purchased numbers are automatically configured with the necessary voice URLs to work seamlessly with the platform&apos;s voice agents.
               </p>
             </AccordionContent>
           </AccordionItem>
@@ -92,13 +92,13 @@ export default function PhoneNumbersHelpPage() {
                   <strong>Add Existing Number:</strong> Navigate to the <Link href="/workspaces/phone-numbers/new" className="text-primary hover:underline">Add Phone Number <ExternalLinkIcon className="inline-block h-4 w-4 ml-1" /></Link> page (usually accessible from the main &quot;Phone Numbers&quot; screen). You will be prompted to enter the phone number you own and wish to verify, along with a friendly name for identification.
                 </li>
                 <li>
-                  <strong>Automated Verification Call:</strong> Once you submit the number, Twilio (orchestrated by BlueAgent) will place an automated call to the phone number you provided. This call will announce a unique verification code.
+                  <strong>Automated Verification Call:</strong> Once you submit the number, Twilio (orchestrated by the platform) will place an automated call to the phone number you provided. This call will announce a unique verification code.
                 </li>
                 <li>
-                  <strong>Confirmation Step:</strong> You (or the person who has access to the phone number) will need to listen for this code. The exact method for entering or confirming the code might vary (e.g., entering it into a field in BlueAgent if prompted, or simply acknowledging the call as per Twilio&apos;s specific verification flow at the time).
+                  <strong>Confirmation Step:</strong> You (or the person who has access to the phone number) will need to listen for this code. The exact method for entering or confirming the code might vary (e.g., entering it into a field in the platform if prompted, or simply acknowledging the call as per Twilio&apos;s specific verification flow at the time).
                 </li>
                 <li>
-                  <strong>Status Update & Usage:</strong> Twilio then sends a callback to BlueAgent with the outcome (e.g., &apos;success&apos; or &apos;failed&apos;). Once successfully verified, this number becomes available in your list of verified Caller IDs and can be selected when configuring your outbound voice agents.
+                  <strong>Status Update & Usage:</strong> Twilio then sends a callback to the platform with the outcome (e.g., &apos;success&apos; or &apos;failed&apos;). Once successfully verified, this number becomes available in your list of verified Caller IDs and can be selected when configuring your outbound voice agents.
                 </li>
               </ol>
               <p className="text-base">
