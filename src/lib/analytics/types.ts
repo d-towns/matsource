@@ -74,6 +74,8 @@ export interface LeadMetrics {
   bySource: StatusBreakdown[];
   byStatus: StatusBreakdown[];
   totalCount: number;
+  conversionRate: number; // Leads to appointment/sale
+  qualifiedRate: number;  // Percentage of leads that are qualified
 }
 
 // Subscription specific types

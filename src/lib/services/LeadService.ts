@@ -93,7 +93,7 @@ export async function getLeadWithCallAttempts(id: string, teamId: string): Promi
 export async function getLeadsWithCallCount(teamId: string): Promise<LeadWithCallCount[]> {
   const supabase = await createSupabaseSSRClient();
   // Use a custom SQL query for aggregation
-  const { data, error } = await supabase.rpc('leads_with_call_count', { team_id: teamId });
+  const { data, error } = await supabase.rpc('leads_with_call_count', { p_team_id: teamId });
   if (error) throw error;
   return (data || []).map((d: LeadWithCallCount) => LeadWithCallCountSchema.parse(d));
 } 

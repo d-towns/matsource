@@ -6,7 +6,7 @@ export const Team = z.object({
     description: z.string(),
     created_at: z.string().optional(),
     logo: z.any().optional(),
-    plan: z.string().optional(),
+    plan: z.string().optional().nullable(),
     role: z.string().optional(),
     partner_id: z.string().uuid().nullable().optional(),
     twilio_subaccount_sid: z.string().nullable().optional(),

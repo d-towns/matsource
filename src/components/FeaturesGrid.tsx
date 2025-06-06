@@ -17,14 +17,14 @@ const features: Feature[] = [
   {
     title: "Inbound Voice Calls",
     description: "Human-like virtual receptionist to handle your incoming calls.",
-    image: "https://images.unsplash.com/photo-1525182008055-f88b95ff7980?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3Dttps://images.unsplash.com/photo-1521119989659-a83eee488004",
+    image: "/blueagent-agent-single.png",
     slug: "/solutions/inbound-voice-agents",
     core: true
   },
   {
     title: "Outbound Voice Calls",
     description: "Fully automate reminders, follow-ups & more.",
-    image: "https://images.unsplash.com/photo-1598257006458-087169a1f08d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    image: "/blueagent-female-agent-single.png",
     slug: "/solutions/outbound-voice-agents",
     core: true
   },
@@ -102,11 +102,12 @@ export default function FeaturesGrid() {
                     <Image
                       src={feature.image}
                       alt={feature.title}
-                      fill
+                      width={800}
+                      height={800}
                       className="object-cover transition-transform duration-500 group-hover:scale-110"
                       quality={90}
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/70 to-black/20" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/50 to-black/20" />
                   </div>
                   
                   <div className="relative h-full flex flex-col justify-end p-8 text-white">

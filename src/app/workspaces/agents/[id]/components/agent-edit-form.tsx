@@ -11,7 +11,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select';
 import { useTeam } from '@/context/team-context';
 import { usePhoneNumbers } from '@/hooks/usePhoneNumbers';
 
@@ -23,6 +29,7 @@ export interface Agent {
   script: string;
   is_active: boolean;
   phone_number?: string | null;
+  phone_number_id?: string | null;
 }
 
 interface AgentEditFormProps {
@@ -37,11 +44,10 @@ export function AgentEditForm({ initialAgent, isNewAgent, searchType }: AgentEdi
   const { user } = useUser();
   const { toast } = useToast();
   const { activeTeam } = useTeam();
+
+  console.log('initialAgent', initialAgent)
   
-  // Fetch phone numbers for the team
   const { data: phoneNumbers = [], isLoading: phoneNumbersLoading } = usePhoneNumbers(activeTeam?.id);
-  
-  // Filter to only show verified phone numbers
   const verifiedPhoneNumbers = phoneNumbers.filter(pn => pn.verification_status === 'success');
   
   const [agent, setAgent] = useState<Agent | null>(() => {
@@ -54,67 +60,55 @@ export function AgentEditForm({ initialAgent, isNewAgent, searchType }: AgentEdi
         type,
         description: '',
         script: type === 'inbound_voice' || type === 'outbound_voice'
-          ? `You are a friendly and professional representative for our company.
-Your goal is to have a natural conversation with the customer to understand their needs.
-
-Important guidelines:
-- Be conversational and natural, as if you're a real person having a casual conversation
-- Avoid sounding like a script or a traditional IVR system
-- Use natural pauses, filler words occasionally, and conversational transitions
-- Adapt to the customer's tone and energy level
-- Listen carefully to their requirements and respond appropriately`
+          ? `You are a friendly and professional representative for our company.\nYour goal is to have a natural conversation with the customer to understand their needs.\n\nImportant guidelines:\n- Be conversational and natural, as if you're a real person having a casual conversation\n- Avoid sounding like a script or a traditional IVR system\n- Use natural pauses, filler words occasionally, and conversational transitions\n- Adapt to the customer's tone and energy level\n- Listen carefully to their requirements and respond appropriately`
           : '',
         is_active: true,
-        phone_number: null
+        phone_number_id: null
       };
     }
     return null;
   });
   const [saving, setSaving] = useState(false);
 
-  // Handle form field changes
   const handleChange = (field: keyof Agent, value: string | boolean | null) => {
     if (!agent) return;
-    setAgent({ ...agent, [field]: value });
+    if (field === 'phone_number') {
+        setAgent({ ...agent, phone_number_id: value as string | null });
+    } else if (field === 'phone_number_id') {
+        setAgent({ ...agent, phone_number_id: value as string | null });
+    } else {
+        setAgent({ ...agent, [field]: value });
+    }
   };
 
-  // Save agent
   const handleSave = async () => {
-    if (!agent || !user) return;
+    if (!agent || !user || !activeTeam) return;
     
     try {
       setSaving(true);
+      const agentPayload = {
+        name: agent.name,
+        type: agent.type,
+        description: agent.description,
+        script: agent.script,
+        is_active: agent.is_active,
+        phone_number_id: agent.phone_number_id,
+        user_id: user.id,
+        team_id: activeTeam.id
+      };
       
       if (isNewAgent) {
-        // Create new agent
         const { data, error } = await supabase
           .from('agents')
-          .insert({
-            name: agent.name,
-            type: agent.type,
-            description: agent.description,
-            script: agent.script,
-            is_active: agent.is_active,
-            phone_number: agent.phone_number,
-            user_id: user.id,
-            team_id: activeTeam?.id
-          })
+          .insert(agentPayload)
           .select()
           .single();
           
         if (error) throw error;
-        
-        toast({
-          title: 'Agent created',
-          description: 'Your agent has been successfully created.',
-          variant: 'default',
-          duration: 2000
-        });
-        
-        // Navigate to the edit page for the new agent
+        toast({ title: 'Agent created', description: 'Agent successfully created.', duration: 3000 });
         router.push(`/workspaces/agents/${data.id}`);
+        router.refresh();
       } else {
-        // Update existing agent
         const { error } = await supabase
           .from('agents')
           .update({
@@ -122,41 +116,33 @@ Important guidelines:
             description: agent.description,
             script: agent.script,
             is_active: agent.is_active,
-            phone_number: agent.phone_number
+            phone_number_id: agent.phone_number_id
           })
           .eq('id', agent.id);
           
         if (error) throw error;
-        
-        toast({
-          title: 'Agent updated',
-          description: 'Your agent has been successfully updated.'
-        });
+        toast({ title: 'Agent updated', description: 'Agent successfully updated.', duration: 3000 });
+        router.push('/workspaces/agents');
+        router.refresh();
       }
-      
-      // Return to agents list
-      router.push('/workspaces/agents');
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error saving agent:', error);
-      toast({
-        variant: 'destructive',
-        title: 'Failed to save agent',
-        description: 'Please try again later.'
-      });
+      const errorMessage = (error as Error).message || 'Please try again.';
+      toast({ variant: 'destructive', title: 'Failed to save agent', description: errorMessage });
     } finally {
       setSaving(false);
     }
   };
 
   if (!agent) {
-    return <div className="container py-10">Agent not found</div>;
+    return <div className="container py-10">Agent not found or loading...</div>;
   }
 
   return (
     <div className="grid gap-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">
-          {isNewAgent ? 'Create New Agent' : 'Edit Agent'}
+          {isNewAgent ? 'Create New Agent' : `Edit Agent: ${agent.name}`}
         </h1>
         <div className="flex gap-2">
           <Button
@@ -169,7 +155,7 @@ Important guidelines:
             onClick={handleSave}
             disabled={saving}
           >
-            {saving ? 'Saving...' : 'Save Agent'}
+            {saving ? 'Saving...' : (isNewAgent ? 'Create Agent' : 'Save Agent')}
           </Button>
         </div>
       </div>
@@ -212,10 +198,9 @@ Important guidelines:
             />
           </div>
 
-          {/* Phone Number Selection - Only show for voice agents */}
           {(agent.type === 'inbound_voice' || agent.type === 'outbound_voice') && (
             <div>
-              <Label htmlFor="phone_number">Phone Number</Label>
+              <Label htmlFor="phone_number_id">Phone Number (Caller ID for Outbound)</Label>
               <Select
                 value={agent.phone_number || 'none'}
                 onValueChange={(value) => handleChange('phone_number', value === 'none' ? null : value)}
@@ -225,12 +210,12 @@ Important guidelines:
                     phoneNumbersLoading 
                       ? "Loading phone numbers..." 
                       : verifiedPhoneNumbers.length === 0 
-                        ? "No verified phone numbers available"
-                        : "Select a phone number"
+                        ? "No verified caller IDs available"
+                        : "Select a verified caller ID"
                   } />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="none">No phone number</SelectItem>
+                  <SelectItem value="none">No phone number (Agent cannot make/receive calls)</SelectItem>
                   {verifiedPhoneNumbers.map((phoneNumber) => (
                     <SelectItem key={phoneNumber.id} value={phoneNumber.id}>
                       {phoneNumber.phone_number} 
@@ -239,16 +224,28 @@ Important guidelines:
                   ))}
                 </SelectContent>
               </Select>
-              {verifiedPhoneNumbers.length === 0 && !phoneNumbersLoading && (
+              {verifiedPhoneNumbers.length === 0 && !phoneNumbersLoading && agent.type === 'outbound_voice' && (
+                <p className="text-sm text-destructive mt-1">
+                  Outbound agents require a verified phone number to make calls. 
+                  <Button 
+                    variant="link" 
+                    className="p-0 h-auto font-normal text-sm text-destructive"
+                    onClick={() => router.push('/workspaces/phone-numbers/new?verified=true')}
+                  >
+                    Add a verified number.
+                  </Button>
+                </p>
+              )}
+               {verifiedPhoneNumbers.length === 0 && !phoneNumbersLoading && agent.type === 'inbound_voice' && (
                 <p className="text-sm text-muted-foreground mt-1">
-                  No verified phone numbers available. 
+                  No verified phone numbers available. This agent won&apos;t be able to receive calls directly until a number is assigned. 
                   <Button 
                     variant="link" 
                     className="p-0 h-auto font-normal text-sm"
                     onClick={() => router.push('/workspaces/phone-numbers/new')}
                   >
-                    Add a phone number
-                  </Button> first.
+                    Add a phone number.
+                  </Button>
                 </p>
               )}
             </div>
@@ -265,7 +262,6 @@ Important guidelines:
         </CardContent>
       </Card>
       
-      {/* Script Editor */}
       <Card>
         <CardHeader>
           <CardTitle>Agent Script</CardTitle>
@@ -287,7 +283,6 @@ Important guidelines:
         </CardContent>
       </Card>
       
-      {/* Action Buttons */}
       <div className="flex justify-end gap-2">
         <Button
           variant="outline"

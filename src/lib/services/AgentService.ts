@@ -9,7 +9,7 @@ export const AgentService = {
         const supabase = await createSupabaseSSRClient();
         const { data, error } = await supabase
     .from('agents')
-    .select('*')
+    .select('*, phone_numbers(*)')
     .eq('team_id', teamId)
     .order('created_at', { ascending: false });
   if (error) throw error;

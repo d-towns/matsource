@@ -42,6 +42,14 @@ export function NavUser() {
   const pathname = usePathname()
 
   if (!user) return null
+  
+  const handleSignOut = async () => {
+    // clear the activeTeam in local storage
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('activeTeam')
+    }
+    await signOut()
+  }
 
   return (
     <SidebarMenu>
@@ -137,7 +145,7 @@ export function NavUser() {
               )
             }
             <DropdownMenuSeparator />
-            <form action={signOut}>
+            <form action={handleSignOut}>
               <DropdownMenuItem asChild>
                 <button className="w-full">
                   <LogOut className="mr-2 h-4 w-4" />

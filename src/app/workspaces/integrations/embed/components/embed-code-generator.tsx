@@ -132,7 +132,7 @@ function EmbedCodeGeneratorContent({ teamId }: { teamId: string }) {
                 <SelectValue placeholder="Select an agent" />
               </SelectTrigger>
               <SelectContent>
-                {agents?.filter(agent => agent.type === AgentTypeEnum.Values.inbound_voice).map(agent => (
+                {agents?.filter(agent => agent.type === AgentTypeEnum.Values.outbound_voice).map(agent => (
                   <SelectItem key={agent.id} value={agent.id}>
                     {agent.name}
                   </SelectItem>

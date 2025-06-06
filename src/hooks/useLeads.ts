@@ -2,10 +2,17 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import * as api from '@/lib/api/leadApi';
 
 // Hook to fetch leads
-export function useLeads(teamId?: string) {
+export function useLeads(teamId?: string, withCallCount?: boolean) {
+  const queryKey = ['leads', teamId, withCallCount];
+  const queryFn = () => {
+    if (withCallCount) {
+      return api.fetchLeadsWithCallCount(teamId!);
+    }
+    return api.fetchLeads(teamId!);
+  }
   return useQuery({
-    queryKey: ['leads', teamId],
-    queryFn: () => api.fetchLeads(teamId!),
+    queryKey: queryKey,
+    queryFn: queryFn,
     enabled: !!teamId,
   });
 }

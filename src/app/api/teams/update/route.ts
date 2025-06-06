@@ -4,7 +4,7 @@ import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
 
 export async function PATCH(req: NextRequest) {
   try {
-    const { name, description, industry, onboarding_step, timezone } = await req.json();
+    const { name, industry, onboarding_step, timezone } = await req.json();
     
     const supabase = await createSupabaseSSRClient();
     const adminSupabase = getSupabaseAdminClient();
@@ -31,11 +31,9 @@ export async function PATCH(req: NextRequest) {
     const updateData: Record<string, string> = {};
     
     if (name) updateData.name = name;
-    if (description) {
-      updateData.description = industry ? `${description} - Industry: ${industry}` : description;
-    }
     if (onboarding_step) updateData.onboarding_step = onboarding_step;
     if (timezone) updateData.timezone = timezone;
+    if(industry) updateData.industry = industry;
     // Update team
     const { data: team, error: updateError } = await adminSupabase
       .from('teams')

@@ -10,7 +10,7 @@ import { Lead } from '@/lib/models/lead'
 import { useTeam } from '@/context/team-context'
 
 function LeadsTable({ teamId }: { teamId: string }) {
-  const { data: leads, error } = useLeads(teamId)
+  const { data: leads, error } = useLeads(teamId, true)
   if (error) return <p className="text-destructive font-sans">Error loading leads: {error.message}</p>
   return <DataTable columns={columns} data={(leads || []) as Lead[]} />
 }

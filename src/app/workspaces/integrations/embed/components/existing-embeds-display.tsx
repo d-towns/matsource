@@ -15,7 +15,7 @@ import { Suspense } from 'react';
 function ExistingEmbedsDisplayContent({ teamId }: { teamId: string }) {
   const { toast } = useToast();
   const { data: forms, isLoading: isFormsLoading, isError: isFormsError } = useForms(teamId);
-  const { data: agents, isLoading: isAgentsLoading, isError: isAgentsError } = useAgents();
+  const { data: agents, isLoading: isAgentsLoading, isError: isAgentsError } = useAgents(teamId);
 
   // Copy embed code to clipboard
   const copyToClipboard = (text: string) => {
@@ -49,7 +49,7 @@ function ExistingEmbedsDisplayContent({ teamId }: { teamId: string }) {
 console.log('forms', forms)
   // Type assertion to allow form.domains
   const formsWithDomains = forms as (Form & { domains: string[] })[];
-
+  console.log('agents', agents)
   return (
     <div className="grid gap-6">
       {(!formsWithDomains || formsWithDomains.length === 0) ? (
@@ -66,6 +66,7 @@ console.log('forms', forms)
         </Card>
       ) : (
         formsWithDomains.map(form => {
+          
           const agent = agents?.find(a => a.id === form.agent_id);
           return (
             <Card key={form.id}>

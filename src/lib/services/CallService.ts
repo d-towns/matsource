@@ -80,6 +80,7 @@ export async function createOutboundCall(
   additionalParams: {
     form_id?: string;
     lead_id?: string;
+    agent_id?: string;
   } = {}
 ): Promise<Record<string, unknown>> {
   try {
@@ -93,6 +94,8 @@ export async function createOutboundCall(
       }
     });
     const baseUrl = process.env.NEXT_PUBLIC_NODE_ENV === 'production' ? process.env.VOICE_AGENT_SERVICE_URL : process.env.VOICE_AGENT_SERVICE_URL_DEV;
+    console.log('baseUrl', baseUrl)
+    console.log('formData', formData.toString())
     const response = await fetch(`${baseUrl}/create-outbound-call`, {
       method: 'POST',
       body: formData.toString(),

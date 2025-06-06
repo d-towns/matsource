@@ -24,7 +24,7 @@ export default async function AgentEditPage({
           const cookieStore = await cookies()
           const teamId = cookieStore.get('activeTeam')?.value
           if (!teamId) {
-            throw new Error('No active team found');
+            throw new Error('No active team found for fetching agent');
           }
           agent = await AgentService.getAgentById(id, teamId);
       } catch (err) {
@@ -33,15 +33,15 @@ export default async function AgentEditPage({
       }
     }
   } catch (err) {
-    console.error('Error fetching agent:', err);
+    console.error('Error in AgentEditPage setup:', err);
     error = err;
   }
 
-  if (error) {
+  if (error && !agent) {
     return (
       <div>
         <h1 className="text-2xl font-bold text-red-600">Error Loading Agent</h1>
-        <p className="mt-2">There was a problem loading this agent. Please try again later.</p>
+        <p className="mt-2">There was a problem loading the agent data. Please try again later.</p>
       </div>
     )
   }
@@ -61,10 +61,15 @@ export default async function AgentEditPage({
 
   return (
     <div className="container py-10">
-      {error ? (
+      {error && !isNewAgent ? (
         <div>
-          <h1 className="text-2xl font-bold text-red-600">Error Loading Agent</h1>
-          <p className="mt-2">There was a problem loading this agent. Please try again later.</p>
+          <h1 className="text-2xl font-bold text-red-600">Error Loading Agent Details</h1>
+          <p className="mt-2">There was a problem loading full agent details, but you can still attempt to edit. Some information might be missing.</p>
+          <AgentEditForm 
+            initialAgent={agent} 
+            isNewAgent={isNewAgent} 
+            searchType={searchType}
+          />
         </div>
       ) : (
         <AgentEditForm 

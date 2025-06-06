@@ -39,7 +39,7 @@ export function TeamCreateForm() {
         description: values.description,
       });
       setActiveTeam(result);
-      router.push(`/workspaces/dashboard?teamId=${result.id}`);
+      router.push(`/onboarding?teamId=${result.id}`);
     } catch (err) {
       setFormError(err.message || "Failed to create team");
     }
