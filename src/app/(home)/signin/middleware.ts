@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { headers } from "next/headers"; 
 
-export async function middleware(request: NextRequest) {
+export async function middleware() {
 //   const { pathname } = request.nextUrl;
   
   // Store the host domain as a cookie

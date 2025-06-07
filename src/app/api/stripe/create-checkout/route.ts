@@ -1,10 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe/client';
 import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
+import { getPartnerByDomain } from '@/lib/services/PartnerService';
+import { Partner } from '@/lib/models/partner';
 
-const BASE_URL = process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASE_URL : process.env.NEXT_PUBLIC_DEV_BASE_URL;
 export async function POST(req: NextRequest) {
   try {
+    let BASE_URL;
+    let partner: Partner | null = null;
+    const partnerHost = req.headers.get('X-Host-Domain');
+    if(partnerHost) {
+      partner = await getPartnerByDomain(partnerHost);
+      if(partner) {
+        BASE_URL = partner.white_label_origin;
+      }
+    } else {
+      BASE_URL = process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASE_URL : process.env.NEXT_PUBLIC_DEV_BASE_URL;
+    }
+    
     const { priceId } = await req.json();
     console.log('priceId', priceId);
     if (!priceId) {
@@ -38,6 +51,8 @@ export async function POST(req: NextRequest) {
       expand: ['product']
     });
     console.log('price', price);
+
+    
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
       payment_method_types: ['card'],
@@ -52,8 +67,12 @@ export async function POST(req: NextRequest) {
       customer_email: user.email,
       metadata: {
         team_id: userTeamData.team_id,
+        partner_id: partner?.id,
       },
+      payment_intent_data: { on_behalf_of: partner?.stripe_account_id },   
       subscription_data: {
+        application_fee_percent: partner?.fee_percent || 0,                           // your cut
+        transfer_data: { destination: partner?.stripe_account_id },
         metadata: {
           team_id: userTeamData.team_id,
           pool_minutes: price.metadata?.pool_minutes || '1000',
