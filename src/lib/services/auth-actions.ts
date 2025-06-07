@@ -55,7 +55,7 @@ export async function signIn(formData: FormData) {
   }
 
   revalidatePath('/', 'layout')
-  redirect('/')
+  redirect('/workspaces/dashboard')
 }
 
 export async function signUp(formData: FormData) {
@@ -187,8 +187,6 @@ export async function getUserTeams(): Promise<Team[]> {
     return [];
   }
 
-  console.log('teamData', teamData)
-  // console.log('teamData', teamData)
   const teamArraySchema = z.array(Team);
   // Parse and return the team records
   try {

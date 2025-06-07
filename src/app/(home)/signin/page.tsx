@@ -3,13 +3,45 @@
 import { SignInForm } from "@/components/auth/SignInForm"
 import { SignUpForm } from "@/components/auth/SignUpForm"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { useUser } from "@/hooks/use-user"
 import Link from "next/link"
-import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+import { Skeleton } from "@/components/ui/skeleton"
 
 const environment = process.env.NEXT_PUBLIC_NODE_ENV;
 
+
+const SignInSkeleton = () => {
+  return (
+    <div className="container flex min-h-[calc(100vh-80px)] flex-col items-center justify-center">
+      <div className="lg:p-8">
+        <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[400px]">
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full" />  
+          </div>
+        </div>
+      </div>
+  )
+}
+
 export default function SignInPage() {
   const [mode, setMode] = useState("signin")
+  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const { user } = useUser()
+  const router = useRouter()
+  
+  useEffect(() => {
+    if (user) {
+      setIsLoading(false)
+      router.push('/workspaces/dashboard')
+    }
+  }, [user])
+
+  if (isLoading) {
+    return <SignInSkeleton />
+  }
+
 
   return (
     <div className="container flex min-h-[calc(100vh-80px)] flex-col items-center justify-center">
