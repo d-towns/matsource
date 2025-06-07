@@ -7,11 +7,11 @@ export async function middleware(request: NextRequest) {
 
   if (pathname.startsWith('/workspaces')) {
     // First, update the session (handles auth)
-    console.log('deez nuts 2')
     const sessionResponse = await updateSession(request)
 
     // If the session update resulted in a redirect (e.g., to login), return it
     if (sessionResponse.status === 307 || sessionResponse.status === 302) {
+      console.log('redirecting to login')
       sessionResponse.headers.set('X-Host-Domain', host)
       return sessionResponse
     }
@@ -24,10 +24,6 @@ export async function middleware(request: NextRequest) {
 
   // This handles all other paths matched in config, including '/'
   const response = NextResponse.next()
-  if (pathname === '/') {
-    console.log('deez nuts')
-    console.log('host', host)
-  }
   response.headers.set(`X-Host-Domain`, host)
   return response
 }

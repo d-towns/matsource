@@ -7,8 +7,12 @@ export async function updateSession(request: NextRequest) {
   })
 
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    process.env.NEXT_PUBLIC_NODE_ENV === 'development'
+      ? process.env.NEXT_PUBLIC_DEV_SUPABASE_URL!
+      : process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_NODE_ENV === 'development'
+      ? process.env.NEXT_PUBLIC_DEV_SUPABASE_ANON_KEY!
+      : process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
         getAll() {
@@ -36,7 +40,6 @@ export async function updateSession(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser()
-
   if (
     !user &&
     !request.nextUrl.pathname.startsWith('/signin') &&
@@ -65,6 +68,7 @@ export async function updateSession(request: NextRequest) {
 }
 
 export async function checkOnboardingStatus(request: NextRequest) {
+  console.log('checkOnboardingStatus')
   // Skip onboarding check for certain paths
   if (
     request.nextUrl.pathname.startsWith('/onboarding') ||
