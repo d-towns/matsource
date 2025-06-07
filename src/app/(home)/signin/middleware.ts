@@ -8,12 +8,6 @@ export async function middleware() {
   // Store the host domain as a cookie
   const host = (await headers()).get('host') || '';
   const response = NextResponse.next();
-  response.cookies.set('host_domain', host || '', {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/'
-  });
   response.headers.set(`X-Host-Domain`, host);
 
 //   if (pathname === "/signin") {
