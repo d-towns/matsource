@@ -33,9 +33,10 @@ export default function SignInPage() {
   
   useEffect(() => {
     if (user) {
-      setIsLoading(false)
+      
       router.push('/workspaces/dashboard')
-    }
+    } 
+    setIsLoading(false)
   }, [user])
 
   if (isLoading) {
