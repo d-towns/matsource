@@ -5,7 +5,6 @@ import { CallAttemptWithLead, CallAttemptWithLeadSchema } from '@/lib/models/lea
 // Fetch all call attempts for the user's team
 export async function getCalls(userId: string, teamId: string): Promise<CallAttempt[]> {
   const supabase = await createSupabaseSSRClient();
-  console.log('teammmmmm' , teamId)
   const { data, error } = await supabase
     .from('call_attempts')
     .select('*')
@@ -18,8 +17,6 @@ export async function getCalls(userId: string, teamId: string): Promise<CallAtte
 // Fetch a single call attempt by ID
 export async function getCallById(id: string, teamId: string): Promise<CallAttempt> {
   const supabase = await createSupabaseSSRClient();
-  console.log('id', id)
-  console.log('teamId', teamId)
   const { data, error } = await supabase
     .from('call_attempts')
     .select('*')

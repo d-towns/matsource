@@ -6,8 +6,10 @@
  */
 
 // Helper function to determine if we're in development
-const isDevelopment = process.env.NODE_ENV === 'development';
-const isProduction = process.env.NODE_ENV === 'production';
+const isDevelopment = process.env.NEXT_PUBLIC_NODE_ENV === 'development';
+const isStaging = process.env.NEXT_PUBLIC_NODE_ENV === 'staging';
+const isProduction = process.env.NEXT_PUBLIC_NODE_ENV === 'production';
+
 
 export const config = {
   // Environment
@@ -51,7 +53,7 @@ export const config = {
   // Payment Processing (Stripe)
   payments: {
     stripe: {
-      secretKey: isDevelopment
+      secretKey: isDevelopment || isStaging
         ? process.env.STRIPE_DEV_SECRET_KEY!
         : process.env.STRIPE_SECRET_KEY!,
       webhookSecret: isDevelopment
