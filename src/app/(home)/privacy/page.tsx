@@ -13,7 +13,7 @@ export default function PrivacyPolicyPage() {
             BlueAgent Privacy Policy
           </h2>
           <p className="mt-6 text-lg leading-8 text-gray-600">
-            Effective Date: [Month Day, 2025]
+            Effective Date: June 9, 2025
           </p>
         </div>
         <div className="mx-auto mt-16 max-w-4xl">
