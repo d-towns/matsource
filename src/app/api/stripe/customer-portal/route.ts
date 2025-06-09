@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     if(partnerHost) {
       partner = await getPartnerByDomain(partnerHost);
       if(partner) {
-        BASE_URL = partner.white_label_origin;
+        BASE_URL = partner.white_label_origin.includes('localhost') ? 'http://' + partner.white_label_origin : 'https://' + partner.white_label_origin;
       }
     } else {
       BASE_URL = process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASE_URL : process.env.NEXT_PUBLIC_DEV_BASE_URL;
@@ -67,7 +67,8 @@ export async function POST(req: NextRequest) {
     const session = await stripe.billingPortal.sessions.create({
       customer: subscription.stripe_customer_id,
       return_url: `${BASE_URL}/workspaces/settings/billing`,
-      ...(isWhiteLabel && { stripeAccount: partner?.stripe_account_id })
+      ...(isWhiteLabel && { on_behalf_of: partner?.stripe_account_id })
+      // ...(isWhiteLabel && { stripeAccount: partner?.stripe_account_id })
     });
 
     return NextResponse.json({ 

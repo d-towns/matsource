@@ -1,6 +1,7 @@
 import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
 import { Partner, PartnerSchema } from '@/lib/models/partner';
 import { Team } from '@/lib/models/team';
+import { getSupabaseAdminClient } from '../supabase/admin';
 
 // Fetch a partner by id
 export async function getPartnerById(partnerId: string): Promise<Partner | null> {
@@ -44,7 +45,8 @@ export async function createTeamForPartner(partnerId: string, team: Omit<Team, '
 } 
 
 export async function getPartnerByDomain(domain: string): Promise<Partner | null> {
-  const supabase = await createSupabaseSSRClient();
+  // const supabase = await createSupabaseSSRClient();
+  const supabase = await getSupabaseAdminClient();
   const { data, error } = await supabase
     .from('partners')
     .select('*')

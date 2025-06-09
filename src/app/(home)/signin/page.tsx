@@ -9,9 +9,10 @@ import { config } from "@/lib/config"
 
 const environment = config.env.nextPublicNodeEnv;
 
+
 export default function SignInPage() {
   const [mode, setMode] = useState("signin")
-
+console.log('environment', environment)
   return (
     <div className="container flex min-h-[calc(100vh-80px)] flex-col items-center justify-center">
       <div className="lg:p-8">
@@ -35,7 +36,7 @@ export default function SignInPage() {
 
           {mode === "signin" ? <SignInForm /> : <SignUpForm />}
 
-          { environment === "development" || environment === "staging" && (
+          { (environment === "development" || environment === "staging") && (
           <p className="px-8 text-center text-sm text-gray-400">
             {mode === "signin" ? (
               <>

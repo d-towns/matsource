@@ -8,7 +8,7 @@ export async function middleware(request: NextRequest) {
   console.log('pathname', pathname)
   if (pathname.startsWith('/workspaces')) {
     // First, update the session (handles auth)
-    console.log('deez nuts 444')
+    // console.log('deez nuts 444')
     const sessionResponse = await updateSession(request)
 
     // If the session update resulted in a redirect (e.g., to login), return it
@@ -26,10 +26,11 @@ export async function middleware(request: NextRequest) {
 
   // This handles all other paths matched in config, including '/'
   const response = NextResponse.next()
+  // console.log('host', host)
   response.headers.set(`X-Host-Domain`, host)
   return response
 }
 
-export const config = {
-  matcher: ['/', '/workspaces/:path*'],
-}
+// export const config = {
+//   matcher: ['/', '/workspaces/:path*'],
+// }

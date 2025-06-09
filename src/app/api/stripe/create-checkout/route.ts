@@ -10,10 +10,12 @@ export async function POST(req: NextRequest) {
     let partner: Partner | null = null;
     let BASE_URL;
     const partnerHost = req.headers.get('X-Host-Domain');
+    console.log('partnerHost', partnerHost);
     if(partnerHost) {
       partner = await getPartnerByDomain(partnerHost);
+      console.log('partner', partner);
       if(partner) {
-        BASE_URL = partner.white_label_origin;
+        BASE_URL = partner.white_label_origin.includes('localhost') ? 'http://' + partner.white_label_origin : 'https://' + partner.white_label_origin;
       }
     } else {
       BASE_URL = process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASE_URL : process.env.NEXT_PUBLIC_DEV_BASE_URL;
@@ -52,6 +54,7 @@ export async function POST(req: NextRequest) {
       expand: ['product']
     });
     console.log('price', price);
+    console.log('BASE_URL', BASE_URL);
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
       payment_method_types: ['card'],
@@ -68,10 +71,11 @@ export async function POST(req: NextRequest) {
         team_id: userTeamData.team_id,
         ...(isWhiteLabel && { partner_id: partner?.id })
       },
-      ...(isWhiteLabel && { payment_intent_data: { on_behalf_of: partner?.stripe_account_id } }),
+      // ...(isWhiteLabel && { payment_intent_data: { on_behalf_of: partner?.stripe_account_id } }),
       subscription_data: {
         ...(isWhiteLabel && { application_fee_percent: partner?.fee_percent || 0 }),
         ...(isWhiteLabel && { transfer_data: { destination: partner?.stripe_account_id } }),
+        ...(isWhiteLabel && { on_behalf_of: partner?.stripe_account_id }),
         metadata: {
           team_id: userTeamData.team_id,
           pool_minutes: price.metadata?.pool_minutes || '1000',
