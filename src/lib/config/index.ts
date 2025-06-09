@@ -19,6 +19,7 @@ export const config = {
     nodeEnv: process.env.NODE_ENV || 'development',
     nextPublicNodeEnv: process.env.NEXT_PUBLIC_NODE_ENV || 'development',
     isCi: !!process.env.CI,
+    isWhiteLabel: process.env.NEXT_PUBLIC_WHITE_LABEL === 'true',
   },
 
   // Application URLs

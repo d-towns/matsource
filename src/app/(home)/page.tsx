@@ -14,11 +14,21 @@ import { DotMatrix } from "@/components/DotMatrix";
 import { HeroSideBySide } from "@/components/HeroSideBySide";
 // import ProblemStatsSection from "@/components/ProblemStatsSection";
 // import { QuestionSection } from "@/components/QuestionSection";
+import { config } from '@/lib/config'
+import { redirect } from "next/navigation";
+
+const isWhiteLabel = config.env.isWhiteLabel;
+
 
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
   // const allPosts = await getAllPosts();
+
+  if(isWhiteLabel) {
+    redirect('/signin')
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden relative">
       {/* Full Page Dot Matrix Background */}
