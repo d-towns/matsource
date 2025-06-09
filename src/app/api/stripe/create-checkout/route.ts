@@ -1,12 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe/client';
 import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
-
-const BASE_URL = process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASE_URL : process.env.NEXT_PUBLIC_DEV_BASE_URL;
+import { Partner } from '@/lib/models/partner';
+import { getPartnerByDomain } from '@/lib/services/PartnerService';
+import { config } from '@/lib/config';
 export async function POST(req: NextRequest) {
   try {
     const { priceId } = await req.json();
-    console.log('priceId', priceId);
+    let partner: Partner | null = null;
+    let BASE_URL;
+    const partnerHost = req.headers.get('X-Host-Domain');
+    if(partnerHost) {
+      partner = await getPartnerByDomain(partnerHost);
+      if(partner) {
+        BASE_URL = partner.white_label_origin;
+      }
+    } else {
+      BASE_URL = process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASE_URL : process.env.NEXT_PUBLIC_DEV_BASE_URL;
+    }
+
+    const isWhiteLabel = config.env.isWhiteLabel;
+
     if (!priceId) {
       return NextResponse.json({ error: 'Price ID is required' }, { status: 400 });
     }
@@ -52,8 +66,12 @@ export async function POST(req: NextRequest) {
       customer_email: user.email,
       metadata: {
         team_id: userTeamData.team_id,
+        ...(isWhiteLabel && { partner_id: partner?.id })
       },
+      ...(isWhiteLabel && { payment_intent_data: { on_behalf_of: partner?.stripe_account_id } }),
       subscription_data: {
+        ...(isWhiteLabel && { application_fee_percent: partner?.fee_percent || 0 }),
+        ...(isWhiteLabel && { transfer_data: { destination: partner?.stripe_account_id } }),
         metadata: {
           team_id: userTeamData.team_id,
           pool_minutes: price.metadata?.pool_minutes || '1000',
@@ -68,3 +86,4 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 } 
+

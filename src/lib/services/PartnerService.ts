@@ -42,3 +42,14 @@ export async function createTeamForPartner(partnerId: string, team: Omit<Team, '
   if (userTeamsError) throw userTeamsError;
   return Team.parse(data);
 } 
+
+export async function getPartnerByDomain(domain: string): Promise<Partner | null> {
+  const supabase = await createSupabaseSSRClient();
+  const { data, error } = await supabase
+    .from('partners')
+    .select('*')
+    .eq('white_label_origin', domain)
+    .single();
+  if (error) throw error;
+  return data ? PartnerSchema.parse(data) : null;
+}

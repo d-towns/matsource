@@ -1,11 +1,27 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, NextRequest } from 'next/server';
 import { stripe } from '@/lib/stripe/client';
 import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
+import { Partner } from '@/lib/models/partner';
+import { getPartnerByDomain } from '@/lib/services/PartnerService';
+import config from '@/lib/config';
 
-const BASE_URL = process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASE_URL : process.env.NEXT_PUBLIC_DEV_BASE_URL;
-export async function POST() {
+export async function POST(req: NextRequest) {
   try {
     const supabase = await createSupabaseSSRClient();
+
+    let partner: Partner | null = null;
+    let BASE_URL;
+    const partnerHost = req.headers.get('X-Host-Domain');
+    if(partnerHost) {
+      partner = await getPartnerByDomain(partnerHost);
+      if(partner) {
+        BASE_URL = partner.white_label_origin;
+      }
+    } else {
+      BASE_URL = process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_BASE_URL : process.env.NEXT_PUBLIC_DEV_BASE_URL;
+    }
+
+    const isWhiteLabel = config.env.isWhiteLabel;
     
     // Get the authenticated user
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -51,6 +67,7 @@ export async function POST() {
     const session = await stripe.billingPortal.sessions.create({
       customer: subscription.stripe_customer_id,
       return_url: `${BASE_URL}/workspaces/settings/billing`,
+      ...(isWhiteLabel && { stripeAccount: partner?.stripe_account_id })
     });
 
     return NextResponse.json({ 
