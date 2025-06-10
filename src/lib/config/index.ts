@@ -83,6 +83,19 @@ export const config = {
         : process.env.NEXT_PUBLIC_BASE_URL!}/api/integrations/google/callback`,
     },
 
+    // Jobber Services
+    jobber: {
+      clientId: process.env.JOBBER_CLIENT_ID!,
+      clientSecret: process.env.JOBBER_CLIENT_SECRET!,
+      baseUrl: process.env.JOBBER_BASE_URL || 'https://api.getjobber.com',
+      authUrl: process.env.JOBBER_AUTH_URL || 'https://api.getjobber.com/api/oauth/authorize',
+      tokenUrl: process.env.JOBBER_TOKEN_URL || 'https://api.getjobber.com/api/oauth/token',
+      callbackUrl: `${isDevelopment 
+        ? (process.env.NEXT_PUBLIC_DEV_BASE_URL || 'http://localhost:3000')
+        : process.env.NEXT_PUBLIC_BASE_URL!}/api/integrations/jobber/callback`,
+      scopes: process.env.JOBBER_SCOPES || 'read_clients,read_jobs,read_invoices',
+    },
+
     // Twilio
     twilio: {
       accountSid: process.env.TWILIO_ACCOUNT_SID!,

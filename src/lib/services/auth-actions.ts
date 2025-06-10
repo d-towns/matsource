@@ -187,7 +187,7 @@ export async function getUserTeams(): Promise<Team[]> {
     return [];
   }
 
-  console.log('teamData', teamData)
+  // console.log('teamData', teamData)
   // console.log('teamData', teamData)
   const teamArraySchema = z.array(Team);
   // Parse and return the team records

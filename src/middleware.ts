@@ -5,7 +5,7 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   const host = request.headers.get('host') || ''
 
-  console.log('pathname', pathname)
+  // console.log('pathname', pathname)
   if (pathname.startsWith('/workspaces')) {
     // First, update the session (handles auth)
     // console.log('deez nuts 444')

@@ -8,18 +8,42 @@ export interface GoogleCalendarToken {
   updated_at: string;
 }
 
-// We'll keep this interface for potential future use
+export interface JobberToken {
+  id: string;
+  user_id: string | null;
+  team_id: string;
+  access_token: string;
+  refresh_token: string;
+  expires_at: string;
+  scope: string | null;
+  token_type: string;
+  created_at: string | null;
+  updated_at: string | null;
+}
+
+// Integration types
+export type IntegrationType = 'google_calendar' | 'jobber';
+
 export interface Integration {
   id: string;
   name: string;
-  type: 'google_calendar';
+  type: IntegrationType;
   status: 'active' | 'inactive';
   connected_at?: string;
-  metadata?: Record<string, unknown>; // Use unknown instead of any
+  metadata?: Record<string, unknown>;
 }
 
 export interface IntegrationState {
   isConnected: boolean;
   lastSynced?: string;
   error?: string;
-} 
+}
+
+// Jobber-specific integration state
+export interface JobberIntegrationState extends IntegrationState {
+  scope?: string;
+  expiresAt?: string;
+}
+
+// Union type for all integration states
+export type AnyIntegrationState = IntegrationState | JobberIntegrationState; 
