@@ -23,11 +23,11 @@ export default function TermsOfServicePage() {
                 1. Acceptance of These Terms
               </h3>
               <p className="mt-6">
-                By clicking "I Agree," signing an order form, or using the
-                BlueAgent platform in any way, you ("Customer," "you," or
-                "your") agree to be bound by (a) these Terms, (b) any Order
+                By clicking &ldquo;I Agree,&rdquo; signing an order form, or using the
+                BlueAgent platform in any way, you (&ldquo;Customer,&rdquo; &ldquo;you,&rdquo; or
+                &ldquo;your&rdquo;) agree to be bound by (a) these Terms, (b) any Order
                 Form that references them, and (c) our Privacy Policy. If you
-                don't agree, don't use the Service.
+                don&rsquo;t agree, don&rsquo;t use the Service.
               </p>
             </div>
             <div>
@@ -50,12 +50,12 @@ export default function TermsOfServicePage() {
               </h3>
               <p className="mt-6">
                 BlueAgent is a software-as-a-service platform that supplies
-                AI-powered voice "agents" for inbound and outbound phone calls.
+                AI-powered voice &ldquo;agents&rdquo; for inbound and outbound phone calls.
                 The product:
               </p>
               <ul className="mt-4 list-disc list-inside space-y-2">
                 <li>
-                  Answers or initiates calls on the business's phone number
+                  Answers or initiates calls on the business&rsquo;s phone number
                   24/7.
                 </li>
                 <li>
@@ -75,7 +75,7 @@ export default function TermsOfServicePage() {
             </div>
             <div>
               <h3 className="text-2xl font-bold tracking-tight text-gray-900">
-                4. Account Registration & Security
+                4. Account Registration &amp; Security
               </h3>
               <p className="mt-6">
                 You must provide accurate contact, billing, and compliance
@@ -94,7 +94,7 @@ export default function TermsOfServicePage() {
             </div>
             <div>
               <h3 className="text-2xl font-bold tracking-tight text-gray-900">
-                5. Subscriptions, Usage Fees & Payment
+                5. Subscriptions, Usage Fees &amp; Payment
               </h3>
               <p className="mt-6">
                 <span className="font-semibold">Subscription Plans.</span>{' '}
@@ -103,11 +103,11 @@ export default function TermsOfServicePage() {
                 pool of monthly talk-minutes.
               </p>
               <p className="mt-4">
-                <span className="font-semibold">Voice & SMS Usage.</span>{' '}
+                <span className="font-semibold">Voice &amp; SMS Usage.</span>{' '}
                 Minutes and carrier charges in excess of the plan are billed at
                 the current overage rates listed on our pricing page. Rates may
-                change to track Twilio's wholesale changes; we'll give at
-                least 30 days' notice.
+                change to track Twilio&rsquo;s wholesale changes; we&rsquo;ll give at
+                least 30 days&rsquo; notice.
               </p>
               <p className="mt-4">
                 <span className="font-semibold">Taxes.</span> All fees are
@@ -118,7 +118,7 @@ export default function TermsOfServicePage() {
                 <span className="font-semibold">Late Payments.</span> Overdue
                 amounts accrue 1.5 % interest per month (or the highest lawful
                 rate, if lower). We may suspend the Service for non-payment
-                after 10 days' notice.
+                after 10 days&rsquo; notice.
               </p>
               <p className="mt-4">
                 <span className="font-semibold">No Refunds.</span> Except where
@@ -127,7 +127,7 @@ export default function TermsOfServicePage() {
             </div>
             <div>
               <h3 className="text-2xl font-bold tracking-tight text-gray-900">
-                6. Telephone Numbers & Caller ID
+                6. Telephone Numbers &amp; Caller ID
               </h3>
               <p className="mt-6">
                 <span className="font-semibold">Provisioning.</span> By default
@@ -142,7 +142,7 @@ export default function TermsOfServicePage() {
               <p className="mt-4">
                 <span className="font-semibold">Verified Caller ID.</span> If
                 you choose to present your own number as caller ID, you must
-                complete Twilio's verification workflow.
+                complete Twilio&rsquo;s verification workflow.
               </p>
               <p className="mt-4">
                 <span className="font-semibold">Compliance.</span> You must
@@ -154,7 +154,7 @@ export default function TermsOfServicePage() {
             </div>
             <div>
               <h3 className="text-2xl font-bold tracking-tight text-gray-900">
-                7. Use Restrictions & Acceptable Use
+                7. Use Restrictions &amp; Acceptable Use
               </h3>
               <p className="mt-6">You agree NOT to:</p>
               <ul className="mt-4 list-disc list-inside space-y-2">
@@ -167,8 +167,8 @@ export default function TermsOfServicePage() {
                   number on a Do-Not-Call registry without a lawful exception.
                 </li>
                 <li>
-                  Attempt to reverse engineer, probe, or breach BlueAgent's or
-                  Twilio's security.
+                  Attempt to reverse engineer, probe, or breach BlueAgent&rsquo;s or
+                  Twilio&rsquo;s security.
                 </li>
                 <li>
                   Use the Service to build or support a competing product.
@@ -182,7 +182,7 @@ export default function TermsOfServicePage() {
             </div>
             <div>
               <h3 className="text-2xl font-bold tracking-tight text-gray-900">
-                8. Customer Data & Call Recordings
+                8. Customer Data &amp; Call Recordings
               </h3>
               <p className="mt-6">
                 <span className="font-semibold">Ownership.</span> As between
@@ -210,7 +210,7 @@ export default function TermsOfServicePage() {
             </div>
             <div>
               <h3 className="text-2xl font-bold tracking-tight text-gray-900">
-                9. AI & Machine-Learning Specific Disclaimers
+                9. AI &amp; Machine-Learning Specific Disclaimers
               </h3>
               <p className="mt-6">
                 <span className="font-semibold">Probabilistic Output.</span> AI
@@ -238,7 +238,7 @@ export default function TermsOfServicePage() {
                 The Service integrates with Twilio (telephony), OpenAI (LLM
                 inference), Zapier (workflow triggers), and optional CRM APIs
                 (HubSpot, Salesforce, etc.). Use of any third-party service is
-                subject to that provider's terms; BlueAgent is not liable for
+                subject to that provider&rsquo;s terms; BlueAgent is not liable for
                 their acts or omissions.
               </p>
             </div>
@@ -271,7 +271,7 @@ export default function TermsOfServicePage() {
                 13. Confidentiality
               </h3>
               <p className="mt-6">
-                Each party agrees to protect the other's non-public information
+                Each party agrees to protect the other&rsquo;s non-public information
                 with at least the same care it uses for its own confidential
                 info (and never less than reasonable care) and to use it only
                 for performing under these Terms.
@@ -279,7 +279,7 @@ export default function TermsOfServicePage() {
             </div>
             <div>
               <h3 className="text-2xl font-bold tracking-tight text-gray-900">
-                14. Term & Termination
+                14. Term &amp; Termination
               </h3>
               <p className="mt-6">
                 <span className="font-semibold">By You.</span> Cancel inside
@@ -303,7 +303,7 @@ export default function TermsOfServicePage() {
                 15. Warranty Disclaimers
               </h3>
               <p className="mt-6 uppercase">
-                The Service is provided "as is" and "as available." BlueAgent,
+                The Service is provided &ldquo;as is&rdquo; and &ldquo;as available.&rdquo; BlueAgent,
                 its suppliers, and licensors disclaim all
                 warranties—express, implied, or statutory—including
                 merchantability, fitness for a particular purpose, and
@@ -316,7 +316,7 @@ export default function TermsOfServicePage() {
                 16. Limitation of Liability
               </h3>
               <p className="mt-6 uppercase">
-                To the maximum extent permitted by law, BlueAgent's total
+                To the maximum extent permitted by law, BlueAgent&rsquo;s total
                 liability for all claims in a calendar year will not exceed the
                 amounts you paid us in that year. BlueAgent will not be liable
                 for indirect, special, incidental, consequential, punitive, or
@@ -341,8 +341,8 @@ export default function TermsOfServicePage() {
                 18. Modifications to the Service or Terms
               </h3>
               <p className="mt-6">
-                We may modify the Service or these Terms at any time. We'll
-                post the revised Terms and update the "Effective Date."
+                We may modify the Service or these Terms at any time. We&rsquo;ll
+                post the revised Terms and update the &ldquo;Effective Date.&rdquo;
                 Material changes will be emailed or shown in-app at least 30
                 days before they take effect. Continued use after that means
                 acceptance.
@@ -350,7 +350,7 @@ export default function TermsOfServicePage() {
             </div>
             <div>
               <h3 className="text-2xl font-bold tracking-tight text-gray-900">
-                19. Governing Law & Dispute Resolution
+                19. Governing Law &amp; Dispute Resolution
               </h3>
               <p className="mt-6">
                 <span className="font-semibold">Law.</span> These Terms are
@@ -400,7 +400,7 @@ export default function TermsOfServicePage() {
                 provision is unenforceable, the rest remain in effect.
               </p>
               <p className="mt-4">
-                <span className="font-semibold">Waiver.</span> A party's
+                <span className="font-semibold">Waiver.</span> A party&rsquo;s
                 failure to enforce a provision is not a waiver of future
                 enforcement.
               </p>

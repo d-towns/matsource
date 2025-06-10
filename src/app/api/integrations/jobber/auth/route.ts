@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
 import { jobberOAuthClient } from '@/lib/jobber/oauth';
 
@@ -6,7 +6,7 @@ import { jobberOAuthClient } from '@/lib/jobber/oauth';
  * POST /api/integrations/jobber/auth
  * Initiates Jobber OAuth authentication flow
  */
-export async function POST(_request: NextRequest) {
+export async function POST() {
   try {
     // Verify user is authenticated via Supabase
     const supabase = await createSupabaseSSRClient();

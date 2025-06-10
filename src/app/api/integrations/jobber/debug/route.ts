@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { config } from '@/lib/config';
 
 /**
  * GET /api/integrations/jobber/debug
  * Debug route to check Jobber configuration (remove in production)
  */
-export async function GET(_request: NextRequest) {
+export async function GET() {
   try {
     // Only allow in development
     if (config.env.isProduction) {

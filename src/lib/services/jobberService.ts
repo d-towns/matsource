@@ -4,8 +4,7 @@ import { jobberOAuthClient } from '@/lib/jobber/oauth';
 import { 
   JobberToken, 
   StoreJobberTokens, 
-  storeJobberTokensSchema,
-  JobberTokenRefreshResponse 
+  storeJobberTokensSchema
 } from '@/lib/models/jobber_token';
 import { cookies } from 'next/headers';
 

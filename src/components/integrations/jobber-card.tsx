@@ -224,7 +224,7 @@ export function JobberCard() {
         {/* Features List */}
         {!integrationState.isConnected && (
           <div className="space-y-2 mb-3">
-            <p className="text-sm font-medium text-muted-foreground">What you'll get:</p>
+            <p className="text-sm font-medium text-muted-foreground">What you&rsquo;ll get:</p>
             <div className="grid grid-cols-1 gap-1 text-xs text-muted-foreground">
               <div className="flex items-center gap-2">
                 <Users className="h-3 w-3" />

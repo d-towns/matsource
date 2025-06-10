@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
 import { disconnectJobber } from '@/lib/services/jobberService';
 import { cookies } from 'next/headers';
@@ -7,7 +7,7 @@ import { cookies } from 'next/headers';
  * POST /api/integrations/jobber/disconnect
  * Disconnects Jobber integration for the user's active team
  */
-export async function POST(_request: NextRequest) {
+export async function POST() {
   try {
     // Verify user is authenticated
     const supabase = await createSupabaseSSRClient();

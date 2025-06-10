@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
 import { getJobberIntegrationState } from '@/lib/services/jobberService';
 
@@ -6,7 +6,7 @@ import { getJobberIntegrationState } from '@/lib/services/jobberService';
  * GET /api/integrations/jobber/status
  * Returns the current Jobber integration status for the user's active team
  */
-export async function GET(_request: NextRequest) {
+export async function GET() {
   try {
     // Verify user is authenticated
     const supabase = await createSupabaseSSRClient();
