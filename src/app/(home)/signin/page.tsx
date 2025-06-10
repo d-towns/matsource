@@ -36,7 +36,7 @@ console.log('environment', environment)
 
           {mode === "signin" ? <SignInForm /> : <SignUpForm />}
 
-          { (environment === "development" || environment === "staging") && (
+          {/* { (environment === "development" || environment === "staging") && ( */}
           <p className="px-8 text-center text-sm text-gray-400">
             {mode === "signin" ? (
               <>
@@ -60,7 +60,7 @@ console.log('environment', environment)
               </>
             )} 
           </p>
-          )}
+          {/* )} */}
         </div>
       </div>
     </div>
