@@ -8,6 +8,7 @@ import { PlanSelection } from '@/components/onboarding/plan-selection';
 import { TeamDetails } from '@/components/onboarding/team-details';
 import { IndustrySelection } from '@/components/onboarding/industry-selection';
 import { CallerIdVerification } from '@/components/onboarding/caller-id-verification';
+import { config } from '@/lib/config';
 
 type OnboardingStep = 'plan_selection' | 'team_details' | 'industry_selection' | 'caller_id_verification' | 'completed';
 
@@ -87,7 +88,7 @@ export function OnboardingLayout() {
         <Card className="shadow-xl">
           <CardHeader className="text-center pb-6">
             <CardTitle className="text-2xl font-bold font-sans text-gray-900">
-              Welcome to BlueAgent
+              {config.env.isWhiteLabel ? 'Welcome' : 'Welcome to BlueAgent'}
             </CardTitle>
             <p className="text-gray-600 font-sans mt-2">
               Let&apos;s get you set up in just a few steps
