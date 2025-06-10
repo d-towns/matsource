@@ -1,8 +1,9 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { stripe } from '@/lib/stripe/client';
-
-export async function GET() {
+import { config } from '@/lib/config'; 
+import { getPartnerByDomain } from '@/lib/services/PartnerService';
+export async function GET(req: NextRequest) {
   try {
     // Fetch all active prices with expanded product data
     const prices = await stripe.prices.list({
@@ -10,18 +11,29 @@ export async function GET() {
       expand: ['data.product'],
       limit: 100, // Adjust as needed
     });
+    let partner = null;
+    if(config.env.isWhiteLabel) {
+      const currentHostDomain = req.headers.get('X-Host-Domain');
+      partner = await getPartnerByDomain(currentHostDomain);
+    }
 
     // Filter and transform the prices
     const filteredPrices = prices.data.filter(price => {
-      // Only include recurring prices (subscriptions)
       if (price.type !== 'recurring') return false;
-      
-      // In development, filter out prices with amount lower than $240 (24000 cents)
-      if (process.env.NODE_ENV === 'development') {
-        return price.unit_amount && price.unit_amount >= 24000; // $240.00 in cents
+
+      if (config.env.isWhiteLabel) {
+        return price.metadata?.partner_id === partner?.id;
+      } else {
+        return price.metadata?.official === 'true';
       }
+      // // Only include recurring prices (subscriptions)
       
-      return true;
+      // // In development, filter out prices with amount lower than $240 (24000 cents)
+      // if (process.env.NODE_ENV === 'development') {
+      //   return price.unit_amount && price.unit_amount >= 24000; // $240.00 in cents
+      // }
+      
+      // return true;
     });
 
     // Transform prices to a more frontend-friendly format
