@@ -6,6 +6,8 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { Team } from '../models/team'
 import { z } from 'zod'
+import { headers } from 'next/headers'
+
 
 export async function signIn(formData: FormData) {
   const supabase = await createSupabaseSSRClient()
@@ -65,10 +67,13 @@ export async function signUp(formData: FormData) {
   // in practice, you should validate your inputs
   const email = formData.get('email') as string
   const full_name = email.split('@')[0]
+  const hostDomain = (await headers()).get('X-Host-Domain')
+  const baseUrl = hostDomain ? `https://${hostDomain}` : 'http://localhost:3000'
   const data = {
     email: formData.get('email') as string,
     password: formData.get('password') as string,
     options: {
+      emailRedirectTo: `${baseUrl}/auth/callback?next=/onboarding`,
       data: {
         full_name: full_name,
       },
@@ -149,9 +154,10 @@ export async function signOut() {
  */
 export async function signInWithGoogle(redirectTo?: string) {
   const supabase = await createSupabaseSSRClient();
-  const baseUrl = process.env.NEXT_PUBLIC_NODE_ENV === 'production'
-    ? process.env.NEXT_PUBLIC_BASE_URL
-    : 'http://localhost:3000';
+
+
+  const hostDomain = (await headers()).get('X-Host-Domain')
+  const baseUrl = hostDomain ? `https://${hostDomain}` : 'http://localhost:3000'
   const {data: oAuthResponse, error: oAuthError} = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
