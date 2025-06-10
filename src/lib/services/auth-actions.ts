@@ -80,7 +80,7 @@ export async function signUp(formData: FormData) {
     email: formData.get('email') as string,
     password: formData.get('password') as string,
     options: {
-      emailRedirectTo: `${baseUrl}/auth/callback?next=/onboarding`,
+      emailRedirectTo: `${baseUrl}/auth/confirm?next=/onboarding`,
       data: {
         full_name: full_name,
       },
