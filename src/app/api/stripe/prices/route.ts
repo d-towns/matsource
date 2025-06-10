@@ -20,11 +20,11 @@ export async function GET(req: NextRequest) {
     // Filter and transform the prices
     const filteredPrices = prices.data.filter(price => {
       if (price.type !== 'recurring') return false;
-
+      const product = price.product as Stripe.Product;
       if (config.env.isWhiteLabel) {
-        return price.metadata?.partner_id === partner?.id;
+        return product.metadata?.partner_id === partner?.id;
       } else {
-        return price.metadata?.official === 'true';
+        return product.metadata?.official === 'true';
       }
       // // Only include recurring prices (subscriptions)
       
