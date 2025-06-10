@@ -7,6 +7,7 @@ import { redirect } from 'next/navigation'
 import { Team } from '../models/team'
 import { z } from 'zod'
 import { headers } from 'next/headers'
+import { config } from '@/lib/config'
 
 
 export async function signIn(formData: FormData) {
@@ -67,8 +68,14 @@ export async function signUp(formData: FormData) {
   // in practice, you should validate your inputs
   const email = formData.get('email') as string
   const full_name = email.split('@')[0]
-  const hostDomain = (await headers()).get('X-Host-Domain')
-  const baseUrl = hostDomain ? `https://${hostDomain}` : 'http://localhost:3000'
+  let hostDomain = null;
+  let baseUrl = null;
+  if(config.env.isWhiteLabel) {
+    hostDomain = (await headers()).get('X-Host-Domain')
+    baseUrl = hostDomain ? `https://${hostDomain}` : 'http://localhost:3000'
+  } else {
+    baseUrl = config.env.isProduction ? config.app.prodBaseUrl : config.app.devBaseUrl
+  }
   const data = {
     email: formData.get('email') as string,
     password: formData.get('password') as string,
@@ -156,8 +163,14 @@ export async function signInWithGoogle(redirectTo?: string) {
   const supabase = await createSupabaseSSRClient();
 
 
-  const hostDomain = (await headers()).get('X-Host-Domain')
-  const baseUrl = hostDomain ? `https://${hostDomain}` : 'http://localhost:3000'
+  let hostDomain = null;
+  let baseUrl = null;
+  if(config.env.isWhiteLabel) {
+    hostDomain = (await headers()).get('X-Host-Domain')
+    baseUrl = hostDomain ? `https://${hostDomain}` : 'http://localhost:3000'
+  } else {
+    baseUrl = config.env.isProduction ? config.app.prodBaseUrl : config.app.devBaseUrl
+  }
   const {data: oAuthResponse, error: oAuthError} = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
