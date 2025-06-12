@@ -1,19 +1,32 @@
 "use client"
 
-import { usePartnerLogo } from '@/hooks/usePartnerLogo'
+import { getPartnerLogoUrl } from '@/lib/actions/partner-logo'
 import { config } from '@/lib/config'
 import Image from 'next/image'
-
+import { useEffect, useState } from 'react'
 
 interface PartnerLogoProps {
-  bucket: string
-  assetId: string
   className?: string
 }
 
-export  function PartnerLogo({ className = '' }: PartnerLogoProps) {
-  const { logoUrl, loading, error } = usePartnerLogo()
+export function PartnerLogo({ className = '' }: PartnerLogoProps) {
+  const [logoUrl, setLogoUrl] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
 
+  useEffect(() => {
+    const fetchLogo = async () => {
+      try {
+        const url = await getPartnerLogoUrl()
+        setLogoUrl(url)
+      } catch (error) {
+        console.error('Error fetching partner logo:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchLogo()
+  }, [])
 
   // Only show if white label is enabled
   if (!config.env.isWhiteLabel) {
@@ -28,7 +41,7 @@ export  function PartnerLogo({ className = '' }: PartnerLogoProps) {
     )
   }
 
-  if (error || !logoUrl) {
+  if (!logoUrl) {
     return null
   }
 

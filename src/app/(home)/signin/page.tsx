@@ -19,14 +19,14 @@ console.log('environment', environment)
     <div className="container flex min-h-[calc(100vh-80px)] flex-col items-center justify-center">
       <div className="lg:p-8">
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[400px]">
-          <PartnerLogo bucket="partner-logos" assetId="default" />
+          <PartnerLogo/>
           <div className="flex flex-col space-y-2 text-center">
-            <Alert variant="default" className="mb-4 bg-gradient-to-r from-primary/10 to-secondary/10">
+            {/* <Alert variant="default" className="mb-4 bg-gradient-to-r from-primary/10 to-secondary/10">
               <AlertTitle>Attention</AlertTitle>
               <AlertDescription>
                 Accounts are only for active clients. If you are not an active client, please <Link href="/get-started" className="underline text-matsource-500 hover:text-matsource-400">contact us</Link> to get access.
               </AlertDescription>
-            </Alert>
+            </Alert> */}
             <h1 className="text-4xl font-semibold tracking-tight">
               {mode === "signin" ? "Welcome back" : "Create an account"}
             </h1>
