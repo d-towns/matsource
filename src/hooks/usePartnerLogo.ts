@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useUser } from './use-user'
+import { getPartnerByDomain } from '@/lib/services/PartnerService'
 
 interface PartnerLogoData {
   url: string
@@ -18,11 +18,19 @@ export function usePartnerLogo(): UsePartnerLogoResult {
   const [logoUrl, setLogoUrl] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const { partnerId } = useUser()
+  const [partnerId, setPartnerId] = useState<string | null>(null)
+
+  const getPartnerId = async () => {
+    const domain = window.location.hostname
+    const partner = await getPartnerByDomain(domain)
+    if(partner) {
+      setPartnerId(partner.id)
+    }
+  }
+  
   useEffect(() => {
     if (!partnerId) {
-      setLoading(false)
-      return
+      getPartnerId()
     }
 
     const fetchLogo = async () => {
