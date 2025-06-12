@@ -3,8 +3,6 @@
 import { SignInForm } from "@/components/auth/SignInForm"
 import { SignUpForm } from "@/components/auth/SignUpForm"
 import { PartnerLogo } from "@/components/auth/PartnerLogo"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import Link from "next/link"
 import { useState } from "react"
 import { config } from "@/lib/config"
 

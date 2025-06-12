@@ -22,9 +22,8 @@ export async function getPartnerLogoUrl(): Promise<string | null> {
     
     // Try to get logo using domain as asset ID
     const filePath = `${partner.id}.png`
-    console.log('filePath', filePath)
+
     const { data } = supabase.storage.from('partner-logos').getPublicUrl(filePath)
-    console.log("data", data)
     
     if (!data?.publicUrl) {
       return null
