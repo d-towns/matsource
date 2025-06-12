@@ -2,10 +2,12 @@
 
 import { SignInForm } from "@/components/auth/SignInForm"
 import { SignUpForm } from "@/components/auth/SignUpForm"
+import { PartnerLogo } from "@/components/auth/PartnerLogo"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import Link from "next/link"
 import { useState } from "react"
 import { config } from "@/lib/config"
+
 
 const environment = config.env.nextPublicNodeEnv;
 
@@ -17,6 +19,7 @@ console.log('environment', environment)
     <div className="container flex min-h-[calc(100vh-80px)] flex-col items-center justify-center">
       <div className="lg:p-8">
         <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[400px]">
+          <PartnerLogo bucket="partner-logos" assetId="default" />
           <div className="flex flex-col space-y-2 text-center">
             <Alert variant="default" className="mb-4 bg-gradient-to-r from-primary/10 to-secondary/10">
               <AlertTitle>Attention</AlertTitle>

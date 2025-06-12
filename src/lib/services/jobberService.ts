@@ -121,7 +121,7 @@ export async function refreshJobberTokens(
     const refreshedTokens = await jobberOAuthClient.refreshAccessToken(refreshToken);
 
     // Calculate expiration timestamp
-    const expiresAt = new Date(Date.now() + (refreshedTokens.expires_in * 1000));
+    const expiresAt = new Date(Date.now() + (refreshedTokens.expires_in));
 
     // Prepare token data for storage
     const tokenData: StoreJobberTokens = {

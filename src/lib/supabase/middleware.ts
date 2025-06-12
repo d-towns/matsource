@@ -1,5 +1,6 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { createSupabaseSSRClient } from './ssr'
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -79,30 +80,11 @@ export async function checkOnboardingStatus(request: NextRequest) {
     return NextResponse.next()
   }
 
-  let response = NextResponse.next({
+  const response = NextResponse.next({
     request,
   })
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll()
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
-          response = NextResponse.next({
-            request,
-          })
-          cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options)
-          )
-        },
-      },
-    }
-  )
+  const supabase = await createSupabaseSSRClient()
 
   try {
     const {
@@ -123,6 +105,8 @@ export async function checkOnboardingStatus(request: NextRequest) {
       `)
       .eq('user_id', user.id)
       .single()
+
+    console.log('userTeamData', userTeamData)
 
     // If user has no team or team hasn't completed onboarding, redirect to onboarding
     if (!userTeamData?.team_id || (userTeamData.teams as { onboarding_step?: string })?.onboarding_step !== 'completed') {

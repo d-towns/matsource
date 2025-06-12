@@ -2,15 +2,16 @@ import { z } from 'zod';
 
 // Enum for call_attempts.status
 export const CallAttemptStatusEnum = z.enum([
-  'connected',
-  'voicemail',
-  'no_answer',
+  'queued',
+  'initiated',
+  'ringing',
+  'in-progress',
+  'completed',
   'busy',
   'failed',
-  'appointment_scheduled',
-  'declined',
-  'follow_up',
-  'pending',
+  'no-answer',
+  'canceled',
+
 ]);
 
 // Enum for call_attempts.result

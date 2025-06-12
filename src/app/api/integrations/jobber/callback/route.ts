@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
     console.log('Successfully exchanged code for Jobber tokens');
 
     // Calculate expiration timestamp
-    const expiresAt = new Date(Date.now() + (tokenResponse.expires_in * 1000));
+    const expiresAt = new Date(Date.now() + (tokenResponse.expires_in));
 
     // Get active team from cookies
     const cookieStore = await cookies();

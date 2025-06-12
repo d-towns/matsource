@@ -8,6 +8,7 @@ import { Team } from '../models/team'
 import { z } from 'zod'
 import { headers } from 'next/headers'
 import { config } from '@/lib/config'
+import { getPartnerByDomain } from './PartnerService'
 
 
 export async function signIn(formData: FormData) {
@@ -70,9 +71,11 @@ export async function signUp(formData: FormData) {
   const full_name = email.split('@')[0]
   let hostDomain = null;
   let baseUrl = null;
+  let partner = null;
   if(config.env.isWhiteLabel) {
     hostDomain = (await headers()).get('X-Host-Domain')
     baseUrl = hostDomain ? `https://${hostDomain}` : 'http://localhost:3000'
+    partner = await getPartnerByDomain(hostDomain)
   } else {
     baseUrl = config.env.isProduction ? config.app.prodBaseUrl : config.app.devBaseUrl
   }
@@ -122,6 +125,14 @@ export async function signUp(formData: FormData) {
             role: 'owner'
           });
 
+        if(partner) {
+          const { error: userPartnerError } = await adminSupabase.from('users').update({
+            partner_id: partner.id,
+          }).eq('id', authData.user.id)
+          if(userPartnerError) {
+            console.error('User partner assignment error during signup:', userPartnerError);
+          }
+        }
         if (userTeamError) {
           console.error('User team assignment error during signup:', userTeamError);
         }

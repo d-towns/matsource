@@ -16,7 +16,7 @@ export default function BlueAgentFormDemo() {
   }, []);
 
   return (
-    <section className="py-16 px-4 md:px-6 lg:px-8 bg-gradient-to-br from">
+    <section className="py-16 px-4 md:px-6 lg:px-8 bg-gradient-to-br from-primary/10 to-secondary/10">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div
