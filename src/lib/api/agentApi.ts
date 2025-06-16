@@ -3,7 +3,12 @@ import { Agent } from '@/lib/models/agent';
 
 // Fetch all agents
 export async function fetchAgents(teamId: string): Promise<Agent[]> {
-  const res = await fetch(`/api/agents?teamId=${encodeURIComponent(teamId)}`);
+  const res = await fetch(`/api/agents?teamId=${encodeURIComponent(teamId)}`, {
+    cache: 'no-store',
+    headers: {
+      'Cache-Control': 'no-cache',
+    },
+  });
   if (!res.ok) throw new Error('Failed to fetch agents');
   const { agents } = await res.json();
   return agents;
@@ -11,20 +16,32 @@ export async function fetchAgents(teamId: string): Promise<Agent[]> {
 
 // Fetch a single agent
 export async function fetchAgent(id: string, teamId: string): Promise<Agent> {
-  const res = await fetch(`/api/agents/${id}?teamId=${encodeURIComponent(teamId)}`);
+  const res = await fetch(`/api/agents/${id}?teamId=${encodeURIComponent(teamId)}`, {
+    cache: 'no-store',
+    headers: {
+      'Cache-Control': 'no-cache',
+    },
+  });
   if (!res.ok) throw new Error('Failed to fetch agent');
   return await res.json();
 }
 
 // Create a new agent
 export async function addAgent(
-  input: Omit<Partial<Agent>, 'id' | 'created_at' | 'updated_at' | 'team_id'> & { name: string; type: 'inbound_voice' | 'outbound_voice' | 'browser' },
+  input: Omit<Partial<Agent>, 'id' | 'created_at' | 'updated_at' | 'team_id' | 'user_id'> & { 
+    name: string; 
+    type: 'inbound_voice' | 'outbound_voice' | 'browser';
+  },
   teamId: string
 ): Promise<Agent> {
   const res = await fetch('/api/agents', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache',
+    },
     body: JSON.stringify({ ...input, teamId }),
+    cache: 'no-store',
   });
   if (!res.ok) throw new Error('Failed to create agent');
   return await res.json();
@@ -33,13 +50,17 @@ export async function addAgent(
 // Update an agent
 export async function updateAgentApi(
   id: string,
-  updates: Partial<Omit<Agent, 'id' | 'created_at' | 'updated_at' | 'team_id'>>,
+  updates: Partial<Omit<Agent, 'id' | 'created_at' | 'updated_at' | 'team_id' | 'user_id'>>,
   teamId: string
 ): Promise<Agent> {
   const res = await fetch('/api/agents', {
     method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache',
+    },
     body: JSON.stringify({ id, updates, teamId }),
+    cache: 'no-store',
   });
   if (!res.ok) throw new Error('Failed to update agent');
   return await res.json();
@@ -49,8 +70,12 @@ export async function updateAgentApi(
 export async function deleteAgentApi(id: string, teamId: string): Promise<void> {
   const res = await fetch('/api/agents', {
     method: 'DELETE',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache',
+    },
     body: JSON.stringify({ id, teamId }),
+    cache: 'no-store',
   });
   if (!res.ok) throw new Error('Failed to delete agent');
 } 

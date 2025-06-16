@@ -52,7 +52,7 @@ export function NavUser() {
   }
 
   return (
-    <SidebarMenu>
+    <SidebarMenu className="bg-secondary-100 rounded-lg border border-gray-200 p-2">
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

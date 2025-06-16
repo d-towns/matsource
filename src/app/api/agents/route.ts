@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
 import { AgentService } from '@/lib/services/AgentService';
 
+// Force dynamic rendering and disable caching
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 /**
  * GET /api/agents?teamId=...
  * List all agents for the given team
@@ -18,7 +22,14 @@ export async function GET(request: NextRequest) {
   }
   try {
     const agents = await AgentService.getAgents(teamId);
-    return NextResponse.json({ agents });
+    const response = NextResponse.json({ agents });
+    
+    // Prevent caching of dynamic data
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    response.headers.set('Pragma', 'no-cache');
+    response.headers.set('Expires', '0');
+    
+    return response;
   } catch (error) {
     console.error("Error fetching agents:", error);
     return NextResponse.json({ error: "Failed to fetch agents" }, { status: 500 });
@@ -43,7 +54,14 @@ export async function POST(request: NextRequest) {
   }
   try {
     const created = await AgentService.createAgent(user.id, teamId, agentData);
-    return NextResponse.json(created);
+    const response = NextResponse.json(created);
+    
+    // Prevent caching of dynamic data
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    response.headers.set('Pragma', 'no-cache');
+    response.headers.set('Expires', '0');
+    
+    return response;
   } catch (error) {
     console.error("Error creating agent:", error);
     return NextResponse.json({ error: "Failed to create agent" }, { status: 500 });
@@ -71,7 +89,14 @@ export async function PATCH(request: NextRequest) {
   }
   try {
     const updated = await AgentService.updateAgent(id, teamId, updates);
-    return NextResponse.json(updated);
+    const response = NextResponse.json(updated);
+    
+    // Prevent caching of dynamic data
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    response.headers.set('Pragma', 'no-cache');
+    response.headers.set('Expires', '0');
+    
+    return response;
   } catch (error) {
     console.error("Error updating agent:", error);
     return NextResponse.json({ error: "Failed to update agent" }, { status: 500 });
@@ -98,7 +123,14 @@ export async function DELETE(request: NextRequest) {
   }
   try {
     await AgentService.deleteAgent(id, teamId);
-    return NextResponse.json({ success: true });
+    const response = NextResponse.json({ success: true });
+    
+    // Prevent caching of dynamic data
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    response.headers.set('Pragma', 'no-cache');
+    response.headers.set('Expires', '0');
+    
+    return response;
   } catch (error) {
     console.error("Error deleting agent:", error);
     return NextResponse.json({ error: "Failed to delete agent" }, { status: 500 });

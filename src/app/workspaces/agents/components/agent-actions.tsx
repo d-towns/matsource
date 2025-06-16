@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Edit, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { createClient } from '@/lib/supabase/client';
+import { useDeleteAgent } from '@/hooks/useAgents';
+import { useTeam } from '@/context/team-context';
 import { Agent } from '@/lib/models/agent';
 
 interface AgentActionsProps {
@@ -15,8 +15,8 @@ interface AgentActionsProps {
 export function AgentActions({ agent }: AgentActionsProps) {
   const router = useRouter();
   const { toast } = useToast();
-  const [isDeleting, setIsDeleting] = useState(false);
-  const supabase = createClient();
+  const { activeTeam } = useTeam();
+  const deleteAgentMutation = useDeleteAgent(activeTeam?.id);
 
   // Navigate to edit agent page
   const handleEditAgent = () => {
@@ -30,21 +30,12 @@ export function AgentActions({ agent }: AgentActionsProps) {
     }
     
     try {
-      setIsDeleting(true);
-      const { error } = await supabase
-        .from('agents')
-        .delete()
-        .eq('id', agent.id);
-        
-      if (error) throw error;
+      await deleteAgentMutation.mutateAsync(agent.id);
       
       toast({
         title: 'Agent deleted',
         description: 'The agent has been deleted successfully.'
       });
-      
-      // Refresh the page to show updated list
-      router.refresh();
     } catch (error) {
       console.error('Error deleting agent:', error);
       toast({
@@ -52,8 +43,6 @@ export function AgentActions({ agent }: AgentActionsProps) {
         title: 'Failed to delete agent',
         description: 'Please try again later.'
       });
-    } finally {
-      setIsDeleting(false);
     }
   };
 
@@ -70,7 +59,7 @@ export function AgentActions({ agent }: AgentActionsProps) {
         variant="outline" 
         size="icon"
         onClick={handleDeleteAgent}
-        disabled={isDeleting}
+        disabled={deleteAgentMutation.isPending}
       >
         <Trash2 size={16} />
       </Button>

@@ -2,8 +2,32 @@ import { z } from 'zod';
 
 export const AgentTypeEnum = z.enum(['inbound_voice', 'outbound_voice', 'browser']);
 export const LLMProvidersEnum = z.enum(['groq', 'openai']);
-export const STTProvidersEnum = z.enum(['elevenlabs', 'openai', 'groq']);
-export const TTSProvidersEnum = z.enum(['elevenlabs', 'openai', 'csm-1', 'groq']);
+export const STTProvidersEnum = z.enum(['groq', 'openai', 'elevenlabs']);
+export const TTSProvidersEnum = z.enum(['elevenlabs', 'openai']);
+
+// Voice schema for nested voice object
+export const VoiceSchema = z.object({
+  id: z.string().uuid(),
+  provider: TTSProvidersEnum,
+  voice_id: z.string(), // This is the provider's voice identifier
+  name: z.string().nullable().optional(),
+  description: z.string().nullable().optional(),
+  preview_url: z.string().nullable().optional(),
+  created_at: z.string(),
+  updated_at: z.string(),
+});
+
+// Model schema for nested model object
+export const ModelSchema = z.object({
+  id: z.string().uuid(),
+  provider: LLMProvidersEnum,
+  model_name: z.string(),
+  tier: z.enum(['basic', 'premium']),
+  name: z.string().nullable().optional(),
+  description: z.string().nullable().optional(),
+  created_at: z.string(),
+  updated_at: z.string(),
+});
 
 export const AgentSchema = z.object({
   id: z.string().uuid(),
@@ -23,6 +47,13 @@ export const AgentSchema = z.object({
   stt_provider: STTProvidersEnum,
   llm_provider: LLMProvidersEnum,
   phone_number: z.string().uuid().nullable().optional(),
+  voice_id: z.string().uuid().nullable().optional(),
+  llm_model_id: z.string().uuid().nullable().optional(),
+  // Nested objects from joins
+  voices: VoiceSchema.nullable().optional(),
+  models: ModelSchema.nullable().optional(),
 });
 
-export type Agent = z.infer<typeof AgentSchema>; 
+export type Agent = z.infer<typeof AgentSchema>;
+export type Voice = z.infer<typeof VoiceSchema>;
+export type Model = z.infer<typeof ModelSchema>; 

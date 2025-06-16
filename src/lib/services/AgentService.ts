@@ -9,7 +9,12 @@ export const AgentService = {
         const supabase = await createSupabaseSSRClient();
         const { data, error } = await supabase
     .from('agents')
-    .select('*, phone_numbers(*)')
+    .select(`
+      *, 
+      phone_numbers(*),
+      voices(*),
+      models(*)
+    `)
     .eq('team_id', teamId)
     .order('created_at', { ascending: false });
   if (error) throw error;
@@ -21,7 +26,12 @@ getAgentById: async (id: string, teamId: string): Promise<Agent> => {
   const supabase = await createSupabaseSSRClient();
   const { data, error } = await supabase
     .from('agents')
-    .select('*')
+    .select(`
+      *, 
+      phone_numbers(*),
+      voices(*),
+      models(*)
+    `)
     .eq('id', id)
     .eq('team_id', teamId)
     .single();
@@ -55,13 +65,17 @@ updateAgent: async (
   teamId: string,
   updates: Partial<Omit<Agent, 'id' | 'created_at' | 'updated_at' | 'team_id'>>
 ): Promise<Agent> => {
+  console.log('updates', updates);
+  console.log('id', id);
+  console.log('teamId', teamId);
   const supabase = await createSupabaseSSRClient();
   const { data, error } = await supabase
     .from('agents')
     .update(updates)
     .eq('id', id)
     .eq('team_id', teamId)
-    .single();
+    .select().single();
+  console.log('data', data);
   if (error) throw error;
   return AgentSchema.parse(data);
 },

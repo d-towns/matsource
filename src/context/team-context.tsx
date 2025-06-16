@@ -38,7 +38,6 @@ export const TeamProvider = ({ children}: { children: ReactNode,}) => {
   const loadTeamsFromServer = async () => {
 
     const teams = await getUserTeams()
-    console.log('teams', teams)
     if (teams) {
       setTeams(teams)      
     } else {

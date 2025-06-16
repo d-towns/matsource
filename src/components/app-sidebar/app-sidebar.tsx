@@ -172,7 +172,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { teams, activeTeam } = useTeam();
   
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible="icon" {...props} className="font-sans">
       <SidebarHeader>
           <TeamSwitcher teams={teams} activeTeam={activeTeam} />
       </SidebarHeader>

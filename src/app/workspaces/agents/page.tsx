@@ -28,7 +28,7 @@ import { useTeam } from '@/context/team-context';
 import { useAgents } from '@/hooks/useAgents';
 import { usePhoneNumbers } from '@/hooks/usePhoneNumbers';
 import { useToast } from '@/hooks/use-toast';
-import { PhoneIcon, PhoneOutgoing } from 'lucide-react';
+import { PhoneIcon, PhoneOutgoing, Volume2, Brain } from 'lucide-react';
 import { Agent } from '@/lib/models/agent';
 import Image from 'next/image';
 import { useLeads } from '@/hooks/useLeads';
@@ -83,7 +83,7 @@ export default function AgentsPage() {
     }
   }, [outboundVoiceAgents, selectedAgentForCall]);
 
-  // Create a map of phone number ID to phone number for quick lookup
+  // Create map for phone number lookup
   const phoneNumberMap = phoneNumbers.reduce((acc, pn) => {
     acc[pn.id] = pn;
     return acc;
@@ -160,18 +160,48 @@ export default function AgentsPage() {
               : 'No script defined yet'}
           </p>
           {(agent.type === 'inbound_voice' || agent.type === 'outbound_voice') && (
-            <div className="flex items-center gap-2 text-sm">
-              <PhoneIcon className="h-4 w-4" />
-              {agent.phone_number && phoneNumberMap[agent.phone_number] ? (
-                <span className="font-mono">
-                  {phoneNumberMap[agent.phone_number].phone_number}
-                  {phoneNumberMap[agent.phone_number].friendly_name &&
-                    ` (${phoneNumberMap[agent.phone_number].friendly_name})`
-                  }
-                </span>
-              ) : (
-                <span className="text-muted-foreground">No phone number assigned</span>
-              )}
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-sm">
+                <PhoneIcon className="h-4 w-4" />
+                {agent.phone_number && phoneNumberMap[agent.phone_number] ? (
+                  <span className="font-mono">
+                    {phoneNumberMap[agent.phone_number].phone_number}
+                    {phoneNumberMap[agent.phone_number].friendly_name &&
+                      ` (${phoneNumberMap[agent.phone_number].friendly_name})`
+                    }
+                  </span>
+                ) : (
+                  <span className="text-muted-foreground">No phone number assigned</span>
+                )}
+              </div>
+              
+              <div className="flex items-center gap-2 text-sm">
+                <Volume2 className="h-4 w-4" />
+                {agent.voices ? (
+                  <span className="truncate">
+                    {agent.voices.name || agent.voices.voice_id}
+                    <Badge variant="outline" className="ml-2 text-xs">
+                      {agent.voices.provider}
+                    </Badge>
+                  </span>
+                ) : (
+                  <span className="text-muted-foreground">No voice selected</span>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2 text-sm">
+                <Brain className="h-4 w-4" />
+                {agent.models ? (
+                  <span className="truncate">
+                    {agent.models.model_name}
+                    <Badge variant="outline" className="ml-2 text-xs">
+                      {agent.models.provider}
+                    </Badge>
+                  </span>
+                ) : (
+                  <span className="text-muted-foreground">No model selected</span>
+                )}
+              </div>
             </div>
           )}
         </CardContent>
@@ -289,39 +319,43 @@ export default function AgentsPage() {
         </TabsContent>
         {/* Tab content for inbound voice agents */}
         <TabsContent value="inbound_voice">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          
             {agents.filter((agent) => agent.type === 'inbound_voice').length === 0 ? (
               <EmptyState />
             ) : (
-              agents
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {agents
                 .filter((agent) => agent.type === 'inbound_voice')
-                .map(renderAgentCard)
+                .map(renderAgentCard)}
+                </div>
             )}
-          </div>
+          
         </TabsContent>
         {/* Tab content for outbound voice agents */}
         <TabsContent value="outbound_voice">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          
             {agents.filter((agent) => agent.type === 'outbound_voice').length === 0 ? (
               <EmptyState />
             ) : (
-              agents
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {agents
                 .filter((agent) => agent.type === 'outbound_voice')
-                .map(renderAgentCard)
-            )}
+                .map(renderAgentCard)}
           </div>
+            )}
         </TabsContent>
         {/* Tab content for browser agents */}
         <TabsContent value="browser">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          
             {agents.filter((agent) => agent.type === 'browser').length === 0 ? (
               <EmptyState />
             ) : (
-              agents
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {agents
                 .filter((agent) => agent.type === 'browser')
-                .map(renderAgentCard)
-            )}
+                .map(renderAgentCard)}
           </div>
+            )}
         </TabsContent>
       </Tabs>
     </div>
