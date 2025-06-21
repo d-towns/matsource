@@ -23,7 +23,8 @@ import { useAddAgent, useUpdateAgent } from '@/hooks/useAgents';
 import { VoiceSelector } from '@/components/ui/voice-selector';
 import { ModelSelector } from '@/components/ui/model-selector';
 
-import { Agent } from '@/lib/models/agent';
+import { Agent, LLMProvidersEnum, TTSProvidersEnum } from '@/lib/models/agent';
+import { z } from 'zod';
 
 interface AgentEditFormProps {
   initialAgent: Agent | null;
@@ -69,10 +70,16 @@ export function AgentEditForm({ initialAgent, isNewAgent, searchType }: AgentEdi
 
   const handleChange = (field: keyof Agent, value: string | boolean | null) => {
     if (!agent) return;
-    setAgent({ ...agent, [field]: value });
+    setAgent((prev) => ({ ...prev, [field]: value }));
   };
 
+  const handleVoiceSelect = (voiceId: string, provider: z.infer<typeof TTSProvidersEnum>) => {
+   setAgent((prev) => ({ ...prev, voice_id: voiceId, tts_provider: provider }))
+  }
 
+  const handleModelSelect = (modelId: string, provider: z.infer<typeof LLMProvidersEnum>) => {
+    setAgent((prev) => ({ ...prev, llm_model_id: modelId, llm_provider: provider }))
+  }
 
   const handleSave = async () => {
     if (!agent || !user || !activeTeam) return;
@@ -88,6 +95,8 @@ export function AgentEditForm({ initialAgent, isNewAgent, searchType }: AgentEdi
           phone_number: agent.phone_number,
           voice_id: agent.voice_id,
           llm_model_id: agent.llm_model_id,
+          tts_provider: agent.tts_provider,
+          llm_provider: agent.llm_provider,
         };
         
         const createdAgent = await addAgentMutation.mutateAsync(agentInput);
@@ -102,6 +111,8 @@ export function AgentEditForm({ initialAgent, isNewAgent, searchType }: AgentEdi
           phone_number: agent.phone_number,
           voice_id: agent.voice_id,
           llm_model_id: agent.llm_model_id,
+          tts_provider: agent.tts_provider,
+          llm_provider: agent.llm_provider,
         };
         
         await updateAgentMutation.mutateAsync({ id: agent.id, updates });
@@ -281,10 +292,7 @@ export function AgentEditForm({ initialAgent, isNewAgent, searchType }: AgentEdi
             <CardContent className="flex-1">
               <VoiceSelector
                 selectedVoiceId={agent.voice_id}
-                onVoiceSelect={(voiceId, provider) => {
-                  handleChange('voice_id', voiceId)
-                  handleChange('tts_provider', provider)
-                }}
+                onVoiceSelect={handleVoiceSelect}
               />
             </CardContent>
           </Card>
@@ -302,10 +310,7 @@ export function AgentEditForm({ initialAgent, isNewAgent, searchType }: AgentEdi
             <CardContent className="flex-1">
               <ModelSelector
                 selectedModelId={agent.llm_model_id}
-                onModelSelect={(modelId, provider) => {
-                  handleChange('llm_model_id', modelId)
-                  handleChange('llm_provider', provider)
-                }}
+                onModelSelect={handleModelSelect}
               />
             </CardContent>
           </Card>

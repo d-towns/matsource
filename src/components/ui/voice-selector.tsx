@@ -203,7 +203,7 @@ function VoiceSkeletonCard() {
 export function VoiceSelector({ selectedVoiceId, onVoiceSelect, className }: VoiceSelectorProps) {
   const { data: voices, isLoading, error } = useVoices();
   const [currentPlayingId, setCurrentPlayingId] = useState<string | null>(null);
-
+  console.log('selectedVoiceId', selectedVoiceId)
   // Group voices by provider
   const voicesByProvider = voices?.reduce((acc, voice) => {
     if (!acc[voice.provider]) {
