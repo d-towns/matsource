@@ -72,6 +72,8 @@ export function AgentEditForm({ initialAgent, isNewAgent, searchType }: AgentEdi
     setAgent({ ...agent, [field]: value });
   };
 
+
+
   const handleSave = async () => {
     if (!agent || !user || !activeTeam) return;
     
@@ -279,7 +281,10 @@ export function AgentEditForm({ initialAgent, isNewAgent, searchType }: AgentEdi
             <CardContent className="flex-1">
               <VoiceSelector
                 selectedVoiceId={agent.voice_id}
-                onVoiceSelect={(voiceId) => handleChange('voice_id', voiceId)}
+                onVoiceSelect={(voiceId, provider) => {
+                  handleChange('voice_id', voiceId)
+                  handleChange('tts_provider', provider)
+                }}
               />
             </CardContent>
           </Card>
@@ -297,7 +302,10 @@ export function AgentEditForm({ initialAgent, isNewAgent, searchType }: AgentEdi
             <CardContent className="flex-1">
               <ModelSelector
                 selectedModelId={agent.llm_model_id}
-                onModelSelect={(modelId) => handleChange('llm_model_id', modelId)}
+                onModelSelect={(modelId, provider) => {
+                  handleChange('llm_model_id', modelId)
+                  handleChange('llm_provider', provider)
+                }}
               />
             </CardContent>
           </Card>

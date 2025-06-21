@@ -54,6 +54,7 @@ createAgent: async (
   const { data, error } = await supabase
     .from('agents')
     .insert(payload)
+    .select()
     .single();
   if (error) throw error;
   return AgentSchema.parse(data);

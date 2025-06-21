@@ -16,11 +16,11 @@ export const CallAttemptStatusEnum = z.enum([
 
 // Enum for call_attempts.result
 export const CallResultEnum = z.enum([
+  'voicemail',
+  'successful_ask',
   'appointment_set',
-  'call_back_later',
-  'not_interested',
-  'wrong_number',
-  'undetermined',
+  'declined_ask',
+  'requested_follow_up',
 ]);
 
 // Base schema (no lead)

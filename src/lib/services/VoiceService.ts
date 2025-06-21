@@ -1,8 +1,10 @@
 import { createSupabaseSSRClient } from '@/lib/supabase/ssr';
+import { TTSProvidersEnum } from '../models/agent';
+import { z } from 'zod';
 
 export interface Voice {
   id: string;
-  provider: 'elevenlabs' | 'openai' | 'csm-1' | 'groq';
+  provider: z.infer<typeof TTSProvidersEnum>;
   voice_id: string;
   name: string;
   description: string | null;

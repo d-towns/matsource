@@ -275,7 +275,7 @@ export function CallerIdVerification({ onComplete, onSkip }: CallerIdVerificatio
                   <ShoppingCart className="w-8 h-8 text-green-600" />
                 )}
               </div>
-              <h3 className="text-lg font-semibold font-sans mb-2">I don&apos;t have a number</h3>
+              <h3 className="text-lg font-semibold font-sans mb-2">Get a new number</h3>
               <p className="text-sm text-gray-600 font-sans mb-4">
                 We&apos;ll provide you with a new business phone number ready to use immediately
               </p>

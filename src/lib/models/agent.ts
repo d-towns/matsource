@@ -2,8 +2,8 @@ import { z } from 'zod';
 
 export const AgentTypeEnum = z.enum(['inbound_voice', 'outbound_voice', 'browser']);
 export const LLMProvidersEnum = z.enum(['groq', 'openai']);
-export const STTProvidersEnum = z.enum(['groq', 'openai', 'elevenlabs']);
-export const TTSProvidersEnum = z.enum(['elevenlabs', 'openai']);
+export const STTProvidersEnum = z.enum(['groq', 'openai', 'elevenlabs',]);
+export const TTSProvidersEnum = z.enum(['elevenlabs', 'openai', 'playai', 'groq']);
 
 // Voice schema for nested voice object
 export const VoiceSchema = z.object({

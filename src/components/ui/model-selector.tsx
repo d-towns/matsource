@@ -8,17 +8,19 @@ import { Brain, Crown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Model } from '@/lib/services/ModelService';
 import { useModels } from '@/hooks/useModels';
+import { LLMProvidersEnum } from '@/lib/models/agent';
+import { z } from 'zod';
 
 interface ModelSelectorProps {
   selectedModelId?: string | null;
-  onModelSelect: (modelId: string) => void;
+  onModelSelect: (modelId: string, provider: z.infer<typeof LLMProvidersEnum>) => void;
   className?: string;
 }
 
 function ModelCard({ model, isSelected, onSelect }: {
   model: Model;
   isSelected: boolean;
-  onSelect: (modelId: string) => void;
+  onSelect: (modelId: string, provider: z.infer<typeof LLMProvidersEnum>) => void;
 }) {
   return (
     <Card 
@@ -26,7 +28,7 @@ function ModelCard({ model, isSelected, onSelect }: {
         "cursor-pointer transition-all duration-200 hover:shadow-md",
         isSelected && "ring-2 ring-primary shadow-md"
       )}
-      onClick={() => onSelect(model.id)}
+      onClick={() => onSelect(model.id, model.provider)}
     >
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">

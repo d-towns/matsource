@@ -11,12 +11,14 @@ import { cn } from '@/lib/utils';
 import { Voice } from '@/lib/services/VoiceService';
 import { useVoices } from '@/hooks/useVoices';
 import WaveSurfer from 'wavesurfer.js';
+import { TTSProvidersEnum } from '@/lib/models/agent';
+import { z } from 'zod';
 
 interface VoiceSelectorProps {
   selectedVoiceId?: string | null;
-  onVoiceSelect: (voiceId: string) => void;
+  onVoiceSelect: (voiceId: string, provider: z.infer<typeof TTSProvidersEnum>) => void;
   className?: string;
-}
+} 
 
 interface AudioPlayerProps {
   previewUrl: string | null;
@@ -136,7 +138,7 @@ function AudioPlayer({ previewUrl, voiceId, currentPlayingId, onPlayStateChange 
 function VoiceCard({ voice, isSelected, onSelect, currentPlayingId, onPlayStateChange }: {
   voice: Voice;
   isSelected: boolean;
-  onSelect: (voiceId: string) => void;
+  onSelect: (voiceId: string, provider: z.infer<typeof TTSProvidersEnum>) => void;
   currentPlayingId: string | null;
   onPlayStateChange: (voiceId: string | null) => void;
 }) {
@@ -146,7 +148,7 @@ function VoiceCard({ voice, isSelected, onSelect, currentPlayingId, onPlayStateC
         "cursor-pointer transition-all duration-200 hover:shadow-md",
         isSelected && "ring-2 ring-primary shadow-md"
       )}
-      onClick={() => onSelect(voice.id)}
+      onClick={() => onSelect(voice.id, voice.provider)}
     >
       <CardHeader className="pb-3">
         <div className="space-y-3">

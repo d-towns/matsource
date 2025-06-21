@@ -129,7 +129,6 @@ export default function AgentsPage() {
 
   const renderAgentCard = (agent: Agent) => (
     <Card key={agent.id}>
-      <Link href={`/workspaces/agents/${agent.id}`}>
         <CardHeader>
           <div className="flex justify-between items-start">
             <CardTitle>{agent.name}</CardTitle>
@@ -208,7 +207,6 @@ export default function AgentsPage() {
         <CardFooter className="flex justify-between">
           <AgentActions agent={agent} />
         </CardFooter>
-      </Link>
     </Card>
   );
 
@@ -284,7 +282,7 @@ export default function AgentsPage() {
                         <SelectValue placeholder="Select a lead" />
                       </SelectTrigger>
                       <SelectContent>
-                        {leads.map((lead) => (
+                        {leads && leads.map((lead) => (
                           <SelectItem key={lead.id} value={lead.id}>
                             {lead.name}
                           </SelectItem>
